@@ -9,6 +9,7 @@
     <version>5.6-SNAPSHOT</version>
   </parent>
 
+  <groupId>org.nuxeo.ecm.platform</groupId>
   <artifactId>nuxeo-platform-jbpm</artifactId>
   <name>Nuxeo JPBM Service</name>
   <packaging>pom</packaging>
