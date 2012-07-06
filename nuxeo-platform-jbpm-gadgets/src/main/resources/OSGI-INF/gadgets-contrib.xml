@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<component name="org.nuxeo.ecm.platform.jbpm.gadgets" version="1.0">
+
+  <extension target="org.nuxeo.opensocial.gadgets.service" point="gadget">
+
+    <internalGadget name="waitingfor">
+      <mountPoint>/waitingfor</mountPoint>
+      <entryPoint>waitingfor.xml</entryPoint>
+      <category>Nuxeo</category>
+      <icon>waiting_for.png</icon>
+    </internalGadget>
+
+  </extension>
+
+</component>

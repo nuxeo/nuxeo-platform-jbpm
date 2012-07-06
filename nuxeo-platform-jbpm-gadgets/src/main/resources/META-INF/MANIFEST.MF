@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 1
+Bundle-Name: Nuxeo ECM JBPM Gadgets
+Bundle-SymbolicName: org.nuxeo.ecm.platform.jbpm.gadgets;singleton:=true
+Bundle-Vendor: Nuxeo
+Nuxeo-Component: OSGI-INF/gadgets-contrib.xml,
+ OSGI-INF/theme-contrib.xml

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<component name="org.nuxeo.ecm.platform.jbpm.gadgets.theme">
+
+  <require>org.nuxeo.theme.nuxeo.default</require>
+
+  <extension target="org.nuxeo.theme.services.ThemeService" point="resources">
+    <resource name="gadget-waitingfor.css">
+      <path>css/opensocial/gadgets/waitingfor.css</path>
+    </resource>
+
+    <resource name="gadget-waitingfor.js">
+      <path>scripts/opensocial/gadgets/waitingfor.js</path>
+    </resource>
+  </extension>
+
+</component>
