@@ -261,4 +261,20 @@ public class JBPMTaskWrapper implements Task {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * @since 5.6
+     */
+    @Override
+    public String getType() throws ClientException {
+        return null;
+    }
+
+    /**
+     * @since 5.6
+     */
+    @Override
+    public void setType(String type) throws ClientException {
+        // do nothing
+    }
+
 }
