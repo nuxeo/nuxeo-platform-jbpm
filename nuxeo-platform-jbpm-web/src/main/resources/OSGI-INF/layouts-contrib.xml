@@ -3,6 +3,7 @@
 
   <extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
     point="widgets">
+    <!-- FIXME: find a better name -->
     <widget name="actors" type="template">
       <fields>
         <field>actors</field>
@@ -20,6 +21,7 @@
         <property name="required">true</property>
       </properties>
     </widget>
+    <!-- FIXME: find a better name -->
     <widget name="right" type="template">
       <fields>
         <field>parameters.right</field>
@@ -48,6 +50,7 @@
         </property>
       </properties>
     </widget>
+    <!-- FIXME: find a better name -->
     <widget name="directive" type="template">
       <fields>
         <field>directive</field>
@@ -274,11 +277,13 @@
         <mode value="any">edit</mode>
       </widgetModes>
     </widget>
+    <!-- FIXME: find a better name -->
     <widget name="empty" type="text">
       <widgetModes>
         <mode value="any">view</mode>
       </widgetModes>
     </widget>
+    <!-- FIXME: find a better name -->
     <widget name="empty_hidden_withoutManageRight" type="text">
       <widgetModes>
         <mode value="any">#{jbpmActions.canManageParticipants ? 'view' : 'hidden'}</mode>

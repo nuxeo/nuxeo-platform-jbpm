@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<component name="org.nuxeo.ecm.platform.jbpm.web.layouts">
+
+  <extension target="org.nuxeo.ecm.platform.ui.web.ContentViewService"
+    point="contentViews">
+
+    <contentView name="user_processes">
+      <title>title.dashboard.userProcesses</title>
+      <translateTitle>true</translateTitle>
+      <emptySentence>label.dashboard.user.document.process.empty</emptySentence>
+      <translateEmptySentence>true</translateEmptySentence>
+      <pageProvider name="user_processes">
+        <property name="coreSession">#{documentManager}</property>
+        <property name="filterDocumentsFromTrash">true</property>
+      </pageProvider>
+      <showPageSizeSelector>false</showPageSizeSelector>
+      <showRefreshCommand>true</showRefreshCommand>
+      <useGlobalPageSize>false</useGlobalPageSize>
+      <refresh>
+        <event>workflowEvent</event>
+        <event>documentChildrenChanged</event>
+      </refresh>
+      <cacheKey>only_one_cache</cacheKey>
+      <cacheSize>1</cacheSize>
+      <resultLayouts>
+        <layout name="dashboard_process_listing" showCSVExport="false"
+          showPDFExport="false" showSyndicationLinks="false" />
+      </resultLayouts>
+    </contentView>
+
+  </extension>
+
+</component>
