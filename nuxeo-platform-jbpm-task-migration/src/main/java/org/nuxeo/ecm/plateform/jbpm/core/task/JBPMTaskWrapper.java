@@ -277,4 +277,19 @@ public class JBPMTaskWrapper implements Task {
         // do nothing
     }
 
+    /**
+     * @since 5.6
+     */
+    @Override
+    public String getProcessId() throws ClientException {
+        return null;
+    }
+
+    /**
+     * @since 5.6
+     */
+    @Override
+    public void setProcessId(String processId) throws ClientException {
+        // do nothing
+    }
 }
