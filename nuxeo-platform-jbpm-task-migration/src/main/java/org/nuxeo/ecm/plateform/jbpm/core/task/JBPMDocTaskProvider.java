@@ -166,6 +166,33 @@ public class JBPMDocTaskProvider implements TaskProvider {
         return migratedTasks;
     }
 
+    /**
+     * @since 5.6
+     */
+    @Override
+    public List<Task> getAllTaskInstances(String processId, CoreSession session)
+            throws ClientException {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * @since 5.6
+     */
+    @Override
+    public List<Task> getAllTaskInstances(String processId,
+            NuxeoPrincipal user, CoreSession session) throws ClientException {
+        return null;
+    }
+
+    /**
+     * @since 5.6
+     */
+    @Override
+    public List<Task> getAllTaskInstances(String processId,
+            List<String> actors, CoreSession session) throws ClientException {
+        return null;
+    }
+
     @Override
     public List<Task> getTaskInstances(final DocumentModel dm,
             final List<String> actors, final CoreSession coreSession)
