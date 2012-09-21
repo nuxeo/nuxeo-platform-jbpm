@@ -3,8 +3,7 @@
 
   <extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
     point="widgets">
-    <!-- FIXME: find a better name -->
-    <widget name="actors" type="template">
+    <widget name="jbpm_actors" type="template">
       <fields>
         <field>actors</field>
       </fields>
@@ -21,8 +20,7 @@
         <property name="required">true</property>
       </properties>
     </widget>
-    <!-- FIXME: find a better name -->
-    <widget name="right" type="template">
+    <widget name="jbpm_right" type="template">
       <fields>
         <field>parameters.right</field>
       </fields>
@@ -50,8 +48,7 @@
         </property>
       </properties>
     </widget>
-    <!-- FIXME: find a better name -->
-    <widget name="directive" type="template">
+        <widget name="jbpm_directive" type="template">
       <fields>
         <field>directive</field>
       </fields>
@@ -68,7 +65,7 @@
         <mode value="edit">#{jbpmActions.canManageParticipants ? 'edit' : 'view'}</mode>
       </widgetModes>
     </widget>
-    <widget name="directive_task" type="template">
+    <widget name="jbpm_directive_task" type="template">
       <fields>
         <field>variablesLocally.directive</field>
       </fields>
@@ -300,13 +297,13 @@
       </templates>
       <rows>
         <row>
-          <widget>actors</widget>
+          <widget>jbpm_actors</widget>
         </row>
         <row>
-          <widget>right</widget>
+          <widget>jbpm_right</widget>
         </row>
         <row>
-          <widget>directive</widget>
+          <widget>jbpm_directive</widget>
         </row>
         <row>
           <widget>jbpm_dueDate</widget>
@@ -345,7 +342,7 @@
           <widget>right_task</widget>
         </column>
         <column>
-          <widget>directive_task</widget>
+          <widget>jbpm_directive_task</widget>
         </column>
         <column>
           <widget>jbpm_comments</widget>
