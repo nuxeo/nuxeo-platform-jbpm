@@ -22,17 +22,7 @@ Copy the `nuxeo-platform-jbpm-*.jar` JARs into your Nuxeo instance in `nxserver/
 
 #### Configure the Datasource
 
-Nuxeo jBPM relies on a Datasource `nxjbpm` which is not defined in a default distribution.
-The easiest way to add it is to use the provided `jbpm` template. You need to copy the `templates/jbpm` folder into your Nuxeo instance:
-
-    $ cp -r templates/jbpm $NUXEO_HOME/templates/
-
-Edit the `bin/nuxeo.conf` file to deploy the `jbpm` template after the default configuration:
-
-    nuxeo.templates=default,jbpm
-
-Restart the Nuxeo instance.
-
+Nuxeo jBPM relies on a Datasource `nxjbpm` which is already defined in a default Nuxeo 5.6 distribution.
 
 ## About Nuxeo
 
