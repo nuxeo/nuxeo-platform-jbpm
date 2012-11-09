@@ -398,10 +398,10 @@
           <widget>actors_virtualTask</widget>
         </column>
         <column>
-          <widget>right</widget>
+          <widget>jbpm_right</widget>
         </column>
         <column>
-          <widget>directive</widget>
+          <widget>jbpm_directive</widget>
         </column>
         <column>
           <widget>jbpm_comment</widget>
