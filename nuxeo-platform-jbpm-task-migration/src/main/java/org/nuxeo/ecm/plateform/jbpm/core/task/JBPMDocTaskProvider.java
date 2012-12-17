@@ -174,6 +174,15 @@ public class JBPMDocTaskProvider implements TaskProvider {
             throws ClientException {
         throw new UnsupportedOperationException();
     }
+    
+    /**
+     * @since 5.7
+     */
+    @Override
+    public List<Task> getAllTaskInstances(String processId, String nodeId, CoreSession session)
+            throws ClientException {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * @since 5.6
