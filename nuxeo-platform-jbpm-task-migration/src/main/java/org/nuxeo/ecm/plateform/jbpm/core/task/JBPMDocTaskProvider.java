@@ -172,7 +172,7 @@ public class JBPMDocTaskProvider implements TaskProvider {
     @Override
     public List<Task> getAllTaskInstances(String processId, CoreSession session)
             throws ClientException {
-        throw new UnsupportedOperationException();
+        return null;
     }
     
     /**
