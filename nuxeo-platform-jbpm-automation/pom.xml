@@ -41,6 +41,10 @@
       <groupId>org.jbpm.jbpm3</groupId>
       <artifactId>jbpm-jpdl</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+    </dependency>
 
     <!-- tests -->
     <dependency>
