@@ -170,15 +170,15 @@ public class UserProcessPageProvider extends
 
     @Override
     protected void pageChanged() {
-        super.pageChanged();
         pageProcesses = null;
+        super.pageChanged();
     }
 
     @Override
     public void refresh() {
-        super.refresh();
         userProcesses = null;
         pageProcesses = null;
+        super.refresh();
     }
 
 }
