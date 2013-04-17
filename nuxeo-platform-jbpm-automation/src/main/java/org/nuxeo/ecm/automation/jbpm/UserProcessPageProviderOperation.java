@@ -88,7 +88,7 @@ public class UserProcessPageProviderOperation extends AbstractWorkflowOperation 
         }
         PageProvider<DocumentProcessItem> pageProvider = (PageProvider<DocumentProcessItem>) pps.getPageProvider(
                 USER_PROCESSES_PAGE_PROVIDER, null, targetPageSize, targetPage,
-                props);
+                props, null);
 
         Locale locale = language != null && !language.isEmpty() ? new Locale(
                 language) : Locale.ENGLISH;

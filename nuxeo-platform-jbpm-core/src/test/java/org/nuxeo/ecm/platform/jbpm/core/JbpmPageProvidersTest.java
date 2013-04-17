@@ -136,7 +136,7 @@ public class JbpmPageProvidersTest extends SQLRepositoryTestCase {
                 (Serializable) session);
         PageProvider<DashBoardItem> taskProvider = (PageProvider<DashBoardItem>) ppService.getPageProvider(
                 "current_user_tasks", null, null, null, properties,
-                (Object[]) null);
+                null, (Object[]) null);
         List<DashBoardItem> tasks = taskProvider.getCurrentPage();
         assertNotNull(tasks);
         assertEquals(2, tasks.size());
@@ -189,7 +189,7 @@ public class JbpmPageProvidersTest extends SQLRepositoryTestCase {
                 (Serializable) session);
         PageProvider<DocumentProcessItem> processProvider = (PageProvider<DocumentProcessItem>) ppService.getPageProvider(
                 "current_user_processes", null, null, null, properties,
-                (Object[]) null);
+                null, (Object[]) null);
         List<DocumentProcessItem> processes = processProvider.getCurrentPage();
         assertNotNull(processes);
         assertEquals(1, processes.size());
