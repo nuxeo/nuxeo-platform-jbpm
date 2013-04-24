@@ -16,6 +16,12 @@
  */
 package org.nuxeo.ecm.platform.jbpm.core;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -24,11 +30,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
-
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.NuxeoGroup;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
@@ -136,7 +140,7 @@ public class JbpmPageProvidersTest extends SQLRepositoryTestCase {
                 (Serializable) session);
         PageProvider<DashBoardItem> taskProvider = (PageProvider<DashBoardItem>) ppService.getPageProvider(
                 "current_user_tasks", null, null, null, properties,
-                null, (Object[]) null);
+                (Object[]) null);
         List<DashBoardItem> tasks = taskProvider.getCurrentPage();
         assertNotNull(tasks);
         assertEquals(2, tasks.size());
@@ -189,7 +193,7 @@ public class JbpmPageProvidersTest extends SQLRepositoryTestCase {
                 (Serializable) session);
         PageProvider<DocumentProcessItem> processProvider = (PageProvider<DocumentProcessItem>) ppService.getPageProvider(
                 "current_user_processes", null, null, null, properties,
-                null, (Object[]) null);
+                (Object[]) null);
         List<DocumentProcessItem> processes = processProvider.getCurrentPage();
         assertNotNull(processes);
         assertEquals(1, processes.size());

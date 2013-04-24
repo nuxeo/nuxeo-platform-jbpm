@@ -88,7 +88,7 @@ public class UserTaskPageProviderOperation extends AbstractWorkflowOperation {
         }
         PageProvider<DashBoardItem> pageProvider = (PageProvider<DashBoardItem>) pps.getPageProvider(
                 USER_TASKS_PAGE_PROVIDER, null, targetPageSize, targetPage,
-                props, null);
+                props);
 
         Locale locale = language != null && !language.isEmpty() ? new Locale(
                 language) : Locale.ENGLISH;
@@ -102,17 +102,18 @@ public class UserTaskPageProviderOperation extends AbstractWorkflowOperation {
             obj.put("taskName",
                     createdFromCreateTaskOperation ? dashBoardItem.getName()
                             : getI18nTaskName(dashBoardItem.getName(), locale));
-            obj.put("directive", getI18nLabel(dashBoardItem.getDirective(),
-                    locale));
+            obj.put("directive",
+                    getI18nLabel(dashBoardItem.getDirective(), locale));
             obj.put("comment", dashBoardItem.getComment());
             Date dueDate = dashBoardItem.getDueDate();
             obj.put("dueDate",
                     dueDate != null ? DateParser.formatW3CDateTime(dueDate)
                             : "");
             obj.put("documentTitle", dashBoardItem.getDocument().getTitle());
-            obj.put("documentLink", getDocumentLink(documentViewCodecManager,
-                    dashBoardItem.getDocument(),
-                    !createdFromCreateTaskOperation));
+            obj.put("documentLink",
+                    getDocumentLink(documentViewCodecManager,
+                            dashBoardItem.getDocument(),
+                            !createdFromCreateTaskOperation));
             Date startDate = dashBoardItem.getStartDate();
             obj.put("startDate",
                     startDate != null ? DateParser.formatW3CDateTime(startDate)

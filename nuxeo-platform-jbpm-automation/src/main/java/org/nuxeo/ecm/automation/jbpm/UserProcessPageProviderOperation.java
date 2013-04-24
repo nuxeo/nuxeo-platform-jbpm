@@ -88,7 +88,7 @@ public class UserProcessPageProviderOperation extends AbstractWorkflowOperation 
         }
         PageProvider<DocumentProcessItem> pageProvider = (PageProvider<DocumentProcessItem>) pps.getPageProvider(
                 USER_PROCESSES_PAGE_PROVIDER, null, targetPageSize, targetPage,
-                props, null);
+                props);
 
         Locale locale = language != null && !language.isEmpty() ? new Locale(
                 language) : Locale.ENGLISH;
@@ -96,11 +96,13 @@ public class UserProcessPageProviderOperation extends AbstractWorkflowOperation 
         JSONArray processes = new JSONArray();
         for (DocumentProcessItem process : pageProvider.getCurrentPage()) {
             JSONObject obj = new JSONObject();
-            obj.put("processInstanceName", getI18nProcessInstanceName(
-                    process.getProcessInstanceName(), locale));
+            obj.put("processInstanceName",
+                    getI18nProcessInstanceName(
+                            process.getProcessInstanceName(), locale));
             obj.put("documentTitle", process.getDocumentModel().getTitle());
-            obj.put("documentLink", getDocumentLink(documentViewCodecManager,
-                    process.getDocumentModel(), true));
+            obj.put("documentLink",
+                    getDocumentLink(documentViewCodecManager,
+                            process.getDocumentModel(), true));
             Date startDate = process.getProcessInstanceStartDate();
             obj.put("startDate",
                     startDate != null ? DateParser.formatW3CDateTime(startDate)
