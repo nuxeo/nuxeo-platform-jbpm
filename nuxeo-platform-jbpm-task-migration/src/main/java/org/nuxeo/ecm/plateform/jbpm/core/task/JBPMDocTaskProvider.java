@@ -18,6 +18,7 @@ package org.nuxeo.ecm.plateform.jbpm.core.task;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -174,7 +175,7 @@ public class JBPMDocTaskProvider implements TaskProvider {
             throws ClientException {
         return null;
     }
-    
+
     /**
      * @since 5.7
      */
@@ -227,6 +228,13 @@ public class JBPMDocTaskProvider implements TaskProvider {
                     }
                 });
         return migratedTasks;
+    }
+
+    @Override
+    public List<Task> getTaskInstances(DocumentModel documentModel,
+            List<String> strings, boolean b, CoreSession session)
+            throws ClientException {
+        return Collections.emptyList();
     }
 
     public String endTask(CoreSession coreSession, NuxeoPrincipal principal,
