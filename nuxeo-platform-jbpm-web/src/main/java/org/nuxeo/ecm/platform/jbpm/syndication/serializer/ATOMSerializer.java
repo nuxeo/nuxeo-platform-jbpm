@@ -27,7 +27,6 @@ import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.platform.jbpm.syndication.workflow.DashBoardItem;
 import org.nuxeo.ecm.platform.jbpm.syndication.workflow.TaskModule;
 import org.nuxeo.ecm.platform.jbpm.syndication.workflow.TaskModuleImpl;
-import org.nuxeo.ecm.platform.syndication.serializer.ResultSummary;
 import org.nuxeo.ecm.platform.ui.web.tag.fn.DocumentModelFunctions;
 import org.restlet.data.CharacterSet;
 import org.restlet.data.MediaType;
@@ -42,7 +41,6 @@ import com.sun.syndication.io.SyndFeedOutput;
 
 /**
  * @author bchaffangeon
- *
  */
 public class ATOMSerializer implements DashBoardItemSerializer {
 
