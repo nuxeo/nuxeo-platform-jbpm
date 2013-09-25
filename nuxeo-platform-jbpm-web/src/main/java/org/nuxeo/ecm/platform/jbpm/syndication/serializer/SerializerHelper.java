@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.platform.jbpm.syndication.workflow.DashBoardItem;
-import org.nuxeo.ecm.platform.syndication.serializer.ResultSummary;
 import org.restlet.data.Response;
 
 public class SerializerHelper {

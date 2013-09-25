@@ -35,8 +35,6 @@ import net.sf.json.JSONSerializer;
 
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.platform.jbpm.syndication.workflow.DashBoardItem;
-import org.nuxeo.ecm.platform.syndication.serializer.ResultSummary;
-import org.nuxeo.ecm.platform.syndication.translate.TranslationHelper;
 import org.restlet.data.MediaType;
 import org.restlet.data.Response;
 
