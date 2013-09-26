@@ -17,7 +17,6 @@
 package org.nuxeo.ecm.plateform.jbpm.core.task;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -262,13 +261,20 @@ public class JBPMTaskWrapper implements Task {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * @since 5.8
+     */
     @Override
     public List<String> getDelegatedActors() throws ClientException {
-        return Collections.emptyList();
+        throw new UnsupportedOperationException();
     }
 
+    /**
+     * @since 5.8
+     */
     @Override
     public void setDelegatedActors(List<String> strings) {
+        throw new UnsupportedOperationException();
     }
 
     /**
