@@ -1,0 +1,1 @@
+This module is deprecated as of Nuxeo 5.8, as a nuxeo-platform-document-routing is used as the default workflow engine.
