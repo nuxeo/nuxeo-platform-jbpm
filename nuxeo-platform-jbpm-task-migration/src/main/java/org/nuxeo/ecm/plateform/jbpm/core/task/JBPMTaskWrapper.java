@@ -308,4 +308,21 @@ public class JBPMTaskWrapper implements Task {
     public void setProcessId(String processId) throws ClientException {
         // do nothing
     }
+
+    /**
+     * @since 5.8
+     */
+    @Override
+    public List<String> getTargetDocumentsIds() throws ClientException {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * @since 5.8
+     */
+    @Override
+    public void setTargetDocumentsIds(List<String> docs) throws ClientException {
+        throw new UnsupportedOperationException();
+
+    }
 }

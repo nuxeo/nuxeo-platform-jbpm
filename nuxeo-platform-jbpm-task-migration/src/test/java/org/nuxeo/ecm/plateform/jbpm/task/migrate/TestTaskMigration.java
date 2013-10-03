@@ -1,5 +1,9 @@
 package org.nuxeo.ecm.plateform.jbpm.task.migrate;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -8,12 +12,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.After;
-import org.junit.Test;
-import static org.junit.Assert.*;
-
 import org.jbpm.taskmgmt.exe.TaskInstance;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.nuxeo.ecm.core.api.CoreInstance;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
@@ -53,7 +55,8 @@ public class TestTaskMigration extends SQLRepositoryTestCase {
         deployBundle("org.nuxeo.ecm.platform.task.api");
         deployBundle("org.nuxeo.ecm.platform.task.core");
 
-        deployContrib("org.nuxeo.ecm.platform.jbpm.task.migration", "OSGI-INF/task-provider-contrib.xml");
+        deployContrib("org.nuxeo.ecm.platform.jbpm.task.migration",
+                "OSGI-INF/task-provider-contrib.xml");
 
         deployBundle(JbpmUTConstants.TESTING_BUNDLE_NAME);
 
@@ -75,7 +78,6 @@ public class TestTaskMigration extends SQLRepositoryTestCase {
 
     }
 
-
     protected void createJBPMTask(String taskName) throws Exception {
         Date dueDate = sdf.parse("12/25/2012");
 
@@ -83,7 +85,9 @@ public class TestTaskMigration extends SQLRepositoryTestCase {
         taskVariables.put("v1", "value1");
         taskVariables.put("v2", "value2");
 
-        jbpmTaskService.createTask(session, principal, doc, taskName, prefixedActorIds, true, "directive", "comment", dueDate, taskVariables);
+        jbpmTaskService.createTask(session, principal, doc, taskName,
+                prefixedActorIds, true, "directive", "comment", dueDate,
+                taskVariables);
 
     }
 
@@ -94,12 +98,13 @@ public class TestTaskMigration extends SQLRepositoryTestCase {
         assertNotNull(taskService);
 
         // create JBPM Tasks
-        for (int i = 0; i < NB_TASKS ; i++) {
+        for (int i = 0; i < NB_TASKS; i++) {
             createJBPMTask("TestTask-" + i);
         }
 
         // verify that the tasks are created
-        List<TaskInstance> tis = jbpmService.getCurrentTaskInstances(prefixedActorIds, null);
+        List<TaskInstance> tis = jbpmService.getCurrentTaskInstances(
+                prefixedActorIds, null);
         assertEquals(NB_TASKS, tis.size());
 
         DocumentModelList taskDocs = session.query("select * from TaskDoc");
@@ -107,10 +112,11 @@ public class TestTaskMigration extends SQLRepositoryTestCase {
 
         // call the wrapper service to triger migration
         long t0 = System.currentTimeMillis();
-        List<Task> tasks = taskService.getCurrentTaskInstances( prefixedActorIds, session);
+        List<Task> tasks = taskService.getCurrentTaskInstances(
+                prefixedActorIds, session);
         assertEquals(NB_TASKS, tasks.size());
         long t1 = System.currentTimeMillis();
-        long deltaS= (t1-t0)/1000;
+        long deltaS = (t1 - t0) / 1000;
 
         System.out.println("Migrated " + NB_TASKS + " tasks in " + deltaS + "s");
         System.out.println((NB_TASKS / deltaS) + " tasks/s");
@@ -126,10 +132,10 @@ public class TestTaskMigration extends SQLRepositoryTestCase {
         // check tasks attributes
         Task task = tasks.get(0);
         assertTrue(task.getName().startsWith("TestTask-"));
-        assertEquals("directive",task.getDirective());
-        assertEquals("comment",task.getComments().get(0).getText());
-        assertEquals("toto",task.getInitiator());
-        assertEquals("user:tit'i",task.getActors().get(0));
+        assertEquals("directive", task.getDirective());
+        assertEquals("comment", task.getComments().get(0).getText());
+        assertEquals("toto", task.getInitiator());
+        assertEquals("user:tit'i", task.getActors().get(0));
         assertTrue(task.getVariables().keySet().contains("v1"));
         assertTrue(task.getVariables().keySet().contains("v2"));
         assertEquals(doc.getId(), task.getTargetDocumentId());
@@ -138,7 +144,7 @@ public class TestTaskMigration extends SQLRepositoryTestCase {
 
     @After
     public void tearDown() throws Exception {
-        if (session!=null) {
+        if (session != null) {
             CoreInstance.getInstance().close(session);
         }
         super.tearDown();
