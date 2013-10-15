@@ -179,8 +179,8 @@ public class JBPMDocTaskProvider implements TaskProvider {
      * @since 5.7
      */
     @Override
-    public List<Task> getAllTaskInstances(String processId, String nodeId, CoreSession session)
-            throws ClientException {
+    public List<Task> getAllTaskInstances(String processId, String nodeId,
+            CoreSession session) throws ClientException {
         throw new UnsupportedOperationException();
     }
 
@@ -231,12 +231,15 @@ public class JBPMDocTaskProvider implements TaskProvider {
 
     /**
      * @since 5.8
+     *
+     *  Delegation is not supported on JBPM tasks , so the parameter
+     *  'includeDelegatedTasks' is ignored
      */
     @Override
     public List<Task> getTaskInstances(DocumentModel documentModel,
-            List<String> strings, boolean includeDelegatedTasks,
+            List<String> actors, boolean includeDelegatedTasks,
             CoreSession session) throws ClientException {
-        throw new UnsupportedOperationException();
+        return getTaskInstances(documentModel, actors, session);
     }
 
     public String endTask(CoreSession coreSession, NuxeoPrincipal principal,
