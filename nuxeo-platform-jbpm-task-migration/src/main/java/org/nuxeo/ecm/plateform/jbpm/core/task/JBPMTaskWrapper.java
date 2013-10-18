@@ -262,11 +262,14 @@ public class JBPMTaskWrapper implements Task {
     }
 
     /**
+     * Delegation is not supported on JBPM tasks. The list of delegated actors
+     * is always empty.
+     *
      * @since 5.8
      */
     @Override
     public List<String> getDelegatedActors() throws ClientException {
-        throw new UnsupportedOperationException();
+        return new ArrayList<String>();
     }
 
     /**
