@@ -5,7 +5,8 @@
     point="actions">
 
     <action id="TAB_CONTENT_JBPM" link="/incl/tabs/document_process.xhtml"
-      enabled="true" label="action.view.review" icon="/icons/file.gif" order="60">
+      enabled="true" label="action.view.review" icon="/icons/file.gif" order="60"
+      type="rest_document_link">
       <category>VIEW_ACTION_LIST</category>
       <filter-id>jbpm-process</filter-id>
       <filter-id>mutable_document</filter-id>
