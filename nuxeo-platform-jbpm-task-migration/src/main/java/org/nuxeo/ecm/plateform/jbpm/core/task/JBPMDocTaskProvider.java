@@ -33,6 +33,7 @@ import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
+import org.nuxeo.ecm.core.api.SortInfo;
 import org.nuxeo.ecm.platform.jbpm.JbpmEventNames;
 import org.nuxeo.ecm.platform.jbpm.JbpmOperation;
 import org.nuxeo.ecm.platform.jbpm.JbpmService;
@@ -110,6 +111,17 @@ public class JBPMDocTaskProvider implements TaskProvider {
         return migratedTasks;
     }
 
+    /**
+     * Sort infos is not handled in jbpm (used only by nuxeo task provider)
+     *
+     * @since 5.9.3
+     */
+    @Override
+    public List<Task> getCurrentTaskInstances(CoreSession coreSession,
+            List<SortInfo> sortInfos) throws ClientException {
+        return getCurrentTaskInstances(coreSession);
+    }
+
     @Override
     public List<Task> getCurrentTaskInstances(final List<String> actors,
             final CoreSession coreSession) throws ClientException {
@@ -136,6 +148,18 @@ public class JBPMDocTaskProvider implements TaskProvider {
                     }
                 });
         return migratedTasks;
+    }
+
+    /**
+     * Sort infos is not handled in jbpm (used only by nuxeo task provider)
+     *
+     * @since 5.9.3
+     */
+    @Override
+    public List<Task> getCurrentTaskInstances(List<String> actors,
+            CoreSession coreSession, List<SortInfo> sortInfos) throws
+            ClientException {
+        return getCurrentTaskInstances(actors, coreSession);
     }
 
     @Override
