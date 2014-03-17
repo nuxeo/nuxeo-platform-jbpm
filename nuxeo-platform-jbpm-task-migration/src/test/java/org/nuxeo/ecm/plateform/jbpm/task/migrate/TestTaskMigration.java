@@ -16,7 +16,6 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.nuxeo.ecm.core.api.CoreInstance;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
@@ -76,6 +75,12 @@ public class TestTaskMigration extends SQLRepositoryTestCase {
 
         prefixedActorIds.add("user:tit'i");
 
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        closeSession();
+        super.tearDown();
     }
 
     protected void createJBPMTask(String taskName) throws Exception {
@@ -140,14 +145,6 @@ public class TestTaskMigration extends SQLRepositoryTestCase {
         assertTrue(task.getVariables().keySet().contains("v2"));
         assertEquals(doc.getId(), task.getTargetDocumentId());
 
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        if (session != null) {
-            CoreInstance.getInstance().close(session);
-        }
-        super.tearDown();
     }
 
 }
