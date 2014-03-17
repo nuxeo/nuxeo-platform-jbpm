@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.jbpm.graph.exe.ExecutionContext;
-import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreInstance;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentRef;
@@ -35,7 +34,6 @@ import org.nuxeo.ecm.core.api.security.ACL;
 import org.nuxeo.ecm.core.api.security.ACP;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.platform.jbpm.AbstractJbpmHandlerHelper;
-import org.nuxeo.ecm.platform.jbpm.NuxeoJbpmException;
 import org.nuxeo.ecm.platform.jbpm.VirtualTaskInstance;
 
 /**
@@ -52,17 +50,6 @@ public class AddRightsActionHandler extends AbstractJbpmHandlerHelper {
 
     private String list;
 
-    // XXX open a system session to set rights: running a workflow only requires
-    // "write"
-    protected CoreSession getSystemSession() throws Exception {
-        String repositoryName = getDocumentRepositoryName();
-        try {
-            return CoreInstance.getInstance().open(repositoryName, null);
-        } catch (ClientException e) {
-            throw new NuxeoJbpmException(e);
-        }
-    }
-
     @Override
     @SuppressWarnings("unchecked")
     public void execute(ExecutionContext executionContext) throws Exception {
@@ -73,9 +60,7 @@ public class AddRightsActionHandler extends AbstractJbpmHandlerHelper {
             if (participants == null) {
                 participants = (List<VirtualTaskInstance>) executionContext.getVariable(list);
             }
-            CoreSession session = null;
-            try {
-                session = getSystemSession();
+            try (CoreSession session = CoreInstance.openCoreSessionSystem(getDocumentRepositoryName())) {
                 DocumentRef docRef = getDocumentRef();
                 ACP acp = session.getACP(docRef);
                 String aclName = getACLName();
@@ -112,10 +97,6 @@ public class AddRightsActionHandler extends AbstractJbpmHandlerHelper {
                 AddRightUnrestricted runner = new AddRightUnrestricted(session,
                         docRef, acp);
                 runner.runUnrestricted();
-            } finally {
-                if (session != null) {
-                    closeCoreSession(session);
-                }
             }
         }
         executionContext.getToken().signal();

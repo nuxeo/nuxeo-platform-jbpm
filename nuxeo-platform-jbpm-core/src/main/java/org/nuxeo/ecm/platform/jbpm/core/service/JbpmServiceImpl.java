@@ -347,17 +347,13 @@ public class JbpmServiceImpl implements JbpmService {
 
     protected DocumentModel getDocumentModel(NuxeoPrincipal user, String docId,
             String repoId) throws NuxeoJbpmException {
-        CoreSession session = getCoreSession(repoId, user);
-        DocumentModel result;
-        try {
-            result = session.getDocument(new IdRef(docId));
+        try (CoreSession session = CoreInstance.openCoreSession(repoId, user)) {
+            DocumentModel result = session.getDocument(new IdRef(docId));
             result.detach(true);
+            return result;
         } catch (ClientException e) {
             throw new NuxeoJbpmException(e);
-        } finally {
-            closeCoreSession(session);
         }
-        return result;
     }
 
     @Override
@@ -537,21 +533,6 @@ public class JbpmServiceImpl implements JbpmService {
             }
         }
         return result;
-    }
-
-    protected CoreSession getCoreSession(String repositoryName,
-            NuxeoPrincipal principal) throws NuxeoJbpmException {
-        Map<String, Serializable> context = new HashMap<String, Serializable>();
-        context.put("principal", principal);
-        try {
-            return CoreInstance.getInstance().open(repositoryName, context);
-        } catch (ClientException e) {
-            throw new NuxeoJbpmException(e);
-        }
-    }
-
-    protected void closeCoreSession(CoreSession session) {
-        CoreInstance.getInstance().close(session);
     }
 
     @Override

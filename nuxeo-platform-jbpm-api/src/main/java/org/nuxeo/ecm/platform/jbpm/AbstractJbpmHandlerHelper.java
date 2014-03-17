@@ -16,10 +16,7 @@
  */
 package org.nuxeo.ecm.platform.jbpm;
 
-import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.graph.def.ActionHandler;
@@ -30,7 +27,6 @@ import org.jbpm.taskmgmt.def.AssignmentHandler;
 import org.jbpm.taskmgmt.def.TaskControllerHandler;
 import org.jbpm.taskmgmt.exe.Assignable;
 import org.jbpm.taskmgmt.exe.TaskInstance;
-import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreInstance;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentRef;
@@ -116,25 +112,9 @@ public abstract class AbstractJbpmHandlerHelper implements ActionHandler,
                 VariableName.participants.name());
     }
 
-    protected CoreSession getCoreSession(NuxeoPrincipal principal)
-            throws Exception {
-        String repositoryName = getDocumentRepositoryName();
-        Map<String, Serializable> context = new HashMap<String, Serializable>();
-        context.put("principal", principal);
-        try {
-            return CoreInstance.getInstance().open(repositoryName, context);
-        } catch (ClientException e) {
-            throw new NuxeoJbpmException(e);
-        }
-    }
-
     protected String getSwimlaneUser(String swimlaneName) {
         return executionContext.getTaskMgmtInstance().getSwimlaneInstance(
                 swimlaneName).getActorId();
-    }
-
-    protected void closeCoreSession(CoreSession session) {
-        CoreInstance.getInstance().close(session);
     }
 
     /** @deprecated since 5.4 */
@@ -147,8 +127,8 @@ public abstract class AbstractJbpmHandlerHelper implements ActionHandler,
     protected void followTransition(NuxeoPrincipal principal,
             DocumentRef docRef, String transition, VersioningOption option)
             throws Exception {
-        CoreSession coreSession = getCoreSession(principal);
-        try {
+        try (CoreSession coreSession = CoreInstance.openCoreSession(
+                getDocumentRepositoryName(), principal)) {
             coreSession.followTransition(docRef, transition);
             if (option != null) {
                 if (coreSession.isCheckedOut(docRef)) {
@@ -156,8 +136,6 @@ public abstract class AbstractJbpmHandlerHelper implements ActionHandler,
                 }
             }
             coreSession.save();
-        } finally {
-            closeCoreSession(coreSession);
         }
     }
 

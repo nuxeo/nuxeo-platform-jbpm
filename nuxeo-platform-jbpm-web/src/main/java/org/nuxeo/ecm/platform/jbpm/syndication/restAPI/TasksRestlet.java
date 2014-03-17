@@ -26,8 +26,6 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.dom4j.dom.DOMDocument;
-import org.dom4j.dom.DOMDocumentFactory;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.graph.exe.Token;
 import org.jbpm.taskmgmt.exe.PooledActor;
@@ -35,7 +33,6 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
-import org.nuxeo.ecm.core.api.repository.Repository;
 import org.nuxeo.ecm.core.api.repository.RepositoryManager;
 import org.nuxeo.ecm.platform.jbpm.JbpmListFilter;
 import org.nuxeo.ecm.platform.jbpm.JbpmService;
@@ -233,41 +230,11 @@ public class TasksRestlet extends BaseStatelessNuxeoRestlet {
 
     @Override
     protected boolean initRepository(Response res, String repoId) {
-
-        DOMDocumentFactory domfactory = new DOMDocumentFactory();
-        DOMDocument result = (DOMDocument) domfactory.createDocument();
-
-        RepositoryManager rm;
-        try {
-            rm = Framework.getService(RepositoryManager.class);
-        } catch (Exception e1) {
-            handleError(result, res, e1);
-            return false;
-        }
-
-        Repository repo = null;
         if (repoId == null) {
-            repo = rm.getDefaultRepository();
-        } else {
-            repo = rm.getRepository(repoId);
+            RepositoryManager rm = Framework.getLocalService(RepositoryManager.class);
+            repoId = rm.getDefaultRepository().getName();
         }
-
-        if (repo == null) {
-            handleError(res, "Unable to get " + repoId + " repository");
-            return false;
-        }
-
-        try {
-            session = repo.open();
-        } catch (Exception e1) {
-            handleError(result, res, e1);
-            return false;
-        }
-        if (session == null) {
-            handleError(result, res, "Unable to open " + repoId + " repository");
-            return false;
-        }
-        return true;
+        return super.initRepository(res, repoId);
     }
 
 }

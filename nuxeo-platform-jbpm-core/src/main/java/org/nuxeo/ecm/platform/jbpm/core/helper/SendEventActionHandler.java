@@ -7,6 +7,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.CoreInstance;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
@@ -49,16 +50,13 @@ public class SendEventActionHandler extends AbstractJbpmHandlerHelper {
             if (documentModel == null) {
                 return;
             }
-
-            CoreSession coreSession = getCoreSession(principal);
-            try {
+            try (CoreSession coreSession = CoreInstance.openCoreSession(
+                    getDocumentRepositoryName(), principal)) {
                 EventProducer eventProducer = getEventProducerService();
                 DocumentEventContext ctx = new DocumentEventContext(
                         coreSession, principal, documentModel);
                 ctx.setProperty("recipients", getRecipients());
                 eventProducer.fireEvent(ctx.newEvent(eventName));
-            } finally {
-                closeCoreSession(coreSession);
             }
         }
     }

@@ -22,6 +22,7 @@ import java.util.List;
 import org.jbpm.graph.exe.Comment;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.CoreInstance;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
@@ -54,9 +55,8 @@ public class TaskNotificationHandler extends AbstractJbpmHandlerHelper {
             if (documentModel == null) {
                 return;
             }
-
-            CoreSession coreSession = getCoreSession(principal);
-            try {
+            try (CoreSession coreSession = CoreInstance.openCoreSession(
+                    getDocumentRepositoryName(), principal)) {
                 EventProducer eventProducer;
                 try {
                     eventProducer = Framework.getService(EventProducer.class);
@@ -76,8 +76,6 @@ public class TaskNotificationHandler extends AbstractJbpmHandlerHelper {
                         (Serializable) executionContext.getTaskInstance().getVariable(
                                 "directive"));
                 eventProducer.fireEvent(ctx.newEvent(JbpmEventNames.WORKFLOW_TASK_ASSIGNED));
-            } finally {
-                closeCoreSession(coreSession);
             }
         }
     }

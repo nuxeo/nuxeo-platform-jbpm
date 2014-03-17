@@ -20,12 +20,10 @@
 package org.nuxeo.ecm.platform.jbpm.core.helper;
 
 import org.jbpm.graph.exe.ExecutionContext;
-import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreInstance;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentRef;
 import org.nuxeo.ecm.platform.jbpm.AbstractJbpmHandlerHelper;
-import org.nuxeo.ecm.platform.jbpm.NuxeoJbpmException;
 
 /**
  * Action handler that removes rights
@@ -37,32 +35,15 @@ public class RemoveRightsActionHandler extends AbstractJbpmHandlerHelper {
 
     private static final long serialVersionUID = 1L;
 
-    // XXX open a system session to set rights: running a workflow only requires
-    // "write"
-    protected CoreSession getSystemSession() throws Exception {
-        String repositoryName = getDocumentRepositoryName();
-        try {
-            return CoreInstance.getInstance().open(repositoryName, null);
-        } catch (ClientException e) {
-            throw new NuxeoJbpmException(e);
-        }
-    }
-
     @Override
     public void execute(ExecutionContext executionContext) throws Exception {
         this.executionContext = executionContext;
         if (nuxeoHasStarted()) {
-            CoreSession session = null;
-            try {
-                session = getSystemSession();
+            try (CoreSession session = CoreInstance.openCoreSessionSystem(getDocumentRepositoryName())) {
                 DocumentRef docRef = getDocumentRef();
                 RemoveRightsUnrestricted runner = new RemoveRightsUnrestricted(
                         session, docRef, getACLName());
                 runner.runUnrestricted();
-            } finally {
-                if (session != null) {
-                    closeCoreSession(session);
-                }
             }
         }
     }
