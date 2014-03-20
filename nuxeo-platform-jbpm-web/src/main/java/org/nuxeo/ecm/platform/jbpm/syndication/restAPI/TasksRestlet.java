@@ -232,7 +232,7 @@ public class TasksRestlet extends BaseStatelessNuxeoRestlet {
     protected boolean initRepository(Response res, String repoId) {
         if (repoId == null) {
             RepositoryManager rm = Framework.getLocalService(RepositoryManager.class);
-            repoId = rm.getDefaultRepository().getName();
+            repoId = rm.getDefaultRepositoryName();
         }
         return super.initRepository(res, repoId);
     }
