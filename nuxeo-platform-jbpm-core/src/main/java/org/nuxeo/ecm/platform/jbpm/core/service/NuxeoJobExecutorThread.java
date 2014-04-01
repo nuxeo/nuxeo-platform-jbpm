@@ -60,7 +60,6 @@ public class NuxeoJobExecutorThread extends JobExecutorThread {
     @Override
     protected void executeJob(Job job) {
         TransactionHelper.startTransaction();
-        getEventService().transactionStarted();
         try {
             JbpmContext jbpmContext = jbpmConfiguration.createJbpmContext();
             DbPersistenceServiceFactory factory = ((DbPersistenceServiceFactory) jbpmContext.getServiceFactory(Services.SERVICENAME_PERSISTENCE));
@@ -102,7 +101,6 @@ public class NuxeoJobExecutorThread extends JobExecutorThread {
                 try {
                     if (jbpmTransaction) {
                         jbpmContext.close();
-                        getEventService().transactionCommitted();
                     }
                 } catch (JbpmPersistenceException e) {
                     // if this is a stale state exception, keep it quiet
