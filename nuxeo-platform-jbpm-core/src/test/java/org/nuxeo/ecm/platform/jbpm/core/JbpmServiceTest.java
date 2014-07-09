@@ -16,6 +16,11 @@
  */
 package org.nuxeo.ecm.platform.jbpm.core;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,21 +28,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.After;
-import org.junit.Test;
-import static org.junit.Assert.*;
-
 import org.jbpm.JbpmContext;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
-import org.nuxeo.ecm.core.api.CoreSession;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.NuxeoGroup;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
-import org.nuxeo.ecm.core.repository.jcr.testing.RepositoryOSGITestCase;
+import org.nuxeo.ecm.core.storage.sql.SQLRepositoryTestCase;
 import org.nuxeo.ecm.platform.jbpm.JbpmOperation;
 import org.nuxeo.ecm.platform.jbpm.JbpmService;
 import org.nuxeo.ecm.platform.jbpm.NuxeoJbpmException;
@@ -51,7 +53,7 @@ import org.nuxeo.runtime.api.Framework;
 /**
  * @author arussel
  */
-public class JbpmServiceTest extends RepositoryOSGITestCase {
+public class JbpmServiceTest extends SQLRepositoryTestCase {
 
     private JbpmService service;
 
@@ -61,6 +63,7 @@ public class JbpmServiceTest extends RepositoryOSGITestCase {
 
     private NuxeoPrincipal user1;
 
+    @Override
     @Before
     public void setUp() throws Exception {
         // clean up previous test.
@@ -90,6 +93,7 @@ public class JbpmServiceTest extends RepositoryOSGITestCase {
         openSession();
     }
 
+    @Override
     @After
     public void tearDown() throws Exception {
         closeSession();
@@ -258,7 +262,6 @@ public class JbpmServiceTest extends RepositoryOSGITestCase {
     }
 
     protected DocumentModel getDocument() throws Exception {
-        CoreSession session = getCoreSession();
         DocumentModel model = session.createDocumentModel(
                 session.getRootDocument().getPathAsString(), "1", "File");
         DocumentModel doc = session.createDocument(model);
