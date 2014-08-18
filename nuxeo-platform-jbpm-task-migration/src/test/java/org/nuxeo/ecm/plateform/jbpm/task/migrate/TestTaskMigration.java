@@ -51,6 +51,7 @@ public class TestTaskMigration extends SQLRepositoryTestCase {
         deployBundle("org.nuxeo.ecm.platform.jbpm.api");
         deployBundle("org.nuxeo.ecm.platform.jbpm.core");
 
+        deployBundle("org.nuxeo.ecm.platform.query.api");
         deployBundle("org.nuxeo.ecm.platform.task.api");
         deployBundle("org.nuxeo.ecm.platform.task.core");
 
