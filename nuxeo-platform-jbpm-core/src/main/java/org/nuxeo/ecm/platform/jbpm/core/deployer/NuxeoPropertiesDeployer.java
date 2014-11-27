@@ -33,7 +33,7 @@ public class NuxeoPropertiesDeployer extends AbstractProcessDefinitionDeployer
     public static final String DEPLOY_PROCESS_DEFINITION = "org.nuxeo.ecm.platform.jbpm.deployProcessDefinition";
 
     @Override
-    public boolean isDeployable(URL url) throws Exception {
+    public boolean isDeployable(URL url) {
         return Boolean.parseBoolean(Framework.getProperty(
                 DEPLOY_PROCESS_DEFINITION, "true"));
     }

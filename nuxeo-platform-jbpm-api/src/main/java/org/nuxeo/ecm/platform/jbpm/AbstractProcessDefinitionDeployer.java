@@ -35,7 +35,7 @@ import org.nuxeo.runtime.api.Framework;
 public abstract class AbstractProcessDefinitionDeployer implements
         ProcessDefinitionDeployer {
 
-    public void deploy(final URL url) throws Exception {
+    public void deploy(final URL url) {
         JbpmService service = Framework.getService(JbpmService.class);
         service.executeJbpmOperation(new JbpmOperation() {
             private static final long serialVersionUID = 1L;
@@ -62,7 +62,7 @@ public abstract class AbstractProcessDefinitionDeployer implements
         });
     }
 
-    public boolean isDeployable(URL url) throws Exception {
+    public boolean isDeployable(URL url) {
         return false;
     }
 }

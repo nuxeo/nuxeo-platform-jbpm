@@ -26,7 +26,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import org.nuxeo.ecm.platform.jbpm.AbstractProcessDefinitionDeployer;
@@ -53,15 +52,20 @@ public class IfChangedDeployer extends AbstractProcessDefinitionDeployer impleme
     }
 
     @Override
-    public boolean isDeployable(URL url) throws NoSuchAlgorithmException,
-            SAXException, IOException, TransformerException, ParserConfigurationException {
-        String hash = getHasher().getMD5FromURL(url);
+    public boolean isDeployable(URL url) {
+        String hash;
+        try {
+            hash = getHasher().getMD5FromURL(url);
+        } catch (NoSuchAlgorithmException | SAXException | IOException
+                | TransformerException e) {
+            throw new RuntimeException(e);
+        }
         hashes.put(url, hash);
         return getPersistence().exists(hash);
     }
 
     @Override
-    public void deploy(URL url) throws Exception {
+    public void deploy(URL url) {
         super.deploy(url);
         getPersistence().persist(hashes.get(url));
     }

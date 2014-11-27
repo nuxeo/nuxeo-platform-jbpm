@@ -32,6 +32,7 @@ import org.jbpm.JbpmConfiguration;
 import org.jbpm.job.executor.JobExecutor;
 import org.jbpm.persistence.db.DbPersistenceServiceFactory;
 import org.jbpm.svc.Services;
+import org.nuxeo.ecm.platform.jbpm.JbpmSecurityPolicy;
 import org.nuxeo.ecm.platform.jbpm.JbpmService;
 import org.nuxeo.ecm.platform.jbpm.JbpmTaskService;
 import org.nuxeo.ecm.platform.jbpm.ProcessDefinitionDeployer;
@@ -85,13 +86,18 @@ public class JbpmComponent extends DefaultComponent {
 
     @Override
     public void registerContribution(Object contribution,
-            String extensionPoint, ComponentInstance contributor)
-            throws Exception {
+            String extensionPoint, ComponentInstance contributor) {
         ExtensionPoint ep = Enum.valueOf(ExtensionPoint.class, extensionPoint);
         switch (ep) {
         case deployer:
             DeployerDescriptor desc = (DeployerDescriptor) contribution;
-            deployerDesc.put(desc.getName(), desc.getKlass().newInstance());
+            ProcessDefinitionDeployer deployer;
+            try {
+                deployer = desc.getKlass().newInstance();
+            } catch (ReflectiveOperationException e) {
+                throw new RuntimeException(e);
+            }
+            deployerDesc.put(desc.getName(), deployer);
             break;
         case processDefinition:
             pdDesc.put((ProcessDefinitionDescriptor) contribution, contributor);
@@ -114,8 +120,14 @@ public class JbpmComponent extends DefaultComponent {
             break;
         case securityPolicy:
             SecurityPolicyDescriptor pmd = (SecurityPolicyDescriptor) contribution;
+            JbpmSecurityPolicy securityPolicy;
+            try {
+                securityPolicy = pmd.getKlass().newInstance();
+            } catch (ReflectiveOperationException e) {
+                throw new RuntimeException(e);
+            }
             service.addSecurityPolicy(pmd.getProcessDefinition(),
-                    pmd.getKlass().newInstance());
+                    securityPolicy);
             break;
         case typeFilter:
             TypeFilterDescriptor tfd = (TypeFilterDescriptor) contribution;
@@ -125,7 +137,7 @@ public class JbpmComponent extends DefaultComponent {
     }
 
     @Override
-    public void applicationStarted(ComponentContext context) throws Exception {
+    public void applicationStarted(ComponentContext context) {
         ClassLoader jbossCL = Thread.currentThread().getContextClassLoader();
         ClassLoader nuxeoCL = Framework.class.getClassLoader();
         try {
@@ -138,7 +150,7 @@ public class JbpmComponent extends DefaultComponent {
     }
 
     @Override
-    public void activate(ComponentContext context) throws Exception {
+    public void activate(ComponentContext context) {
         for (Map.Entry<ProcessDefinitionDescriptor, ComponentInstance> entry : pdDesc.entrySet()) {
             ProcessDefinitionDescriptor pdDescriptor = entry.getKey();
             ProcessDefinitionDeployer deployer = deployerDesc.get(pdDescriptor.getDeployer());
@@ -157,7 +169,7 @@ public class JbpmComponent extends DefaultComponent {
     }
 
     @Override
-    public void deactivate(ComponentContext context) throws Exception {
+    public void deactivate(ComponentContext context) {
         JobExecutor jobExecutor = getConfiguration().getJobExecutor();
         if (jobExecutor != null && jobExecutor.isStarted()) {
             jobExecutor.stop();

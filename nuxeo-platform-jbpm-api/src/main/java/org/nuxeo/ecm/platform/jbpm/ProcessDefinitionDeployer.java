@@ -33,12 +33,12 @@ public interface ProcessDefinitionDeployer {
      *
      * @param url the url of the process definition.
      */
-    void deploy(URL url) throws Exception;
+    void deploy(URL url);
 
     /**
      * Is this process definition deployable?
      *
      * @param url the url of the process definition
      */
-    boolean isDeployable(URL url) throws Exception;
+    boolean isDeployable(URL url);
 }
