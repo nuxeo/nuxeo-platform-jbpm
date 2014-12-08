@@ -79,14 +79,14 @@ public class TaskListImpl implements TaskList {
             if (participants != null) {
                 for (Map<String, Object> participant : participants) {
                     VirtualTaskInstance task = new VirtualTaskInstance();
-                    task.setActors((List<String>)participant.get("taskUsers"));
-                    task.setDirective((String)participant.get("directive"));
-                    task.setComment((String)participant.get("comment"));
+                    task.setActors((List<String>) participant.get("taskUsers"));
+                    task.setDirective((String) participant.get("directive"));
+                    task.setComment((String) participant.get("comment"));
                     if (participant.containsKey("right")) {
-                        task.parameters.put("right", (String)participant.get("right"));
+                        task.parameters.put("right", (String) participant.get("right"));
                     }
-                    GregorianCalendar calendar = (GregorianCalendar)participant.get("dueDate");
-                    if(calendar != null){
+                    GregorianCalendar calendar = (GregorianCalendar) participant.get("dueDate");
+                    if (calendar != null) {
                         task.setDueDate(calendar.getTime());
                     }
                     mls.add(task);

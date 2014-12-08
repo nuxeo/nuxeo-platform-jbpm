@@ -53,8 +53,7 @@ public class DMJSONSerializer implements DashBoardItemSerializer {
         }
     }
 
-    protected static String serialize(ResultSummary summary,
-            List<DashBoardItem> workItems, String columnsDefinition,
+    protected static String serialize(ResultSummary summary, List<DashBoardItem> workItems, String columnsDefinition,
             List<String> labels, String lang) throws ClientException {
         if (workItems == null) {
             workItems = Collections.emptyList();
@@ -86,8 +85,7 @@ public class DMJSONSerializer implements DashBoardItemSerializer {
             }
             m.put("directive", item.getDirective());
             if (lang != null && item.getDirective() != null) {
-                m.put("directiveI18n",
-                        TranslationHelper.getLabel(item.getDirective(), lang));
+                m.put("directiveI18n", TranslationHelper.getLabel(item.getDirective(), lang));
             } else {
                 m.put("directiveI18n", "");
             }
@@ -134,11 +132,9 @@ public class DMJSONSerializer implements DashBoardItemSerializer {
     }
 
     @Override
-    public void serialize(ResultSummary summary, List<DashBoardItem> workItems,
-            String columnsDefinition, List<String> labels, String lang,
-            Response res, HttpServletRequest req) throws ClientException {
-        String json = serialize(summary, workItems, columnsDefinition, labels,
-                lang);
+    public void serialize(ResultSummary summary, List<DashBoardItem> workItems, String columnsDefinition,
+            List<String> labels, String lang, Response res, HttpServletRequest req) throws ClientException {
+        String json = serialize(summary, workItems, columnsDefinition, labels, lang);
         res.setEntity(json, MediaType.TEXT_PLAIN);
     }
 

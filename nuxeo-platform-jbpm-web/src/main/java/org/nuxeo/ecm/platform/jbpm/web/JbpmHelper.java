@@ -40,7 +40,6 @@ import org.nuxeo.runtime.api.Framework;
 
 /**
  * @author arussel
- *
  */
 @Name("jbpmHelper")
 @Scope(ScopeType.STATELESS)
@@ -56,21 +55,18 @@ public class JbpmHelper {
         return jbpmService;
     }
 
-    public String createProcessInstance(NuxeoPrincipal principal, String pd,
-            DocumentModel dm, String endLifeCycle) throws Exception {
+    public String createProcessInstance(NuxeoPrincipal principal, String pd, DocumentModel dm, String endLifeCycle)
+            throws Exception {
         Map<String, Serializable> map = null;
-        if (endLifeCycle != null && !endLifeCycle.equals("")
-                && !"null".equals(endLifeCycle)) {
+        if (endLifeCycle != null && !endLifeCycle.equals("") && !"null".equals(endLifeCycle)) {
             map = new HashMap<String, Serializable>();
-            map.put(JbpmService.VariableName.endLifecycleTransition.name(),
-                    endLifeCycle);
+            map.put(JbpmService.VariableName.endLifecycleTransition.name(), endLifeCycle);
         }
         getJbpmService().createProcessInstance(principal, pd, dm, map, null);
         return null;
     }
 
-    public String updateProcessVariable(ProcessInstance pi,
-            String variableName, Object variableValue)
+    public String updateProcessVariable(ProcessInstance pi, String variableName, Object variableValue)
             throws NuxeoJbpmException, Exception {
         pi.getContextInstance().setVariable(variableName, variableValue);
         getJbpmService().persistProcessInstance(pi);

@@ -25,7 +25,6 @@ import org.nuxeo.ecm.platform.jbpm.ProcessDefinitionDeployer;
 
 /**
  * @author <a href="mailto:arussel@nuxeo.com">Alexandre Russel</a>
- *
  */
 @XObject("deployer")
 public class DeployerDescriptor {

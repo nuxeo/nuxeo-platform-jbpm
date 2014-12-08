@@ -56,8 +56,7 @@ public class IfChangedDeployer extends AbstractProcessDefinitionDeployer impleme
         String hash;
         try {
             hash = getHasher().getMD5FromURL(url);
-        } catch (NoSuchAlgorithmException | SAXException | IOException
-                | TransformerException e) {
+        } catch (NoSuchAlgorithmException | SAXException | IOException | TransformerException e) {
             throw new RuntimeException(e);
         }
         hashes.put(url, hash);
@@ -71,14 +70,14 @@ public class IfChangedDeployer extends AbstractProcessDefinitionDeployer impleme
     }
 
     public MD5Hasher getHasher() {
-        if (hasher==null) {
+        if (hasher == null) {
             hasher = new MD5Hasher();
         }
         return hasher;
     }
 
     public HashPersistence getPersistence() {
-        if (persistence==null) {
+        if (persistence == null) {
             persistence = new HashPersistence();
         }
         return persistence;

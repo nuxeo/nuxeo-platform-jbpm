@@ -35,8 +35,7 @@ public class AbandonProcessUnrestricted extends UnrestrictedSessionRunner {
 
     private final Long processId;
 
-    public AbandonProcessUnrestricted(CoreSession session, DocumentRef ref,
-            Long processId) {
+    public AbandonProcessUnrestricted(CoreSession session, DocumentRef ref, Long processId) {
         super(session);
         this.ref = ref;
         this.processId = processId;

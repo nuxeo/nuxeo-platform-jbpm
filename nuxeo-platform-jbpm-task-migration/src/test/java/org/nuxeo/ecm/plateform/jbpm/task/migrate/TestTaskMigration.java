@@ -55,8 +55,7 @@ public class TestTaskMigration extends SQLRepositoryTestCase {
         deployBundle("org.nuxeo.ecm.platform.task.api");
         deployBundle("org.nuxeo.ecm.platform.task.core");
 
-        deployContrib("org.nuxeo.ecm.platform.jbpm.task.migration",
-                "OSGI-INF/task-provider-contrib.xml");
+        deployContrib("org.nuxeo.ecm.platform.jbpm.task.migration", "OSGI-INF/task-provider-contrib.xml");
 
         deployBundle(JbpmUTConstants.TESTING_BUNDLE_NAME);
 
@@ -91,9 +90,8 @@ public class TestTaskMigration extends SQLRepositoryTestCase {
         taskVariables.put("v1", "value1");
         taskVariables.put("v2", "value2");
 
-        jbpmTaskService.createTask(session, principal, doc, taskName,
-                prefixedActorIds, true, "directive", "comment", dueDate,
-                taskVariables);
+        jbpmTaskService.createTask(session, principal, doc, taskName, prefixedActorIds, true, "directive", "comment",
+                dueDate, taskVariables);
 
     }
 
@@ -109,8 +107,7 @@ public class TestTaskMigration extends SQLRepositoryTestCase {
         }
 
         // verify that the tasks are created
-        List<TaskInstance> tis = jbpmService.getCurrentTaskInstances(
-                prefixedActorIds, null);
+        List<TaskInstance> tis = jbpmService.getCurrentTaskInstances(prefixedActorIds, null);
         assertEquals(NB_TASKS, tis.size());
 
         DocumentModelList taskDocs = session.query("select * from TaskDoc");
@@ -118,8 +115,7 @@ public class TestTaskMigration extends SQLRepositoryTestCase {
 
         // call the wrapper service to triger migration
         long t0 = System.currentTimeMillis();
-        List<Task> tasks = taskService.getCurrentTaskInstances(
-                prefixedActorIds, session);
+        List<Task> tasks = taskService.getCurrentTaskInstances(prefixedActorIds, session);
         assertEquals(NB_TASKS, tasks.size());
         long t1 = System.currentTimeMillis();
         long deltaS = (t1 - t0) / 1000;

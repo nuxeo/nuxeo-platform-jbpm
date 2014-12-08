@@ -55,26 +55,19 @@ public class TaskNotificationHandler extends AbstractJbpmHandlerHelper {
             if (documentModel == null) {
                 return;
             }
-            try (CoreSession coreSession = CoreInstance.openCoreSession(
-                    getDocumentRepositoryName(), principal)) {
+            try (CoreSession coreSession = CoreInstance.openCoreSession(getDocumentRepositoryName(), principal)) {
                 EventProducer eventProducer;
                 try {
                     eventProducer = Framework.getService(EventProducer.class);
                 } catch (Exception e) {
                     throw new ClientException(e);
                 }
-                DocumentEventContext ctx = new DocumentEventContext(
-                        coreSession, principal, documentModel);
-                ctx.setProperty(NotificationConstants.RECIPIENTS_KEY,
-                        getRecipients());
-                ctx.setProperty(DocumentEventContext.COMMENT_PROPERTY_KEY,
-                        getComments());
-                ctx.setProperty(DUE_DATE_KEY,
-                        executionContext.getTaskInstance().getDueDate());
-                ctx.setProperty(
-                        DIRECTIVE_KEY,
-                        (Serializable) executionContext.getTaskInstance().getVariable(
-                                "directive"));
+                DocumentEventContext ctx = new DocumentEventContext(coreSession, principal, documentModel);
+                ctx.setProperty(NotificationConstants.RECIPIENTS_KEY, getRecipients());
+                ctx.setProperty(DocumentEventContext.COMMENT_PROPERTY_KEY, getComments());
+                ctx.setProperty(DUE_DATE_KEY, executionContext.getTaskInstance().getDueDate());
+                ctx.setProperty(DIRECTIVE_KEY,
+                        (Serializable) executionContext.getTaskInstance().getVariable("directive"));
                 eventProducer.fireEvent(ctx.newEvent(JbpmEventNames.WORKFLOW_TASK_ASSIGNED));
             }
         }
@@ -83,8 +76,7 @@ public class TaskNotificationHandler extends AbstractJbpmHandlerHelper {
     @SuppressWarnings("unchecked")
     protected String getComments() {
         List<Comment> comments = executionContext.getTaskInstance().getComments();
-        return comments == null ? null
-                : comments.get(comments.size() - 1).getMessage();
+        return comments == null ? null : comments.get(comments.size() - 1).getMessage();
     }
 
     protected String[] getRecipients() {

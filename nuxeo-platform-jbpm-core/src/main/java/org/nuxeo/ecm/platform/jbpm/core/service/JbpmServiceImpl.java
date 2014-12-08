@@ -80,8 +80,7 @@ public class JbpmServiceImpl implements JbpmService {
     private final Map<String, JbpmSecurityPolicy> securityPolicies = new HashMap<String, JbpmSecurityPolicy>();
 
     @Override
-    public Serializable executeJbpmOperation(JbpmOperation operation)
-            throws NuxeoJbpmException {
+    public Serializable executeJbpmOperation(JbpmOperation operation) throws NuxeoJbpmException {
         JbpmContext context = getContext();
         Serializable result = null;
         try {
@@ -109,8 +108,7 @@ public class JbpmServiceImpl implements JbpmService {
             if (!isTransactionEnabled(context)) {
                 contexts.set(context);
                 // context will be closed by the jbpm synchronization
-                context.getSession().getTransaction().registerSynchronization(
-                        new JbpmSynchronization(context));
+                context.getSession().getTransaction().registerSynchronization(new JbpmSynchronization(context));
             }
         }
         return context;
@@ -132,32 +130,27 @@ public class JbpmServiceImpl implements JbpmService {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<TaskInstance> getCurrentTaskInstances(
-            final NuxeoPrincipal currentUser, final JbpmListFilter filter)
+    public List<TaskInstance> getCurrentTaskInstances(final NuxeoPrincipal currentUser, final JbpmListFilter filter)
             throws NuxeoJbpmException {
         return (List<TaskInstance>) executeJbpmOperation(new JbpmOperation() {
             private static final long serialVersionUID = 1L;
 
             @Override
-            public ArrayList<TaskInstance> run(JbpmContext context)
-                    throws NuxeoJbpmException {
-                return getCurrentTaskInstancesInternal(currentUser, filter,
-                        context);
+            public ArrayList<TaskInstance> run(JbpmContext context) throws NuxeoJbpmException {
+                return getCurrentTaskInstancesInternal(currentUser, filter, context);
             }
 
         });
     }
 
-    private ArrayList<TaskInstance> getCurrentTaskInstancesInternal(
-            final NuxeoPrincipal currentUser, final JbpmListFilter filter,
-            JbpmContext context) {
+    private ArrayList<TaskInstance> getCurrentTaskInstancesInternal(final NuxeoPrincipal currentUser,
+            final JbpmListFilter filter, JbpmContext context) {
         if (currentUser == null) {
             throw new IllegalStateException("Null current user");
         }
         context.setActorId(NuxeoPrincipal.PREFIX + currentUser.getName());
         List<String> groups = getActorsAndGroup(currentUser);
-        ArrayList<TaskInstance> tis = getPooledAndActorTaskInstances(context,
-                groups);
+        ArrayList<TaskInstance> tis = getPooledAndActorTaskInstances(context, groups);
         // filter
         if (filter != null) {
             tis = filter.filter(context, null, tis, currentUser);
@@ -168,8 +161,7 @@ public class JbpmServiceImpl implements JbpmService {
     }
 
     @SuppressWarnings("unchecked")
-    protected ArrayList<TaskInstance> getPooledAndActorTaskInstances(
-            JbpmContext context, List<String> groups) {
+    protected ArrayList<TaskInstance> getPooledAndActorTaskInstances(JbpmContext context, List<String> groups) {
         Set<TaskInstance> tis = new HashSet<TaskInstance>();
         tis.addAll(context.getTaskMgmtSession().findTaskInstances(groups));
         tis.addAll(context.getTaskMgmtSession().findPooledTaskInstances(groups));
@@ -192,17 +184,14 @@ public class JbpmServiceImpl implements JbpmService {
     }
 
     @Override
-    public ProcessInstance createProcessInstance(final NuxeoPrincipal user,
-            final String processDefinitionName, final DocumentModel dm,
-            final Map<String, Serializable> variables,
-            final Map<String, Serializable> transientVariables)
-            throws NuxeoJbpmException {
+    public ProcessInstance createProcessInstance(final NuxeoPrincipal user, final String processDefinitionName,
+            final DocumentModel dm, final Map<String, Serializable> variables,
+            final Map<String, Serializable> transientVariables) throws NuxeoJbpmException {
         return (ProcessInstance) executeJbpmOperation(new JbpmOperation() {
             private static final long serialVersionUID = 1L;
 
             @Override
-            public ProcessInstance run(JbpmContext context)
-                    throws NuxeoJbpmException {
+            public ProcessInstance run(JbpmContext context) throws NuxeoJbpmException {
                 String initiatorActorId = NuxeoPrincipal.PREFIX;
                 if (user != null) {
                     initiatorActorId += user.getName();
@@ -210,23 +199,17 @@ public class JbpmServiceImpl implements JbpmService {
                 }
                 ProcessInstance pi = context.newProcessInstance(processDefinitionName);
                 if (initiatorActorId != null) {
-                    pi.getContextInstance().setVariable(
-                            JbpmService.VariableName.initiator.name(),
-                            initiatorActorId);
+                    pi.getContextInstance().setVariable(JbpmService.VariableName.initiator.name(), initiatorActorId);
                 }
                 if (variables != null) {
                     pi.getContextInstance().addVariables(variables);
                 }
                 if (transientVariables != null) {
-                    pi.getContextInstance().setTransientVariables(
-                            transientVariables);
+                    pi.getContextInstance().setTransientVariables(transientVariables);
                 }
                 if (dm != null) {
-                    pi.getContextInstance().setVariable(
-                            JbpmService.VariableName.documentId.name(),
-                            dm.getId());
-                    pi.getContextInstance().setVariable(
-                            JbpmService.VariableName.documentRepositoryName.name(),
+                    pi.getContextInstance().setVariable(JbpmService.VariableName.documentId.name(), dm.getId());
+                    pi.getContextInstance().setVariable(JbpmService.VariableName.documentRepositoryName.name(),
                             dm.getRepositoryName());
                 }
                 TaskInstance ti = pi.getTaskMgmtInstance().createStartTaskInstance();
@@ -242,24 +225,20 @@ public class JbpmServiceImpl implements JbpmService {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<ProcessInstance> getCurrentProcessInstances(
-            final NuxeoPrincipal principal, final JbpmListFilter filter)
+    public List<ProcessInstance> getCurrentProcessInstances(final NuxeoPrincipal principal, final JbpmListFilter filter)
             throws NuxeoJbpmException {
         return (List<ProcessInstance>) executeJbpmOperation(new JbpmOperation() {
             private static final long serialVersionUID = 1L;
 
             @Override
-            public ArrayList<ProcessInstance> run(JbpmContext context)
-                    throws NuxeoJbpmException {
+            public ArrayList<ProcessInstance> run(JbpmContext context) throws NuxeoJbpmException {
                 if (principal == null) {
                     throw new IllegalStateException("Null principal");
                 }
                 List<String> actorsName = getActorsAndGroup(principal);
-                ArrayList<ProcessInstance> initiatorPD = getProcessInstances(
-                        context, actorsName);
+                ArrayList<ProcessInstance> initiatorPD = getProcessInstances(context, actorsName);
                 if (filter != null) {
-                    initiatorPD = filter.filter(context, null, initiatorPD,
-                            principal);
+                    initiatorPD = filter.filter(context, null, initiatorPD, principal);
                 }
                 return toArrayList(initiatorPD);
             }
@@ -267,8 +246,7 @@ public class JbpmServiceImpl implements JbpmService {
     }
 
     @SuppressWarnings("unchecked")
-    protected ArrayList<ProcessInstance> getProcessInstances(
-            JbpmContext context, List<String> actorsName) {
+    protected ArrayList<ProcessInstance> getProcessInstances(JbpmContext context, List<String> actorsName) {
         ArrayList<ProcessInstance> initiatorPD = new ArrayList<ProcessInstance>();
         if (actorsName == null) {
             return initiatorPD;
@@ -301,8 +279,7 @@ public class JbpmServiceImpl implements JbpmService {
     }
 
     @SuppressWarnings("unchecked")
-    protected List<ProcessDefinition> getProcessDefinitions(NuxeoPrincipal user)
-            throws NuxeoJbpmException {
+    protected List<ProcessDefinition> getProcessDefinitions(NuxeoPrincipal user) throws NuxeoJbpmException {
         return (List<ProcessDefinition>) executeJbpmOperation(new JbpmOperation() {
             private static final long serialVersionUID = 1L;
 
@@ -315,14 +292,12 @@ public class JbpmServiceImpl implements JbpmService {
     }
 
     @Override
-    public DocumentModel getDocumentModel(final TaskInstance ti,
-            final NuxeoPrincipal user) throws NuxeoJbpmException {
+    public DocumentModel getDocumentModel(final TaskInstance ti, final NuxeoPrincipal user) throws NuxeoJbpmException {
         return (DocumentModel) executeJbpmOperation(new JbpmOperation() {
             private static final long serialVersionUID = 1L;
 
             @Override
-            public Serializable run(JbpmContext context)
-                    throws NuxeoJbpmException {
+            public Serializable run(JbpmContext context) throws NuxeoJbpmException {
                 if (user != null) {
                     context.setActorId(NuxeoPrincipal.PREFIX + user.getName());
                 }
@@ -345,8 +320,8 @@ public class JbpmServiceImpl implements JbpmService {
 
     }
 
-    protected DocumentModel getDocumentModel(NuxeoPrincipal user, String docId,
-            String repoId) throws NuxeoJbpmException {
+    protected DocumentModel getDocumentModel(NuxeoPrincipal user, String docId, String repoId)
+            throws NuxeoJbpmException {
         try (CoreSession session = CoreInstance.openCoreSession(repoId, user)) {
             DocumentModel result = session.getDocument(new IdRef(docId));
             result.detach(true);
@@ -357,14 +332,13 @@ public class JbpmServiceImpl implements JbpmService {
     }
 
     @Override
-    public DocumentModel getDocumentModel(final ProcessInstance pi,
-            final NuxeoPrincipal user) throws NuxeoJbpmException {
+    public DocumentModel getDocumentModel(final ProcessInstance pi, final NuxeoPrincipal user)
+            throws NuxeoJbpmException {
         return (DocumentModel) executeJbpmOperation(new JbpmOperation() {
             private static final long serialVersionUID = 1L;
 
             @Override
-            public Serializable run(JbpmContext context)
-                    throws NuxeoJbpmException {
+            public Serializable run(JbpmContext context) throws NuxeoJbpmException {
                 ProcessInstance sessionedPi = context.getProcessInstance(pi.getId());
                 ContextInstance ci = sessionedPi.getContextInstance();
                 String docId = (String) ci.getVariable(JbpmService.VariableName.documentId.name());
@@ -376,15 +350,13 @@ public class JbpmServiceImpl implements JbpmService {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<ProcessInstance> getProcessInstances(final DocumentModel dm,
-            final NuxeoPrincipal user, final JbpmListFilter jbpmListFilter)
-            throws NuxeoJbpmException {
+    public List<ProcessInstance> getProcessInstances(final DocumentModel dm, final NuxeoPrincipal user,
+            final JbpmListFilter jbpmListFilter) throws NuxeoJbpmException {
         return (List<ProcessInstance>) executeJbpmOperation(new JbpmOperation() {
             private static final long serialVersionUID = 1L;
 
             @Override
-            public ArrayList<ProcessInstance> run(JbpmContext context)
-                    throws NuxeoJbpmException {
+            public ArrayList<ProcessInstance> run(JbpmContext context) throws NuxeoJbpmException {
                 if (user != null) {
                     context.setActorId(NuxeoPrincipal.PREFIX + user.getName());
                 }
@@ -392,11 +364,9 @@ public class JbpmServiceImpl implements JbpmService {
                 Session session = context.getSession();
                 List<ProcessInstance> list = session.getNamedQuery(
                         JbpmService.HibernateQueries.NuxeoHibernateQueries_getProcessInstancesForDoc.name()).setParameter(
-                        "docId", dm.getId()).setParameter("repoId",
-                        dm.getRepositoryName()).list();
+                        "docId", dm.getId()).setParameter("repoId", dm.getRepositoryName()).list();
                 for (ProcessInstance pi : list) {
-                    if (Boolean.TRUE.equals(getPermission(pi,
-                            JbpmSecurityPolicy.Action.read, dm, user))) {
+                    if (Boolean.TRUE.equals(getPermission(pi, JbpmSecurityPolicy.Action.read, dm, user))) {
                         pi.getProcessDefinition();
                         result.add(pi);
                         pi.getContextInstance().getVariables().size();
@@ -429,37 +399,31 @@ public class JbpmServiceImpl implements JbpmService {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<TaskInstance> getTaskInstances(final DocumentModel dm,
-            final NuxeoPrincipal user, final JbpmListFilter filter)
-            throws NuxeoJbpmException {
+    public List<TaskInstance> getTaskInstances(final DocumentModel dm, final NuxeoPrincipal user,
+            final JbpmListFilter filter) throws NuxeoJbpmException {
         assert dm != null;
         return (List<TaskInstance>) executeJbpmOperation(new JbpmOperation() {
             private static final long serialVersionUID = 1L;
 
             @Override
-            public ArrayList<TaskInstance> run(JbpmContext context)
-                    throws NuxeoJbpmException {
+            public ArrayList<TaskInstance> run(JbpmContext context) throws NuxeoJbpmException {
                 Set<TaskInstance> tisSet = new HashSet<TaskInstance>();
                 if (user != null) {
-                    List<TaskInstance> tis = getCurrentTaskInstancesInternal(
-                            user, null, context);
+                    List<TaskInstance> tis = getCurrentTaskInstancesInternal(user, null, context);
                     tisSet.addAll(tis);
                 } else {
                     List<TaskInstance> tis = new ArrayList<TaskInstance>();
                     tis.addAll(context.getSession().getNamedQuery(
                             JbpmService.HibernateQueries.NuxeoHibernateQueries_getTaskInstancesForDoc_byTaskMgmt.name()).setParameter(
-                            "docId", dm.getId()).setParameter("repoId",
-                            dm.getRepositoryName()).list());
+                            "docId", dm.getId()).setParameter("repoId", dm.getRepositoryName()).list());
                     tis.addAll(context.getSession().getNamedQuery(
                             JbpmService.HibernateQueries.NuxeoHibernateQueries_getTaskInstancesForDoc_byTask.name()).setParameter(
-                            "docId", dm.getId()).setParameter("repoId",
-                            dm.getRepositoryName()).list());
+                            "docId", dm.getId()).setParameter("repoId", dm.getRepositoryName()).list());
                     // sort to ensure deterministic order
                     Collections.sort(tis, new TaskCreateDateComparator());
                     tisSet.addAll(tis);
                 }
-                ArrayList<TaskInstance> result = getTaskInstancesForDocument(
-                        dm, tisSet);
+                ArrayList<TaskInstance> result = getTaskInstancesForDocument(dm, tisSet);
                 if (filter != null) {
                     result = filter.filter(context, dm, result, user);
                 }
@@ -484,8 +448,7 @@ public class JbpmServiceImpl implements JbpmService {
         }
     }
 
-    protected ArrayList<TaskInstance> getTaskInstancesForDocument(
-            final DocumentModel dm, Set<TaskInstance> tisSet) {
+    protected ArrayList<TaskInstance> getTaskInstancesForDocument(final DocumentModel dm, Set<TaskInstance> tisSet) {
         // we need to look at the variables of the process instance of
         // the task. If there is no process instance we check the
         // variable of the task itself. If there is a process instance,
@@ -501,22 +464,19 @@ public class JbpmServiceImpl implements JbpmService {
                 // task created outside a process
                 String docId = (String) ti.getVariable(JbpmService.VariableName.documentId.name());
                 String repoId = (String) ti.getVariable(JbpmService.VariableName.documentRepositoryName.name());
-                if (docId.equals(dm.getId())
-                        && repoId.equals(dm.getRepositoryName())) {
+                if (docId.equals(dm.getId()) && repoId.equals(dm.getRepositoryName())) {
                     eagerLoadTaskInstance(ti);
                     result.add(ti);
                 }
             } else if (!donePi.contains(Long.valueOf(pi.getId()))) {
                 // process instance hasn't been checked yet
-                String docId = (String) pi.getContextInstance().getVariable(
-                        JbpmService.VariableName.documentId.name());
+                String docId = (String) pi.getContextInstance().getVariable(JbpmService.VariableName.documentId.name());
                 String repoId = (String) pi.getContextInstance().getVariable(
                         JbpmService.VariableName.documentRepositoryName.name());
                 Long pid = Long.valueOf(pi.getId());
                 donePi.add(pid);
                 // check if it uses our document, and if so, add it to the list
-                if (docId.equals(dm.getId())
-                        && repoId.equals(dm.getRepositoryName())) {
+                if (docId.equals(dm.getId()) && repoId.equals(dm.getRepositoryName())) {
                     useDocument.add(pid);
                 }
                 if (useDocument.contains(pid)) {
@@ -536,14 +496,12 @@ public class JbpmServiceImpl implements JbpmService {
     }
 
     @Override
-    public void endProcessInstance(final Long processId)
-            throws NuxeoJbpmException {
+    public void endProcessInstance(final Long processId) throws NuxeoJbpmException {
         executeJbpmOperation(new JbpmOperation() {
             private static final long serialVersionUID = 1L;
 
             @Override
-            public Serializable run(JbpmContext context)
-                    throws NuxeoJbpmException {
+            public Serializable run(JbpmContext context) throws NuxeoJbpmException {
                 context.getProcessInstance(processId.longValue()).end();
                 return null;
             }
@@ -552,19 +510,16 @@ public class JbpmServiceImpl implements JbpmService {
 
     @Override
     public void endTask(final Long taskInstanceId, final String transition,
-            final Map<String, Serializable> taskVariables,
-            final Map<String, Serializable> variables,
-            final Map<String, Serializable> transientVariables,
-            final NuxeoPrincipal principal) throws NuxeoJbpmException {
+            final Map<String, Serializable> taskVariables, final Map<String, Serializable> variables,
+            final Map<String, Serializable> transientVariables, final NuxeoPrincipal principal)
+            throws NuxeoJbpmException {
         executeJbpmOperation(new JbpmOperation() {
             private static final long serialVersionUID = 1L;
 
             @Override
-            public Serializable run(JbpmContext context)
-                    throws NuxeoJbpmException {
+            public Serializable run(JbpmContext context) throws NuxeoJbpmException {
                 if (principal != null) {
-                    context.setActorId(NuxeoPrincipal.PREFIX
-                            + principal.getName());
+                    context.setActorId(NuxeoPrincipal.PREFIX + principal.getName());
                 }
                 TaskInstance ti = context.getTaskInstance(taskInstanceId.longValue());
                 if (taskVariables != null) {
@@ -575,20 +530,17 @@ public class JbpmServiceImpl implements JbpmService {
                 boolean hasProcess = ti.getProcessInstance() != null;
                 if (variables != null) {
                     if (hasProcess) {
-                        ti.getProcessInstance().getContextInstance().addVariables(
-                                variables);
+                        ti.getProcessInstance().getContextInstance().addVariables(variables);
                     } else {
-                        log.error("Cannot put variables on an isolated "
-                                + "task without process: " + variables);
+                        log.error("Cannot put variables on an isolated " + "task without process: " + variables);
                     }
                 }
                 if (transientVariables != null) {
                     if (hasProcess) {
-                        ti.getProcessInstance().getContextInstance().setTransientVariables(
-                                transientVariables);
+                        ti.getProcessInstance().getContextInstance().setTransientVariables(transientVariables);
                     } else {
-                        log.error("Cannot put transient variables on an isolated "
-                                + "task without process: " + transientVariables);
+                        log.error("Cannot put transient variables on an isolated " + "task without process: "
+                                + transientVariables);
                     }
                 }
                 if (transition == null || transition.equals("")) {
@@ -601,8 +553,7 @@ public class JbpmServiceImpl implements JbpmService {
         });
     }
 
-    protected NuxeoPrincipal getPrincipal(String user)
-            throws NuxeoJbpmException {
+    protected NuxeoPrincipal getPrincipal(String user) throws NuxeoJbpmException {
         try {
             return getUserManager().getPrincipal(user);
         } catch (ClientException e) {
@@ -623,21 +574,18 @@ public class JbpmServiceImpl implements JbpmService {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<String> getAvailableTransitions(final Long taskInstanceId,
-            final NuxeoPrincipal principal) throws NuxeoJbpmException {
+    public List<String> getAvailableTransitions(final Long taskInstanceId, final NuxeoPrincipal principal)
+            throws NuxeoJbpmException {
         return (List<String>) executeJbpmOperation(new JbpmOperation() {
             private static final long serialVersionUID = 1L;
 
             @Override
-            public Serializable run(JbpmContext context)
-                    throws NuxeoJbpmException {
+            public Serializable run(JbpmContext context) throws NuxeoJbpmException {
                 if (principal != null) {
-                    context.setActorId(NuxeoPrincipal.PREFIX
-                            + principal.getName());
+                    context.setActorId(NuxeoPrincipal.PREFIX + principal.getName());
                 }
                 // jbpm code returns an array list.
-                List<Transition> transitions = (List<Transition>) context.getTaskInstance(
-                        taskInstanceId.longValue()).getAvailableTransitions();
+                List<Transition> transitions = (List<Transition>) context.getTaskInstance(taskInstanceId.longValue()).getAvailableTransitions();
                 List<String> result = new ArrayList<String>();
                 for (Transition transition : transitions) {
                     result.add(transition.getName());
@@ -649,14 +597,12 @@ public class JbpmServiceImpl implements JbpmService {
     }
 
     @Override
-    public ProcessInstance getProcessInstance(final Long processInstanceId)
-            throws NuxeoJbpmException {
+    public ProcessInstance getProcessInstance(final Long processInstanceId) throws NuxeoJbpmException {
         return (ProcessInstance) executeJbpmOperation(new JbpmOperation() {
             private static final long serialVersionUID = 1L;
 
             @Override
-            public Serializable run(JbpmContext context)
-                    throws NuxeoJbpmException {
+            public Serializable run(JbpmContext context) throws NuxeoJbpmException {
                 ProcessInstance pi = context.getProcessInstance(processInstanceId.longValue());
                 ;
                 eagerLoadProcessInstances(Collections.singletonList(pi));
@@ -667,21 +613,17 @@ public class JbpmServiceImpl implements JbpmService {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<TaskInstance> getTaskInstances(final Long processInstanceId,
-            final NuxeoPrincipal principal, final JbpmListFilter filter)
-            throws NuxeoJbpmException {
+    public List<TaskInstance> getTaskInstances(final Long processInstanceId, final NuxeoPrincipal principal,
+            final JbpmListFilter filter) throws NuxeoJbpmException {
         return (List<TaskInstance>) executeJbpmOperation(new JbpmOperation() {
             private static final long serialVersionUID = 1L;
 
             @Override
-            public Serializable run(JbpmContext context)
-                    throws NuxeoJbpmException {
+            public Serializable run(JbpmContext context) throws NuxeoJbpmException {
                 if (principal != null) {
-                    context.setActorId(NuxeoPrincipal.PREFIX
-                            + principal.getName());
+                    context.setActorId(NuxeoPrincipal.PREFIX + principal.getName());
                 }
-                Collection<TaskInstance> tis = context.getProcessInstance(
-                        processInstanceId.longValue()).getTaskMgmtInstance().getTaskInstances();
+                Collection<TaskInstance> tis = context.getProcessInstance(processInstanceId.longValue()).getTaskMgmtInstance().getTaskInstances();
                 ArrayList<TaskInstance> result = new ArrayList<TaskInstance>();
                 for (TaskInstance ti : tis) {
                     eagerLoadTaskInstance(ti);
@@ -700,14 +642,12 @@ public class JbpmServiceImpl implements JbpmService {
     }
 
     @Override
-    public void saveTaskInstances(final List<TaskInstance> taskInstances)
-            throws NuxeoJbpmException {
+    public void saveTaskInstances(final List<TaskInstance> taskInstances) throws NuxeoJbpmException {
         executeJbpmOperation(new JbpmOperation() {
             private static final long serialVersionUID = 1L;
 
             @Override
-            public Serializable run(JbpmContext context)
-                    throws NuxeoJbpmException {
+            public Serializable run(JbpmContext context) throws NuxeoJbpmException {
                 Session session = context.getSession();
 
                 for (TaskInstance ti : taskInstances) {
@@ -719,28 +659,24 @@ public class JbpmServiceImpl implements JbpmService {
         });
     }
 
-    protected void addSecurityPolicy(String processDefinitionName,
-            JbpmSecurityPolicy securityPolicy) {
+    protected void addSecurityPolicy(String processDefinitionName, JbpmSecurityPolicy securityPolicy) {
         securityPolicies.put(processDefinitionName, securityPolicy);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<ProcessDefinition> getProcessDefinitions(
-            final NuxeoPrincipal user, final DocumentModel dm,
+    public List<ProcessDefinition> getProcessDefinitions(final NuxeoPrincipal user, final DocumentModel dm,
             final JbpmListFilter filter) throws NuxeoJbpmException {
         return (List<ProcessDefinition>) executeJbpmOperation(new JbpmOperation() {
             private static final long serialVersionUID = 1L;
 
             @Override
-            public ArrayList<ProcessDefinition> run(JbpmContext context)
-                    throws NuxeoJbpmException {
+            public ArrayList<ProcessDefinition> run(JbpmContext context) throws NuxeoJbpmException {
                 if (user != null) {
                     context.setActorId(NuxeoPrincipal.PREFIX + user.getName());
                 }
                 List<ProcessDefinition> pds = context.getGraphSession().findLatestProcessDefinitions();
-                ArrayList<ProcessDefinition> result = new ArrayList<ProcessDefinition>(
-                        pds);
+                ArrayList<ProcessDefinition> result = new ArrayList<ProcessDefinition>(pds);
                 if (filter != null) {
                     result = filter.filter(context, dm, result, user);
                 }
@@ -750,9 +686,8 @@ public class JbpmServiceImpl implements JbpmService {
     }
 
     @Override
-    public Boolean getPermission(final ProcessInstance pi,
-            final JbpmSecurityPolicy.Action action, final DocumentModel dm,
-            final NuxeoPrincipal principal) throws NuxeoJbpmException {
+    public Boolean getPermission(final ProcessInstance pi, final JbpmSecurityPolicy.Action action,
+            final DocumentModel dm, final NuxeoPrincipal principal) throws NuxeoJbpmException {
         return (Boolean) executeJbpmOperation(new JbpmOperation() {
             private static final long serialVersionUID = 1L;
 
@@ -762,8 +697,7 @@ public class JbpmServiceImpl implements JbpmService {
                 String pdName = process.getProcessDefinition().getName();
                 if (securityPolicies.containsKey(pdName)) {
                     JbpmSecurityPolicy pm = securityPolicies.get(pdName);
-                    Boolean perm = pm.checkPermission(process, action, dm,
-                            principal);
+                    Boolean perm = pm.checkPermission(process, action, dm, principal);
                     if (perm != null) {
                         return perm;
                     }
@@ -776,14 +710,12 @@ public class JbpmServiceImpl implements JbpmService {
 
     @Override
     @SuppressWarnings("unchecked")
-    public ProcessInstance persistProcessInstance(final ProcessInstance pi)
-            throws NuxeoJbpmException {
+    public ProcessInstance persistProcessInstance(final ProcessInstance pi) throws NuxeoJbpmException {
         return (ProcessInstance) executeJbpmOperation(new JbpmOperation() {
             private static final long serialVersionUID = 1L;
 
             @Override
-            public Serializable run(JbpmContext context)
-                    throws NuxeoJbpmException {
+            public Serializable run(JbpmContext context) throws NuxeoJbpmException {
                 ProcessInstance sessionedPi = context.getProcessInstance(pi.getId());
                 ContextInstance ci = sessionedPi.getContextInstance();
                 Map<String, Object> attrs = pi.getContextInstance().getVariables();
@@ -807,15 +739,13 @@ public class JbpmServiceImpl implements JbpmService {
     }
 
     @Override
-    public void deleteProcessInstance(final NuxeoPrincipal principal,
-            final Long processId) throws NuxeoJbpmException {
+    public void deleteProcessInstance(final NuxeoPrincipal principal, final Long processId) throws NuxeoJbpmException {
         executeJbpmOperation(new JbpmOperation() {
             private static final long serialVersionUID = 1L;
 
             @Override
             @SuppressWarnings("unchecked")
-            public Serializable run(JbpmContext context)
-                    throws NuxeoJbpmException {
+            public Serializable run(JbpmContext context) throws NuxeoJbpmException {
                 if (principal != null) {
                     context.setActorId(principal.getName());
                 }
@@ -837,14 +767,12 @@ public class JbpmServiceImpl implements JbpmService {
     }
 
     @Override
-    public void deleteTaskInstance(final NuxeoPrincipal principal,
-            final Long taskId) throws NuxeoJbpmException {
+    public void deleteTaskInstance(final NuxeoPrincipal principal, final Long taskId) throws NuxeoJbpmException {
         executeJbpmOperation(new JbpmOperation() {
             private static final long serialVersionUID = 1L;
 
             @Override
-            public Serializable run(JbpmContext context)
-                    throws NuxeoJbpmException {
+            public Serializable run(JbpmContext context) throws NuxeoJbpmException {
                 if (principal != null) {
                     context.setActorId(principal.getName());
                 }
@@ -858,30 +786,25 @@ public class JbpmServiceImpl implements JbpmService {
     }
 
     @Override
-    public ProcessDefinition getProcessDefinitionByName(final String name)
-            throws NuxeoJbpmException {
+    public ProcessDefinition getProcessDefinitionByName(final String name) throws NuxeoJbpmException {
         return (ProcessDefinition) executeJbpmOperation(new JbpmOperation() {
             private static final long serialVersionUID = 1L;
 
             @Override
-            public Serializable run(JbpmContext context)
-                    throws NuxeoJbpmException {
-                return context.getGraphSession().findLatestProcessDefinition(
-                        name);
+            public Serializable run(JbpmContext context) throws NuxeoJbpmException {
+                return context.getGraphSession().findLatestProcessDefinition(name);
             }
         });
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<ProcessDefinition> getProcessDefinitionsByType(final String type)
-            throws NuxeoJbpmException {
+    public List<ProcessDefinition> getProcessDefinitionsByType(final String type) throws NuxeoJbpmException {
         return (List<ProcessDefinition>) executeJbpmOperation(new JbpmOperation() {
             private static final long serialVersionUID = 1L;
 
             @Override
-            public Serializable run(JbpmContext context)
-                    throws NuxeoJbpmException {
+            public Serializable run(JbpmContext context) throws NuxeoJbpmException {
                 List<String> pdsName = typeFilters.get(type);
                 if (pdsName == null) {
                     return new ArrayList<ProcessDefinition>();
@@ -897,16 +820,14 @@ public class JbpmServiceImpl implements JbpmService {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<ProcessInstance> getCurrentProcessInstances(
-            final List<String> actors, final JbpmActorsListFilter filter)
+    public List<ProcessInstance> getCurrentProcessInstances(final List<String> actors, final JbpmActorsListFilter filter)
             throws NuxeoJbpmException {
         return (List<ProcessInstance>) executeJbpmOperation(new JbpmOperation() {
             private static final long serialVersionUID = 1L;
 
             @Override
             public Serializable run(JbpmContext context) {
-                ArrayList<ProcessInstance> processes = getProcessInstances(
-                        context, actors);
+                ArrayList<ProcessInstance> processes = getProcessInstances(context, actors);
                 if (filter != null) {
                     processes = filter.filter(context, null, processes, actors);
                 }
@@ -917,26 +838,22 @@ public class JbpmServiceImpl implements JbpmService {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<TaskInstance> getCurrentTaskInstances(
-            final List<String> actors, final JbpmActorsListFilter filter)
+    public List<TaskInstance> getCurrentTaskInstances(final List<String> actors, final JbpmActorsListFilter filter)
             throws NuxeoJbpmException {
         return (List<TaskInstance>) executeJbpmOperation(new JbpmOperation() {
             private static final long serialVersionUID = 1L;
 
             @Override
-            public ArrayList<TaskInstance> run(JbpmContext context)
-                    throws NuxeoJbpmException {
+            public ArrayList<TaskInstance> run(JbpmContext context) throws NuxeoJbpmException {
                 return getCurrentTaskInstancesInternal(actors, filter, context);
             }
 
         });
     }
 
-    private ArrayList<TaskInstance> getCurrentTaskInstancesInternal(
-            final List<String> actors, final JbpmActorsListFilter filter,
-            JbpmContext context) {
-        ArrayList<TaskInstance> tis = getPooledAndActorTaskInstances(context,
-                actors);
+    private ArrayList<TaskInstance> getCurrentTaskInstancesInternal(final List<String> actors,
+            final JbpmActorsListFilter filter, JbpmContext context) {
+        ArrayList<TaskInstance> tis = getPooledAndActorTaskInstances(context, actors);
         // filter
         if (filter != null) {
             tis = filter.filter(context, null, tis, actors);
@@ -948,22 +865,18 @@ public class JbpmServiceImpl implements JbpmService {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<TaskInstance> getTaskInstances(final DocumentModel dm,
-            final List<String> actors, final JbpmActorsListFilter filter)
-            throws NuxeoJbpmException {
+    public List<TaskInstance> getTaskInstances(final DocumentModel dm, final List<String> actors,
+            final JbpmActorsListFilter filter) throws NuxeoJbpmException {
         assert dm != null;
         return (List<TaskInstance>) executeJbpmOperation(new JbpmOperation() {
             private static final long serialVersionUID = 1L;
 
             @Override
-            public ArrayList<TaskInstance> run(JbpmContext context)
-                    throws NuxeoJbpmException {
+            public ArrayList<TaskInstance> run(JbpmContext context) throws NuxeoJbpmException {
                 Set<TaskInstance> tisSet = new HashSet<TaskInstance>();
-                List<TaskInstance> tis = getCurrentTaskInstancesInternal(
-                        actors, null, context);
+                List<TaskInstance> tis = getCurrentTaskInstancesInternal(actors, null, context);
                 tisSet.addAll(tis);
-                ArrayList<TaskInstance> result = getTaskInstancesForDocument(
-                        dm, tisSet);
+                ArrayList<TaskInstance> result = getTaskInstancesForDocument(dm, tisSet);
                 if (filter != null) {
                     result = filter.filter(context, dm, result, actors);
                 }
@@ -981,11 +894,9 @@ public class JbpmServiceImpl implements JbpmService {
     }
 
     @Override
-    public void notifyEventListeners(String name, String comment,
-            String[] recipients, CoreSession session, NuxeoPrincipal principal,
-            DocumentModel doc) throws ClientException {
-        DocumentEventContext ctx = new DocumentEventContext(session, principal,
-                doc);
+    public void notifyEventListeners(String name, String comment, String[] recipients, CoreSession session,
+            NuxeoPrincipal principal, DocumentModel doc) throws ClientException {
+        DocumentEventContext ctx = new DocumentEventContext(session, principal, doc);
         ctx.setProperty("recipients", recipients);
         ctx.getProperties().put("comment", comment);
         try {

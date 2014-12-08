@@ -33,7 +33,6 @@ import org.nuxeo.ecm.platform.jbpm.test.AbstractProcessDefinitionTest;
 
 /**
  * @author arussel
- *
  */
 public class ForeachForkTest extends AbstractProcessDefinitionTest {
 
@@ -61,8 +60,7 @@ public class ForeachForkTest extends AbstractProcessDefinitionTest {
         daList.add(jack);
         assertEquals(3, daList.size());
 
-        pi.getContextInstance().setVariable(
-                JbpmService.VariableName.participants.name(), daList);
+        pi.getContextInstance().setVariable(JbpmService.VariableName.participants.name(), daList);
         pi.signal();
         Set<TaskInstance> tis = (Set<TaskInstance>) pi.getTaskMgmtInstance().getTaskInstances();
         assertEquals(3, tis.size());

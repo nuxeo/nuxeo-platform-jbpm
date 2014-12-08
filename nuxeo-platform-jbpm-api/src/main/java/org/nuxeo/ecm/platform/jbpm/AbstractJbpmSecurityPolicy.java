@@ -27,7 +27,6 @@ import org.nuxeo.ecm.core.api.NuxeoPrincipal;
  * Abstract security policy that provides helper methods to manipulates user.
  *
  * @author Anahide Tchertchian
- *
  */
 public abstract class AbstractJbpmSecurityPolicy implements JbpmSecurityPolicy {
 

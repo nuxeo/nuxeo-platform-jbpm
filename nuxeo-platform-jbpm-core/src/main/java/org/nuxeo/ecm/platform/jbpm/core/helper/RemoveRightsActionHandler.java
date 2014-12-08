@@ -29,7 +29,6 @@ import org.nuxeo.ecm.platform.jbpm.AbstractJbpmHandlerHelper;
  * Action handler that removes rights
  *
  * @author Anahide Tchertchian
- *
  */
 public class RemoveRightsActionHandler extends AbstractJbpmHandlerHelper {
 
@@ -41,8 +40,7 @@ public class RemoveRightsActionHandler extends AbstractJbpmHandlerHelper {
         if (nuxeoHasStarted()) {
             try (CoreSession session = CoreInstance.openCoreSessionSystem(getDocumentRepositoryName())) {
                 DocumentRef docRef = getDocumentRef();
-                RemoveRightsUnrestricted runner = new RemoveRightsUnrestricted(
-                        session, docRef, getACLName());
+                RemoveRightsUnrestricted runner = new RemoveRightsUnrestricted(session, docRef, getACLName());
                 runner.runUnrestricted();
             }
         }

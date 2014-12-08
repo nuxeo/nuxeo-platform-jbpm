@@ -32,8 +32,7 @@ import com.sun.syndication.io.impl.DateParser;
 
 public class TaskModuleGenerator implements ModuleGenerator {
 
-    private static final Namespace TASK_NS = Namespace.getNamespace("task",
-            TaskModule.URI);
+    private static final Namespace TASK_NS = Namespace.getNamespace("task", TaskModule.URI);
 
     private static final Set<Namespace> NAMESPACES;
 
@@ -65,23 +64,19 @@ public class TaskModuleGenerator implements ModuleGenerator {
 
         TaskModule tm = (TaskModule) module;
         if (tm.getDueDate() != null) {
-            element.addContent(generateSimpleElement("dueDate",
-                    DateParser.formatW3CDateTime(tm.getDueDate())));
+            element.addContent(generateSimpleElement("dueDate", DateParser.formatW3CDateTime(tm.getDueDate())));
         }
         if (tm.getStartDate() != null) {
-            element.addContent(generateSimpleElement("startDate",
-                    DateParser.formatW3CDateTime(tm.getStartDate())));
+            element.addContent(generateSimpleElement("startDate", DateParser.formatW3CDateTime(tm.getStartDate())));
         }
         if (tm.getDirective() != null) {
-            element.addContent(generateSimpleElement("directive",
-                    tm.getDirective()));
+            element.addContent(generateSimpleElement("directive", tm.getDirective()));
         }
         if (tm.getName() != null) {
             element.addContent(generateSimpleElement("name", tm.getName()));
         }
         if (tm.getDescription() != null) {
-            element.addContent(generateSimpleElement("description",
-                    tm.getDescription()));
+            element.addContent(generateSimpleElement("description", tm.getDescription()));
         }
         if (tm.getComment() != null) {
             element.addContent(generateSimpleElement("comment", tm.getComment()));

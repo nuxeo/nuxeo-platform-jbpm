@@ -48,8 +48,8 @@ public class TaskVariableFilter implements JbpmListFilter {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> ArrayList<T> filter(JbpmContext jbpmContext,
-            DocumentModel document, ArrayList<T> list, NuxeoPrincipal principal) {
+    public <T> ArrayList<T> filter(JbpmContext jbpmContext, DocumentModel document, ArrayList<T> list,
+            NuxeoPrincipal principal) {
         ArrayList<TaskInstance> result = new ArrayList<TaskInstance>();
         if (!variables.isEmpty()) {
             for (T t : list) {
@@ -59,8 +59,7 @@ public class TaskVariableFilter implements JbpmListFilter {
                     Object value = task.getVariable(variable.getKey());
                     if (value == null && variable.getValue() == null) {
                         continue;
-                    } else if (value != null
-                            && value.equals(variable.getValue())) {
+                    } else if (value != null && value.equals(variable.getValue())) {
                         continue;
                     } else {
                         isOk = false;

@@ -74,8 +74,7 @@ public class JbpmServiceTest extends SQLRepositoryTestCase {
         deployBundle("org.nuxeo.ecm.platform.usermanager");
         deployBundle("org.nuxeo.ecm.directory.types.contrib");
         deployBundle("org.nuxeo.ecm.directory.sql");
-        deployContrib("org.nuxeo.ecm.platform.jbpm.core.test",
-                "OSGI-INF/jbpmService-contrib.xml");
+        deployContrib("org.nuxeo.ecm.platform.jbpm.core.test", "OSGI-INF/jbpmService-contrib.xml");
 
         deployBundle(JbpmUTConstants.CORE_BUNDLE_NAME);
         deployBundle(JbpmUTConstants.TESTING_BUNDLE_NAME);
@@ -121,43 +120,33 @@ public class JbpmServiceTest extends SQLRepositoryTestCase {
         assertNotNull(dm);
 
         // list process definition
-        List<ProcessDefinition> pds = service.getProcessDefinitions(
-                administrator, dm, null);
+        List<ProcessDefinition> pds = service.getProcessDefinitions(administrator, dm, null);
         assertNotNull(pds);
         assertEquals(2, pds.size());
 
         List<VirtualTaskInstance> participants = new ArrayList<VirtualTaskInstance>();
         participants.add(new VirtualTaskInstance("bob", "dobob", "yobob", null));
-        participants.add(new VirtualTaskInstance("trudy", "dotrudy", "yotrudy",
-                null));
+        participants.add(new VirtualTaskInstance("trudy", "dotrudy", "yotrudy", null));
         // create process instance
-        ProcessInstance pd = service.createProcessInstance(administrator,
-                "review_parallel", dm, Collections.singletonMap("participants",
-                        (Serializable) participants), null);
+        ProcessInstance pd = service.createProcessInstance(administrator, "review_parallel", dm,
+                Collections.singletonMap("participants", (Serializable) participants), null);
         Long pdId = Long.valueOf(pd.getId());
         assertNotNull(pd);
-        assertEquals(pd.getContextInstance().getVariable(
-                JbpmService.VariableName.initiator.name()),
+        assertEquals(pd.getContextInstance().getVariable(JbpmService.VariableName.initiator.name()),
                 NuxeoPrincipal.PREFIX + SecurityConstants.ADMINISTRATOR);
-        assertEquals(pd.getContextInstance().getVariable(
-                JbpmService.VariableName.documentId.name()), dm.getId());
-        assertEquals(pd.getContextInstance().getVariable(
-                JbpmService.VariableName.documentRepositoryName.name()),
+        assertEquals(pd.getContextInstance().getVariable(JbpmService.VariableName.documentId.name()), dm.getId());
+        assertEquals(pd.getContextInstance().getVariable(JbpmService.VariableName.documentRepositoryName.name()),
                 dm.getRepositoryName());
 
         // get process instance
-        List<ProcessInstance> pis1 = service.getCurrentProcessInstances(
-                administrator, null);
+        List<ProcessInstance> pis1 = service.getCurrentProcessInstances(administrator, null);
         assertEquals(1, pis1.size());
-        List<ProcessInstance> pis2 = service.getCurrentProcessInstances(
-                administratorList, null);
+        List<ProcessInstance> pis2 = service.getCurrentProcessInstances(administratorList, null);
         assertEquals(1, pis2.size());
 
         // get tasks
-        List<TaskInstance> tasks = service.getTaskInstances(dm, administrator,
-                null);
-        List<TaskInstance> tasks2 = service.getTaskInstances(dm,
-                administratorList, null);
+        List<TaskInstance> tasks = service.getTaskInstances(dm, administrator, null);
+        List<TaskInstance> tasks2 = service.getTaskInstances(dm, administratorList, null);
         assertEquals(tasks2.size(), tasks.size());
         assertNotNull(tasks);
         assertEquals(1, tasks.size());
@@ -168,8 +157,7 @@ public class JbpmServiceTest extends SQLRepositoryTestCase {
         service.executeJbpmOperation(new JbpmOperation() {
             private static final long serialVersionUID = 1L;
 
-            public Serializable run(JbpmContext context)
-                    throws NuxeoJbpmException {
+            public Serializable run(JbpmContext context) throws NuxeoJbpmException {
                 TaskInstance ti = context.getTaskInstance(cancelledTi);
                 ti.cancel();
                 return null;
@@ -182,8 +170,7 @@ public class JbpmServiceTest extends SQLRepositoryTestCase {
         pd = service.getProcessInstance(pdId);
         assertNull(pd);
 
-        List<TaskInstance> tis = service.getCurrentTaskInstances(administrator,
-                null);
+        List<TaskInstance> tis = service.getCurrentTaskInstances(administrator, null);
         assertTrue(tis.isEmpty());
     }
 
@@ -193,26 +180,20 @@ public class JbpmServiceTest extends SQLRepositoryTestCase {
         assertNotNull(dm);
 
         // list process definition
-        List<ProcessDefinition> pds = service.getProcessDefinitions(
-                administrator, dm, null);
+        List<ProcessDefinition> pds = service.getProcessDefinitions(administrator, dm, null);
         assertNotNull(pds);
         assertEquals(2, pds.size());
 
         List<VirtualTaskInstance> participants = new ArrayList<VirtualTaskInstance>();
         String prefixedUser1 = NuxeoPrincipal.PREFIX + user1.getName();
-        participants.add(new VirtualTaskInstance(prefixedUser1, "dobob1",
-                "yobob1", null));
-        participants.add(new VirtualTaskInstance(prefixedUser1, "dobob2",
-                "yobob1", null));
+        participants.add(new VirtualTaskInstance(prefixedUser1, "dobob1", "yobob1", null));
+        participants.add(new VirtualTaskInstance(prefixedUser1, "dobob2", "yobob1", null));
 
         // create process instance
         service.createProcessInstance(administrator, "review_parallel", dm,
-                Collections.singletonMap("participants",
-                        (Serializable) participants), null);
-        List<TaskInstance> tasks = service.getTaskInstances(dm, administrator,
-                null);
-        service.endTask(Long.valueOf(tasks.get(0).getId()), null, null, null,
-                null, null);
+                Collections.singletonMap("participants", (Serializable) participants), null);
+        List<TaskInstance> tasks = service.getTaskInstances(dm, administrator, null);
+        service.endTask(Long.valueOf(tasks.get(0).getId()), null, null, null, null, null);
         // tasks.get(0).end();
         tasks = service.getTaskInstances(dm, administrator, null);
         assertNotNull(tasks);
@@ -221,7 +202,7 @@ public class JbpmServiceTest extends SQLRepositoryTestCase {
         tasks = service.getTaskInstances(dm, user1, null);
         assertEquals(2, tasks.size());
         List<String> transitions = service.getAvailableTransitions(tasks.get(0).getId(), user1);
-        for(String t : transitions) {
+        for (String t : transitions) {
             assertNotNull(t);
         }
         assertNotNull(transitions);
@@ -235,12 +216,10 @@ public class JbpmServiceTest extends SQLRepositoryTestCase {
         ti.setActorId("bob");
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put(JbpmService.VariableName.documentId.name(), dm.getId());
-        variables.put(JbpmService.VariableName.documentRepositoryName.name(),
-                "demo");
+        variables.put(JbpmService.VariableName.documentRepositoryName.name(), "demo");
         ti.addVariables(variables);
         service.saveTaskInstances(Collections.singletonList(ti));
-        List<TaskInstance> lists = service.getTaskInstances(dm,
-                new NuxeoPrincipalImpl("bob"), null);
+        List<TaskInstance> lists = service.getTaskInstances(dm, new NuxeoPrincipalImpl("bob"), null);
         assertNotNull(lists);
     }
 
@@ -248,8 +227,7 @@ public class JbpmServiceTest extends SQLRepositoryTestCase {
     public void testProcessInstancePersistence() throws Exception {
         DocumentModel dm = getDocument();
         // create process instance
-        ProcessInstance pi = service.createProcessInstance(administrator,
-                "review_parallel", dm, null, null);
+        ProcessInstance pi = service.createProcessInstance(administrator, "review_parallel", dm, null, null);
         Long pid = Long.valueOf(pi.getId());
         // edit
         Map<String, Object> variables = new HashMap<String, Object>();
@@ -262,8 +240,7 @@ public class JbpmServiceTest extends SQLRepositoryTestCase {
     }
 
     protected DocumentModel getDocument() throws Exception {
-        DocumentModel model = session.createDocumentModel(
-                session.getRootDocument().getPathAsString(), "1", "File");
+        DocumentModel model = session.createDocumentModel(session.getRootDocument().getPathAsString(), "1", "File");
         DocumentModel doc = session.createDocument(model);
         assertNotNull(doc);
 

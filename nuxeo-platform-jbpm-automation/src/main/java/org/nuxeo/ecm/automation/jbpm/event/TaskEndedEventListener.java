@@ -36,8 +36,7 @@ import org.nuxeo.ecm.platform.jbpm.JbpmTaskService;
 import org.nuxeo.runtime.api.Framework;
 
 /**
- * Listener that will launch another operation when a task is accepted or
- * rejected
+ * Listener that will launch another operation when a task is accepted or rejected
  *
  * @author Anahide Tchertchian
  */
@@ -67,8 +66,7 @@ public class TaskEndedEventListener implements EventListener {
             try {
                 // run the given operation
                 AutomationService os = Framework.getService(AutomationService.class);
-                OperationContext ctx = new OperationContext(
-                        eventContext.getCoreSession());
+                OperationContext ctx = new OperationContext(eventContext.getCoreSession());
                 if (eventContext instanceof DocumentEventContext) {
                     ctx.setInput(((DocumentEventContext) eventContext).getSourceDocument());
                 }

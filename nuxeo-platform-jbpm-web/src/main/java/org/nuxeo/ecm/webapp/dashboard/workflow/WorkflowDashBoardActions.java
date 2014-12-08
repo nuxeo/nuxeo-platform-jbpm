@@ -68,38 +68,30 @@ public class WorkflowDashBoardActions implements Serializable {
 
     private static final Log log = LogFactory.getLog(WorkflowDashBoardActions.class);
 
-    public Collection<DashBoardItem> computeDashboardItems()
-            throws ClientException {
+    public Collection<DashBoardItem> computeDashboardItems() throws ClientException {
         if (currentUserTasks == null) {
             currentUserTasks = taskDashBoardActions.computeDashboardItems();
         }
         return currentUserTasks;
     }
 
-    public Collection<DocumentProcessItem> computeDocumentProcessItems()
-            throws ClientException {
+    public Collection<DocumentProcessItem> computeDocumentProcessItems() throws ClientException {
         if (currentUserProcesses == null) {
             currentUserProcesses = new ArrayList<DocumentProcessItem>();
             NuxeoPrincipal pal = (NuxeoPrincipal) currentUser;
-            List<ProcessInstance> processes = jbpmService.getCurrentProcessInstances(
-                    (NuxeoPrincipal) currentUser, null);
+            List<ProcessInstance> processes = jbpmService.getCurrentProcessInstances((NuxeoPrincipal) currentUser, null);
             if (processes != null) {
                 for (ProcessInstance process : processes) {
                     try {
                         if (process.hasEnded()) {
                             continue;
                         }
-                        DocumentModel doc = jbpmService.getDocumentModel(
-                                process, pal);
-                        if (doc != null
-                                && !LifeCycleConstants.DELETED_STATE.equals(doc.getCurrentLifeCycleState())) {
-                            currentUserProcesses.add(new DocumentProcessItemImpl(
-                                    process, doc));
+                        DocumentModel doc = jbpmService.getDocumentModel(process, pal);
+                        if (doc != null && !LifeCycleConstants.DELETED_STATE.equals(doc.getCurrentLifeCycleState())) {
+                            currentUserProcesses.add(new DocumentProcessItemImpl(process, doc));
                         } else {
-                            log.warn(String.format(
-                                    "User '%s' has a process of type '%s' on a "
-                                            + "missing or deleted document",
-                                    currentUser.getName(),
+                            log.warn(String.format("User '%s' has a process of type '%s' on a "
+                                    + "missing or deleted document", currentUser.getName(),
                                     process.getProcessDefinition().getName()));
                         }
                     } catch (Exception e) {
@@ -111,37 +103,24 @@ public class WorkflowDashBoardActions implements Serializable {
         return currentUserProcesses;
     }
 
-    @Observer(value = { JbpmEventNames.WORKFLOW_ENDED,
-            JbpmEventNames.WORKFLOW_NEW_STARTED,
-            JbpmEventNames.WORKFLOW_TASK_STOP,
-            JbpmEventNames.WORKFLOW_TASK_REJECTED,
-            JbpmEventNames.WORKFLOW_USER_ASSIGNMENT_CHANGED,
-            JbpmEventNames.WORKFLOW_TASK_COMPLETED,
-            JbpmEventNames.WORKFLOW_TASK_REMOVED,
-            JbpmEventNames.WORK_ITEMS_LIST_LOADED,
-            JbpmEventNames.WORKFLOW_TASKS_COMPUTED,
-            JbpmEventNames.WORKFLOW_ABANDONED,
-            JbpmEventNames.WORKFLOW_CANCELED,
-            EventNames.DOMAIN_SELECTION_CHANGED }, create = false)
+    @Observer(value = { JbpmEventNames.WORKFLOW_ENDED, JbpmEventNames.WORKFLOW_NEW_STARTED,
+            JbpmEventNames.WORKFLOW_TASK_STOP, JbpmEventNames.WORKFLOW_TASK_REJECTED,
+            JbpmEventNames.WORKFLOW_USER_ASSIGNMENT_CHANGED, JbpmEventNames.WORKFLOW_TASK_COMPLETED,
+            JbpmEventNames.WORKFLOW_TASK_REMOVED, JbpmEventNames.WORK_ITEMS_LIST_LOADED,
+            JbpmEventNames.WORKFLOW_TASKS_COMPUTED, JbpmEventNames.WORKFLOW_ABANDONED,
+            JbpmEventNames.WORKFLOW_CANCELED, EventNames.DOMAIN_SELECTION_CHANGED }, create = false)
     @BypassInterceptors
     public void invalidateDocumentProcessItems() {
         currentUserProcesses = null;
     }
 
-    @Observer(value = { JbpmEventNames.WORKFLOW_ENDED,
-            JbpmEventNames.WORKFLOW_NEW_STARTED,
-            JbpmEventNames.WORKFLOW_TASK_START,
-            JbpmEventNames.WORKFLOW_TASK_STOP,
-            JbpmEventNames.WORKFLOW_TASK_REJECTED,
-            JbpmEventNames.WORKFLOW_USER_ASSIGNMENT_CHANGED,
-            JbpmEventNames.WORKFLOW_TASK_COMPLETED,
-            JbpmEventNames.WORKFLOW_TASK_REMOVED,
-            JbpmEventNames.WORK_ITEMS_LIST_LOADED,
-            JbpmEventNames.WORKFLOW_TASKS_COMPUTED,
-            JbpmEventNames.WORKFLOW_ABANDONED,
-            JbpmEventNames.WORKFLOW_CANCELED,
-            EventNames.DOMAIN_SELECTION_CHANGED, "documentPublicationRejected",
-            "documentPublished" }, create = false)
+    @Observer(value = { JbpmEventNames.WORKFLOW_ENDED, JbpmEventNames.WORKFLOW_NEW_STARTED,
+            JbpmEventNames.WORKFLOW_TASK_START, JbpmEventNames.WORKFLOW_TASK_STOP,
+            JbpmEventNames.WORKFLOW_TASK_REJECTED, JbpmEventNames.WORKFLOW_USER_ASSIGNMENT_CHANGED,
+            JbpmEventNames.WORKFLOW_TASK_COMPLETED, JbpmEventNames.WORKFLOW_TASK_REMOVED,
+            JbpmEventNames.WORK_ITEMS_LIST_LOADED, JbpmEventNames.WORKFLOW_TASKS_COMPUTED,
+            JbpmEventNames.WORKFLOW_ABANDONED, JbpmEventNames.WORKFLOW_CANCELED, EventNames.DOMAIN_SELECTION_CHANGED,
+            "documentPublicationRejected", "documentPublished" }, create = false)
     @BypassInterceptors
     public void invalidateDashboardItems() {
         currentUserTasks = null;

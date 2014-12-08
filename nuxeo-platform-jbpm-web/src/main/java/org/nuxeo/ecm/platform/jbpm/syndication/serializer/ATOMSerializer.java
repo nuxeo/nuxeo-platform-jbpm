@@ -47,9 +47,8 @@ public class ATOMSerializer implements DashBoardItemSerializer {
     private static final String ATOM_TYPE = "atom_1.0";
 
     @Override
-    public void serialize(ResultSummary summary, List<DashBoardItem> workItems,
-            String columnsDefinition, List<String> labels, String lang,
-            Response response, HttpServletRequest req) throws ClientException {
+    public void serialize(ResultSummary summary, List<DashBoardItem> workItems, String columnsDefinition,
+            List<String> labels, String lang, Response response, HttpServletRequest req) throws ClientException {
         // TODO labels, lang
 
         SyndFeed atomFeed = new SyndFeedImpl();
@@ -71,8 +70,7 @@ public class ATOMSerializer implements DashBoardItemSerializer {
 
         // Try to return feed
         try {
-            response.setEntity(output.outputString(atomFeed),
-                    MediaType.TEXT_XML);
+            response.setEntity(output.outputString(atomFeed), MediaType.TEXT_XML);
             response.getEntity().setCharacterSet(CharacterSet.UTF_8);
         } catch (FeedException fe) {
         }
@@ -81,8 +79,7 @@ public class ATOMSerializer implements DashBoardItemSerializer {
     /**
      * Adapts a DashboardItems to a SyndEntry.
      */
-    private static SyndEntry adaptDashBoardItem(DashBoardItem item,
-            HttpServletRequest req) throws ClientException {
+    private static SyndEntry adaptDashBoardItem(DashBoardItem item, HttpServletRequest req) throws ClientException {
 
         SyndEntry entry = new SyndEntryImpl();
         TaskModule taskModule = new TaskModuleImpl();
@@ -98,12 +95,10 @@ public class ATOMSerializer implements DashBoardItemSerializer {
         modules.add(taskModule);
         entry.setModules(modules);
 
-        String docTitle = (String) item.getDocument().getProperty("dublincore",
-                "title");
+        String docTitle = (String) item.getDocument().getProperty("dublincore", "title");
         entry.setTitle(docTitle);
 
-        entry.setLink(DocumentModelFunctions.documentUrl(null,
-                item.getDocument(), null, null, true, req));
+        entry.setLink(DocumentModelFunctions.documentUrl(null, item.getDocument(), null, null, true, req));
 
         return entry;
     }

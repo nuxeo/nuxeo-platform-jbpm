@@ -62,16 +62,13 @@ public class JbpmTaskServiceImpl implements JbpmTaskService {
 
     private static final Log log = LogFactory.getLog(JbpmTaskServiceImpl.class);
 
-    public void createTask(CoreSession coreSession, NuxeoPrincipal principal,
-            DocumentModel document, String taskName,
-            List<String> prefixedActorIds, boolean createOneTaskPerActor,
-            String directive, String comment, Date dueDate,
-            Map<String, Serializable> taskVariables) throws NuxeoJbpmException {
+    public void createTask(CoreSession coreSession, NuxeoPrincipal principal, DocumentModel document, String taskName,
+            List<String> prefixedActorIds, boolean createOneTaskPerActor, String directive, String comment,
+            Date dueDate, Map<String, Serializable> taskVariables) throws NuxeoJbpmException {
         if (createOneTaskPerActor) {
             for (String prefixedActorId : prefixedActorIds) {
-                createTask(coreSession, principal, document, taskName,
-                        Collections.singletonList(prefixedActorId), false,
-                        directive, comment, dueDate, taskVariables);
+                createTask(coreSession, principal, document, taskName, Collections.singletonList(prefixedActorId),
+                        false, directive, comment, dueDate, taskVariables);
             }
         } else {
             try {
@@ -89,67 +86,52 @@ public class JbpmTaskServiceImpl implements JbpmTaskService {
 
                 // add variables
                 Map<String, Serializable> variables = new HashMap<String, Serializable>();
-                variables.put(JbpmService.VariableName.documentId.name(),
-                        document.getId());
-                variables.put(
-                        JbpmService.VariableName.documentRepositoryName.name(),
-                        document.getRepositoryName());
-                variables.put(JbpmService.VariableName.initiator.name(),
-                        principal.getName());
-                variables.put(JbpmService.TaskVariableName.directive.name(),
-                        directive);
-                variables.put(TaskVariableName.createdFromTaskService.name(),
-                        "true");
+                variables.put(JbpmService.VariableName.documentId.name(), document.getId());
+                variables.put(JbpmService.VariableName.documentRepositoryName.name(), document.getRepositoryName());
+                variables.put(JbpmService.VariableName.initiator.name(), principal.getName());
+                variables.put(JbpmService.TaskVariableName.directive.name(), directive);
+                variables.put(TaskVariableName.createdFromTaskService.name(), "true");
                 if (taskVariables != null) {
                     variables.putAll(taskVariables);
                 }
                 task.setVariables(variables);
 
                 // save the task
-                getJbpmService().saveTaskInstances(
-                        Collections.singletonList(task));
+                getJbpmService().saveTaskInstances(Collections.singletonList(task));
 
                 // notify
                 Map<String, Serializable> eventProperties = new HashMap<String, Serializable>();
                 ArrayList<String> notificationRecipients = new ArrayList<String>();
                 notificationRecipients.add(getTaskInitiator(task));
                 notificationRecipients.addAll(prefixedActorIds);
-                eventProperties.put(
-                        NotificationConstants.RECIPIENTS_KEY,
+                eventProperties.put(NotificationConstants.RECIPIENTS_KEY,
                         notificationRecipients.toArray(new String[notificationRecipients.size()]));
 
-                notifyEvent(coreSession, document, principal, task,
-                        JbpmEventNames.WORKFLOW_TASK_ASSIGNED, eventProperties,
-                        comment, null);
-                notifyEvent(coreSession, document, principal, task,
-                        JbpmEventNames.WORKFLOW_TASK_ASSIGNED, eventProperties,
-                        comment, null);
+                notifyEvent(coreSession, document, principal, task, JbpmEventNames.WORKFLOW_TASK_ASSIGNED,
+                        eventProperties, comment, null);
+                notifyEvent(coreSession, document, principal, task, JbpmEventNames.WORKFLOW_TASK_ASSIGNED,
+                        eventProperties, comment, null);
             } catch (ClientException e) {
                 throw new NuxeoJbpmException(e);
             }
         }
     }
 
-    public void acceptTask(CoreSession coreSession, NuxeoPrincipal principal,
-            TaskInstance task, String comment) throws NuxeoJbpmException {
-        endTask(coreSession, principal, task, comment,
-                JbpmEventNames.WORKFLOW_TASK_COMPLETED, true);
+    public void acceptTask(CoreSession coreSession, NuxeoPrincipal principal, TaskInstance task, String comment)
+            throws NuxeoJbpmException {
+        endTask(coreSession, principal, task, comment, JbpmEventNames.WORKFLOW_TASK_COMPLETED, true);
     }
 
-    public void rejectTask(CoreSession coreSession, NuxeoPrincipal principal,
-            TaskInstance task, String comment) throws NuxeoJbpmException {
-        endTask(coreSession, principal, task, comment,
-                JbpmEventNames.WORKFLOW_TASK_REJECTED, false);
+    public void rejectTask(CoreSession coreSession, NuxeoPrincipal principal, TaskInstance task, String comment)
+            throws NuxeoJbpmException {
+        endTask(coreSession, principal, task, comment, JbpmEventNames.WORKFLOW_TASK_REJECTED, false);
     }
 
     @SuppressWarnings("unchecked")
-    public void endTask(CoreSession coreSession, NuxeoPrincipal principal,
-            TaskInstance task, String comment, String eventName,
-            boolean isValidated) throws NuxeoJbpmException {
+    public void endTask(CoreSession coreSession, NuxeoPrincipal principal, TaskInstance task, String comment,
+            String eventName, boolean isValidated) throws NuxeoJbpmException {
         if (!canEndTask(principal, task)) {
-            throw new NuxeoJbpmException(String.format(
-                    "User with id '%s' cannot end this task",
-                    principal.getName()));
+            throw new NuxeoJbpmException(String.format("User with id '%s' cannot end this task", principal.getName()));
         }
         try {
             JbpmService jbpmService = getJbpmService();
@@ -168,21 +150,17 @@ public class JbpmTaskServiceImpl implements JbpmTaskService {
             // end the task, adding boolean marker that task was validated or
             // rejected
             Map<String, Serializable> taskVariables = new HashMap<String, Serializable>();
-            taskVariables.put(JbpmService.TaskVariableName.validated.name(),
-                    String.valueOf(isValidated));
+            taskVariables.put(JbpmService.TaskVariableName.validated.name(), String.valueOf(isValidated));
             // set variable on task directly too
-            task.setVariable(JbpmService.TaskVariableName.validated.name(),
-                    String.valueOf(isValidated));
-            jbpmService.endTask(Long.valueOf(task.getId()), null, taskVariables,
-                    null, null, principal);
+            task.setVariable(JbpmService.TaskVariableName.validated.name(), String.valueOf(isValidated));
+            jbpmService.endTask(Long.valueOf(task.getId()), null, taskVariables, null, null, principal);
 
             // notify
             Map<String, Serializable> eventProperties = new HashMap<String, Serializable>();
             ArrayList<String> notificationRecipients = new ArrayList<String>();
             notificationRecipients.add(getTaskInitiator(task));
             notificationRecipients.addAll(task.getPooledActors());
-            eventProperties.put(NotificationConstants.RECIPIENTS_KEY,
-                    notificationRecipients);
+            eventProperties.put(NotificationConstants.RECIPIENTS_KEY, notificationRecipients);
             // try to resolve document when notifying
             DocumentModel document = null;
             String docId = (String) task.getVariable(JbpmService.VariableName.documentId.name());
@@ -192,31 +170,25 @@ public class JbpmTaskServiceImpl implements JbpmTaskService {
                     document = coreSession.getDocument(new IdRef(docId));
                 } catch (Exception e) {
                     log.error(
-                            String.format(
-                                    "Could not fetch document with id '%s:%s' for notification",
-                                    docRepo, docId), e);
+                            String.format("Could not fetch document with id '%s:%s' for notification", docRepo, docId),
+                            e);
                 }
             } else {
-                log.error(String.format(
-                        "Could not resolve document for notification: "
-                                + "document is on repository '%s' and given session is on "
-                                + "repository '%s'", docRepo,
+                log.error(String.format("Could not resolve document for notification: "
+                        + "document is on repository '%s' and given session is on " + "repository '%s'", docRepo,
                         coreSession.getRepositoryName()));
             }
 
-            notifyEvent(coreSession, document, principal, task, eventName,
-                    eventProperties, comment, null);
+            notifyEvent(coreSession, document, principal, task, eventName, eventProperties, comment, null);
 
         } catch (Exception e) {
             throw new NuxeoJbpmException(e);
         }
     }
 
-    public boolean canEndTask(NuxeoPrincipal principal, TaskInstance task)
-            throws NuxeoJbpmException {
+    public boolean canEndTask(NuxeoPrincipal principal, TaskInstance task) throws NuxeoJbpmException {
         if (task != null && (!task.isCancelled() && !task.hasEnded())) {
-            return principal.isAdministrator()
-                    || principal.getName().equals(getTaskInitiator(task))
+            return principal.isAdministrator() || principal.getName().equals(getTaskInitiator(task))
                     || isTaskAssignedToUser(task, principal);
         }
         return false;
@@ -227,8 +199,7 @@ public class JbpmTaskServiceImpl implements JbpmTaskService {
     }
 
     @SuppressWarnings("unchecked")
-    protected boolean isTaskAssignedToUser(TaskInstance task,
-            NuxeoPrincipal user) {
+    protected boolean isTaskAssignedToUser(TaskInstance task, NuxeoPrincipal user) {
         if (task != null && user != null) {
             // user actors
             List<String> actors = new ArrayList<String>();
@@ -272,10 +243,9 @@ public class JbpmTaskServiceImpl implements JbpmTaskService {
         }
     }
 
-    protected void notifyEvent(CoreSession coreSession, DocumentModel document,
-            NuxeoPrincipal principal, TaskInstance task, String eventId,
-            Map<String, Serializable> properties, String comment,
-            String category) throws ClientException {
+    protected void notifyEvent(CoreSession coreSession, DocumentModel document, NuxeoPrincipal principal,
+            TaskInstance task, String eventId, Map<String, Serializable> properties, String comment, String category)
+            throws ClientException {
         // Default category
         if (category == null) {
             category = DocumentEventCategories.EVENT_DOCUMENT_CATEGORY;
@@ -286,14 +256,10 @@ public class JbpmTaskServiceImpl implements JbpmTaskService {
 
         EventContext eventContext = null;
         if (document != null) {
-            properties.put(CoreEventConstants.REPOSITORY_NAME,
-                    document.getRepositoryName());
-            properties.put(CoreEventConstants.SESSION_ID,
-                    coreSession.getSessionId());
-            properties.put(CoreEventConstants.DOC_LIFE_CYCLE,
-                    document.getCurrentLifeCycleState());
-            eventContext = new DocumentEventContext(coreSession, principal,
-                    document);
+            properties.put(CoreEventConstants.REPOSITORY_NAME, document.getRepositoryName());
+            properties.put(CoreEventConstants.SESSION_ID, coreSession.getSessionId());
+            properties.put(CoreEventConstants.DOC_LIFE_CYCLE, document.getCurrentLifeCycleState());
+            eventContext = new DocumentEventContext(coreSession, principal, document);
         } else {
             eventContext = new EventContextImpl(coreSession, principal);
         }
@@ -301,10 +267,8 @@ public class JbpmTaskServiceImpl implements JbpmTaskService {
         properties.put(DocumentEventContext.CATEGORY_PROPERTY_KEY, category);
         properties.put(JbpmTaskService.TASK_INSTANCE_EVENT_PROPERTIES_KEY, task);
         String disableNotif = (String) task.getVariable(JbpmEventNames.DISABLE_NOTIFICATION_SERVICE);
-        if (disableNotif != null
-                && Boolean.TRUE.equals(Boolean.valueOf(disableNotif))) {
-            properties.put(JbpmEventNames.DISABLE_NOTIFICATION_SERVICE,
-                    Boolean.TRUE);
+        if (disableNotif != null && Boolean.TRUE.equals(Boolean.valueOf(disableNotif))) {
+            properties.put(JbpmEventNames.DISABLE_NOTIFICATION_SERVICE, Boolean.TRUE);
         }
         eventContext.setProperties(properties);
 

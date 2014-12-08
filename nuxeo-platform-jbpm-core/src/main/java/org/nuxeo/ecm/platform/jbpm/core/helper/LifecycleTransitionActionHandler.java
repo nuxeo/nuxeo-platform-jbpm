@@ -53,20 +53,17 @@ public class LifecycleTransitionActionHandler extends AbstractJbpmHandlerHelper 
                 String transition;
                 VersioningOption option;
                 if (endLifecycle.endsWith(SUFFIX_MINOR)) {
-                    transition = endLifecycle.substring(0,
-                            endLifecycle.length() - SUFFIX_MINOR.length());
+                    transition = endLifecycle.substring(0, endLifecycle.length() - SUFFIX_MINOR.length());
                     option = VersioningOption.MINOR;
                 } else if (endLifecycle.endsWith(SUFFIX_MAJOR)) {
-                    transition = endLifecycle.substring(0,
-                            endLifecycle.length() - SUFFIX_MAJOR.length());
+                    transition = endLifecycle.substring(0, endLifecycle.length() - SUFFIX_MAJOR.length());
                     option = VersioningOption.MAJOR;
                 } else {
                     transition = endLifecycle;
                     option = null;
                 }
                 String user = getInitiator();
-                followTransition(getNuxeoPrincipal(user), getDocumentRef(),
-                        transition, option);
+                followTransition(getNuxeoPrincipal(user), getDocumentRef(), transition, option);
             }
         }
         executionContext.getToken().signal();

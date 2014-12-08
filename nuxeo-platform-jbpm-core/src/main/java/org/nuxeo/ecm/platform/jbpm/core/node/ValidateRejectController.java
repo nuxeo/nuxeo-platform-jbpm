@@ -23,9 +23,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.nuxeo.ecm.platform.jbpm.AbstractJbpmHandlerHelper;
 
 /**
- *
  * @author arussel
- *
  */
 public class ValidateRejectController extends AbstractJbpmHandlerHelper {
 
@@ -34,17 +32,13 @@ public class ValidateRejectController extends AbstractJbpmHandlerHelper {
     private static final long serialVersionUID = 1L;
 
     @Override
-    public void submitTaskVariables(TaskInstance taskInstance,
-            ContextInstance contextInstance, Token token) {
+    public void submitTaskVariables(TaskInstance taskInstance, ContextInstance contextInstance, Token token) {
     }
 
     @Override
-    public void initializeTaskVariables(TaskInstance taskInstance,
-            ContextInstance contextInstance, Token token) {
-        taskInstance.addComment((Comment) token.getComments().get(
-                token.getComments().size() - 1));
-        taskInstance.setVariableLocally("directive",
-                WORKFLOW_DIRECTIVE_TASK_REJECTED);
+    public void initializeTaskVariables(TaskInstance taskInstance, ContextInstance contextInstance, Token token) {
+        taskInstance.addComment((Comment) token.getComments().get(token.getComments().size() - 1));
+        taskInstance.setVariableLocally("directive", WORKFLOW_DIRECTIVE_TASK_REJECTED);
     }
 
 }

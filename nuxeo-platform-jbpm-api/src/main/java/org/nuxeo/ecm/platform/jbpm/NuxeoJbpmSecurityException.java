@@ -18,7 +18,6 @@ package org.nuxeo.ecm.platform.jbpm;
 
 /**
  * @author arussel
- *
  */
 public class NuxeoJbpmSecurityException extends NuxeoJbpmRuntimeException {
 

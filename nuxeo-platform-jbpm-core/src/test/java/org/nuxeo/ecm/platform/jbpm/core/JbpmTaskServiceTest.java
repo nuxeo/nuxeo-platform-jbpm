@@ -76,8 +76,7 @@ public class JbpmTaskServiceTest extends SQLRepositoryTestCase {
         deployBundle("org.nuxeo.ecm.platform.usermanager");
         deployBundle("org.nuxeo.ecm.directory.types.contrib");
         deployBundle("org.nuxeo.ecm.directory.sql");
-        deployContrib("org.nuxeo.ecm.platform.jbpm.core.test",
-                "OSGI-INF/jbpmService-contrib.xml");
+        deployContrib("org.nuxeo.ecm.platform.jbpm.core.test", "OSGI-INF/jbpmService-contrib.xml");
 
         deployBundle(JbpmUTConstants.CORE_BUNDLE_NAME);
         deployBundle(JbpmUTConstants.TESTING_BUNDLE_NAME);
@@ -127,12 +126,10 @@ public class JbpmTaskServiceTest extends SQLRepositoryTestCase {
         calendar.set(2006, 6, 6);
 
         // create one task for all actors
-        taskService.createTask(session, user3, document, "Test Task Name",
-                actors, false, "test directive", "test comment",
-                calendar.getTime(), null);
+        taskService.createTask(session, user3, document, "Test Task Name", actors, false, "test directive",
+                "test comment", calendar.getTime(), null);
 
-        List<TaskInstance> tasks = service.getTaskInstances(document,
-                (NuxeoPrincipal) null, null);
+        List<TaskInstance> tasks = service.getTaskInstances(document, (NuxeoPrincipal) null, null);
         assertNotNull(tasks);
         assertEquals(1, tasks.size());
 
@@ -142,10 +139,8 @@ public class JbpmTaskServiceTest extends SQLRepositoryTestCase {
 
         List<String> pooledActorIds = getPooledActorIds(task);
         assertEquals(2, pooledActorIds.size());
-        assertEquals(NuxeoGroup.PREFIX + SecurityConstants.MEMBERS,
-                pooledActorIds.get(0));
-        assertEquals(NuxeoPrincipal.PREFIX + user1.getName(),
-                pooledActorIds.get(1));
+        assertEquals(NuxeoGroup.PREFIX + SecurityConstants.MEMBERS, pooledActorIds.get(0));
+        assertEquals(NuxeoPrincipal.PREFIX + user1.getName(), pooledActorIds.get(1));
 
         List<Comment> comments = task.getComments();
         assertEquals(1, comments.size());
@@ -161,18 +156,12 @@ public class JbpmTaskServiceTest extends SQLRepositoryTestCase {
         assertFalse(task.hasEnded());
 
         assertEquals(5, task.getVariables().size());
-        assertEquals(
-                document.getRepositoryName(),
+        assertEquals(document.getRepositoryName(),
                 task.getVariable(JbpmService.VariableName.documentRepositoryName.name()));
-        assertEquals(document.getId(),
-                task.getVariable(JbpmService.VariableName.documentId.name()));
-        assertEquals(user3.getName(),
-                task.getVariable(JbpmService.VariableName.initiator.name()));
-        assertEquals("test directive",
-                task.getVariable(JbpmService.TaskVariableName.directive.name()));
-        assertEquals(
-                "true",
-                task.getVariable(JbpmTaskService.TaskVariableName.createdFromTaskService.name()));
+        assertEquals(document.getId(), task.getVariable(JbpmService.VariableName.documentId.name()));
+        assertEquals(user3.getName(), task.getVariable(JbpmService.VariableName.initiator.name()));
+        assertEquals("test directive", task.getVariable(JbpmService.TaskVariableName.directive.name()));
+        assertEquals("true", task.getVariable(JbpmTaskService.TaskVariableName.createdFromTaskService.name()));
 
         // test rights for each user
         // initiator or admin can end a task
@@ -191,8 +180,7 @@ public class JbpmTaskServiceTest extends SQLRepositoryTestCase {
             taskService.acceptTask(session, user4, task, "ok i'm in");
             fail("Should have raised an exception: user4 cannot end the task");
         } catch (NuxeoJbpmException e) {
-            assertEquals("User with id 'myuser4' cannot end this task",
-                    e.getMessage());
+            assertEquals("User with id 'myuser4' cannot end this task", e.getMessage());
         }
 
         // accept task
@@ -213,10 +201,8 @@ public class JbpmTaskServiceTest extends SQLRepositoryTestCase {
 
         pooledActorIds = getPooledActorIds(task);
         assertEquals(2, pooledActorIds.size());
-        assertEquals(NuxeoGroup.PREFIX + SecurityConstants.MEMBERS,
-                pooledActorIds.get(0));
-        assertEquals(NuxeoPrincipal.PREFIX + user1.getName(),
-                pooledActorIds.get(1));
+        assertEquals(NuxeoGroup.PREFIX + SecurityConstants.MEMBERS, pooledActorIds.get(0));
+        assertEquals(NuxeoPrincipal.PREFIX + user1.getName(), pooledActorIds.get(1));
 
         comments = task.getComments();
         // FIXME: cannot add end comment right now
@@ -233,20 +219,13 @@ public class JbpmTaskServiceTest extends SQLRepositoryTestCase {
         assertFalse(task.isCancelled());
         assertTrue(task.hasEnded());
         assertEquals(6, task.getVariables().size());
-        assertEquals(
-                document.getRepositoryName(),
+        assertEquals(document.getRepositoryName(),
                 task.getVariable(JbpmService.VariableName.documentRepositoryName.name()));
-        assertEquals(document.getId(),
-                task.getVariable(JbpmService.VariableName.documentId.name()));
-        assertEquals(user3.getName(),
-                task.getVariable(JbpmService.VariableName.initiator.name()));
-        assertEquals("test directive",
-                task.getVariable(JbpmService.TaskVariableName.directive.name()));
-        assertEquals(
-                "true",
-                task.getVariable(JbpmTaskService.TaskVariableName.createdFromTaskService.name()));
-        assertEquals("true",
-                task.getVariable(JbpmService.TaskVariableName.validated.name()));
+        assertEquals(document.getId(), task.getVariable(JbpmService.VariableName.documentId.name()));
+        assertEquals(user3.getName(), task.getVariable(JbpmService.VariableName.initiator.name()));
+        assertEquals("test directive", task.getVariable(JbpmService.TaskVariableName.directive.name()));
+        assertEquals("true", task.getVariable(JbpmTaskService.TaskVariableName.createdFromTaskService.name()));
+        assertEquals("true", task.getVariable(JbpmService.TaskVariableName.validated.name()));
     }
 
     @SuppressWarnings("unchecked")
@@ -263,12 +242,10 @@ public class JbpmTaskServiceTest extends SQLRepositoryTestCase {
         calendar.set(2006, 6, 6);
 
         // create one task per actor
-        taskService.createTask(session, user3, document, "Test Task Name",
-                actors, true, "test directive", "test comment",
-                calendar.getTime(), null);
+        taskService.createTask(session, user3, document, "Test Task Name", actors, true, "test directive",
+                "test comment", calendar.getTime(), null);
 
-        List<TaskInstance> tasks = service.getTaskInstances(document,
-                (NuxeoPrincipal) null, null);
+        List<TaskInstance> tasks = service.getTaskInstances(document, (NuxeoPrincipal) null, null);
         Collections.sort(tasks, new Comparator<TaskInstance>() {
 
             // Arbitrary invert sort tasks through pooled actor id to ensure to
@@ -291,8 +268,7 @@ public class JbpmTaskServiceTest extends SQLRepositoryTestCase {
 
         List<String> pooledActorIds = getPooledActorIds(task1);
         assertEquals(1, pooledActorIds.size());
-        assertEquals(NuxeoPrincipal.PREFIX + user1.getName(),
-                pooledActorIds.get(0));
+        assertEquals(NuxeoPrincipal.PREFIX + user1.getName(), pooledActorIds.get(0));
 
         List<Comment> comments = task1.getComments();
         assertEquals(1, comments.size());
@@ -307,19 +283,12 @@ public class JbpmTaskServiceTest extends SQLRepositoryTestCase {
         assertFalse(task1.isCancelled());
         assertFalse(task1.hasEnded());
         assertEquals(5, task1.getVariables().size());
-        assertEquals(
-                document.getRepositoryName(),
+        assertEquals(document.getRepositoryName(),
                 task1.getVariable(JbpmService.VariableName.documentRepositoryName.name()));
-        assertEquals(document.getId(),
-                task1.getVariable(JbpmService.VariableName.documentId.name()));
-        assertEquals(user3.getName(),
-                task1.getVariable(JbpmService.VariableName.initiator.name()));
-        assertEquals(
-                "test directive",
-                task1.getVariable(JbpmService.TaskVariableName.directive.name()));
-        assertEquals(
-                "true",
-                task1.getVariable(JbpmTaskService.TaskVariableName.createdFromTaskService.name()));
+        assertEquals(document.getId(), task1.getVariable(JbpmService.VariableName.documentId.name()));
+        assertEquals(user3.getName(), task1.getVariable(JbpmService.VariableName.initiator.name()));
+        assertEquals("test directive", task1.getVariable(JbpmService.TaskVariableName.directive.name()));
+        assertEquals("true", task1.getVariable(JbpmTaskService.TaskVariableName.createdFromTaskService.name()));
 
         // test rights for each user
         // initiator or admin can end a task
@@ -335,8 +304,7 @@ public class JbpmTaskServiceTest extends SQLRepositoryTestCase {
             taskService.rejectTask(session, user2, task1, "i don't agree");
             fail("Should have raised an exception: user2 cannot end the task");
         } catch (NuxeoJbpmException e) {
-            assertEquals("User with id 'myuser2' cannot end this task",
-                    e.getMessage());
+            assertEquals("User with id 'myuser2' cannot end this task", e.getMessage());
         }
 
         // reject task as user1
@@ -357,8 +325,7 @@ public class JbpmTaskServiceTest extends SQLRepositoryTestCase {
 
         pooledActorIds = getPooledActorIds(task1);
         assertEquals(1, pooledActorIds.size());
-        assertEquals(NuxeoPrincipal.PREFIX + user1.getName(),
-                pooledActorIds.get(0));
+        assertEquals(NuxeoPrincipal.PREFIX + user1.getName(), pooledActorIds.get(0));
 
         comments = task1.getComments();
         // FIXME: cannot add end comment right now
@@ -375,22 +342,13 @@ public class JbpmTaskServiceTest extends SQLRepositoryTestCase {
         assertFalse(task1.isCancelled());
         assertTrue(task1.hasEnded());
         assertEquals(6, task1.getVariables().size());
-        assertEquals(
-                document.getRepositoryName(),
+        assertEquals(document.getRepositoryName(),
                 task1.getVariable(JbpmService.VariableName.documentRepositoryName.name()));
-        assertEquals(document.getId(),
-                task1.getVariable(JbpmService.VariableName.documentId.name()));
-        assertEquals(user3.getName(),
-                task1.getVariable(JbpmService.VariableName.initiator.name()));
-        assertEquals(
-                "test directive",
-                task1.getVariable(JbpmService.TaskVariableName.directive.name()));
-        assertEquals(
-                "true",
-                task1.getVariable(JbpmTaskService.TaskVariableName.createdFromTaskService.name()));
-        assertEquals(
-                "false",
-                task1.getVariable(JbpmService.TaskVariableName.validated.name()));
+        assertEquals(document.getId(), task1.getVariable(JbpmService.VariableName.documentId.name()));
+        assertEquals(user3.getName(), task1.getVariable(JbpmService.VariableName.initiator.name()));
+        assertEquals("test directive", task1.getVariable(JbpmService.TaskVariableName.directive.name()));
+        assertEquals("true", task1.getVariable(JbpmTaskService.TaskVariableName.createdFromTaskService.name()));
+        assertEquals("false", task1.getVariable(JbpmService.TaskVariableName.validated.name()));
 
         // check second task
         TaskInstance task2 = tasks.get(0);
@@ -399,8 +357,7 @@ public class JbpmTaskServiceTest extends SQLRepositoryTestCase {
 
         pooledActorIds = getPooledActorIds(task2);
         assertEquals(1, pooledActorIds.size());
-        assertEquals(NuxeoGroup.PREFIX + SecurityConstants.MEMBERS,
-                pooledActorIds.get(0));
+        assertEquals(NuxeoGroup.PREFIX + SecurityConstants.MEMBERS, pooledActorIds.get(0));
 
         comments = task2.getComments();
         assertEquals(1, comments.size());
@@ -415,19 +372,12 @@ public class JbpmTaskServiceTest extends SQLRepositoryTestCase {
         assertFalse(task2.isCancelled());
         assertFalse(task2.hasEnded());
         assertEquals(5, task2.getVariables().size());
-        assertEquals(
-                document.getRepositoryName(),
+        assertEquals(document.getRepositoryName(),
                 task2.getVariable(JbpmService.VariableName.documentRepositoryName.name()));
-        assertEquals(document.getId(),
-                task2.getVariable(JbpmService.VariableName.documentId.name()));
-        assertEquals(user3.getName(),
-                task2.getVariable(JbpmService.VariableName.initiator.name()));
-        assertEquals(
-                "test directive",
-                task2.getVariable(JbpmService.TaskVariableName.directive.name()));
-        assertEquals(
-                "true",
-                task2.getVariable(JbpmTaskService.TaskVariableName.createdFromTaskService.name()));
+        assertEquals(document.getId(), task2.getVariable(JbpmService.VariableName.documentId.name()));
+        assertEquals(user3.getName(), task2.getVariable(JbpmService.VariableName.initiator.name()));
+        assertEquals("test directive", task2.getVariable(JbpmService.TaskVariableName.directive.name()));
+        assertEquals("true", task2.getVariable(JbpmTaskService.TaskVariableName.createdFromTaskService.name()));
 
         // test rights for each user
         // initiator or admin can end a task
@@ -445,8 +395,7 @@ public class JbpmTaskServiceTest extends SQLRepositoryTestCase {
             taskService.acceptTask(session, user4, task2, "i don't agree");
             fail("Should have raised an exception: user4 cannot end the task");
         } catch (NuxeoJbpmException e) {
-            assertEquals("User with id 'myuser4' cannot end this task",
-                    e.getMessage());
+            assertEquals("User with id 'myuser4' cannot end this task", e.getMessage());
         }
 
         // accept task as user1
@@ -459,8 +408,7 @@ public class JbpmTaskServiceTest extends SQLRepositoryTestCase {
 
     @SuppressWarnings("unchecked")
     protected List<String> getPooledActorIds(TaskInstance task) {
-        List<PooledActor> pooledActors = new ArrayList<PooledActor>(
-                task.getPooledActors());
+        List<PooledActor> pooledActors = new ArrayList<PooledActor>(task.getPooledActors());
         assertNotNull(pooledActors);
         List<String> pooledActorIds = new ArrayList<String>(pooledActors.size());
         for (PooledActor pooledActor : pooledActors) {
@@ -474,8 +422,7 @@ public class JbpmTaskServiceTest extends SQLRepositoryTestCase {
         return (TaskInstance) service.executeJbpmOperation(new JbpmOperation() {
             private static final long serialVersionUID = 1L;
 
-            public TaskInstance run(JbpmContext context)
-                    throws NuxeoJbpmException {
+            public TaskInstance run(JbpmContext context) throws NuxeoJbpmException {
                 TaskInstance task = context.getTaskInstance(taskId.longValue());
                 eagerLoadTaskInstance(task);
                 return task;
@@ -500,8 +447,7 @@ public class JbpmTaskServiceTest extends SQLRepositoryTestCase {
     }
 
     protected DocumentModel getDocument() throws Exception {
-        DocumentModel model = session.createDocumentModel(
-                session.getRootDocument().getPathAsString(), "1", "File");
+        DocumentModel model = session.createDocumentModel(session.getRootDocument().getPathAsString(), "1", "File");
         DocumentModel doc = session.createDocument(model);
         assertNotNull(doc);
 

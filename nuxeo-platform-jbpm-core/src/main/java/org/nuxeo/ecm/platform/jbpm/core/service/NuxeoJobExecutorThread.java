@@ -48,11 +48,9 @@ public class NuxeoJobExecutorThread extends JobExecutorThread {
 
     protected final JbpmConfiguration jbpmConfiguration;
 
-    public NuxeoJobExecutorThread(String name, JobExecutor jobExecutor,
-            JbpmConfiguration jbpmConfiguration, int idleInterval,
-            int maxIdleInterval, long maxLockTime, int maxHistory) {
-        super(name, jobExecutor, jbpmConfiguration, idleInterval,
-                maxIdleInterval, maxLockTime, maxHistory);
+    public NuxeoJobExecutorThread(String name, JobExecutor jobExecutor, JbpmConfiguration jbpmConfiguration,
+            int idleInterval, int maxIdleInterval, long maxLockTime, int maxHistory) {
+        super(name, jobExecutor, jbpmConfiguration, idleInterval, maxIdleInterval, maxLockTime, maxHistory);
         this.jbpmConfiguration = jbpmConfiguration;
         this.maxLockTime = maxLockTime;
     }
@@ -65,8 +63,7 @@ public class NuxeoJobExecutorThread extends JobExecutorThread {
             DbPersistenceServiceFactory factory = ((DbPersistenceServiceFactory) jbpmContext.getServiceFactory(Services.SERVICENAME_PERSISTENCE));
             boolean jbpmTransaction = factory.isTransactionEnabled();
             if (!jbpmTransaction) {
-                jbpmContext.getSession().getTransaction().registerSynchronization(
-                        new JbpmSynchronization(jbpmContext));
+                jbpmContext.getSession().getTransaction().registerSynchronization(new JbpmSynchronization(jbpmContext));
             }
             try {
                 JobSession jobSession = jbpmContext.getJobSession();
@@ -92,8 +89,7 @@ public class NuxeoJobExecutorThread extends JobExecutorThread {
                 }
 
                 // if this job is locked too long
-                long totalLockTimeInMillis = System.currentTimeMillis()
-                        - job.getLockTime().getTime();
+                long totalLockTimeInMillis = System.currentTimeMillis() - job.getLockTime().getTime();
                 if (totalLockTimeInMillis > maxLockTime) {
                     jbpmContext.setRollbackOnly();
                 }
@@ -105,8 +101,7 @@ public class NuxeoJobExecutorThread extends JobExecutorThread {
                 } catch (JbpmPersistenceException e) {
                     // if this is a stale state exception, keep it quiet
                     if (Services.isCausedByStaleState(e)) {
-                        log.debug("optimistic locking failed, couldn't complete job "
-                                + job);
+                        log.debug("optimistic locking failed, couldn't complete job " + job);
                     } else {
                         throw e;
                     }

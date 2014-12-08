@@ -40,7 +40,6 @@ import org.nuxeo.ecm.platform.jbpm.JbpmService;
 
 /**
  * @author arussel
- *
  */
 public class HibernateQueriesTest {
 
@@ -82,8 +81,8 @@ public class HibernateQueriesTest {
     @Test
     public void testGetProcessInstancesForDoc() {
         ProcessDefinition pd = new ProcessDefinition();
-        List<ProcessInstance> list = session.getNamedQuery(GET_PI).setParameter(
-                "docId", _1).setParameter("repoId", DEMO).list();
+        List<ProcessInstance> list = session.getNamedQuery(GET_PI).setParameter("docId", _1).setParameter("repoId",
+                DEMO).list();
         assertNotNull(list);
         assertTrue(list.isEmpty());
 
@@ -92,17 +91,14 @@ public class HibernateQueriesTest {
         Token token = new Token();
         pi.setRootToken(token);
         token.setProcessInstance(pi);
-        pi.getContextInstance().setVariable(
-                JbpmService.VariableName.documentId.name(), _1);
-        pi.getContextInstance().setVariable(
-                JbpmService.VariableName.documentRepositoryName.name(), DEMO);
+        pi.getContextInstance().setVariable(JbpmService.VariableName.documentId.name(), _1);
+        pi.getContextInstance().setVariable(JbpmService.VariableName.documentRepositoryName.name(), DEMO);
         session.save(pi.getContextInstance());
         session.save(token);
         session.save(pi);
         session.save(pd);
         session.flush();
-        list = session.getNamedQuery(GET_PI).setParameter("docId", _1).setParameter(
-                "repoId", DEMO).list();
+        list = session.getNamedQuery(GET_PI).setParameter("docId", _1).setParameter("repoId", DEMO).list();
         assertEquals(1, list.size());
         // pi.end();
         pi.setEnd(new Date());
@@ -111,8 +107,7 @@ public class HibernateQueriesTest {
         session.save(pi);
         session.save(pd);
         session.flush();
-        list = session.getNamedQuery(GET_PI).setParameter("docId", _1).setParameter(
-                "repoId", DEMO).list();
+        list = session.getNamedQuery(GET_PI).setParameter("docId", _1).setParameter("repoId", DEMO).list();
         assertNotNull(pi.getEnd());
         assertEquals(0, list.size());
     }
@@ -122,8 +117,7 @@ public class HibernateQueriesTest {
     public void testGetProcessInstancesForInitiator() {
         List<String> initiators = Arrays.asList("bob", "jef");
         ProcessDefinition pd = new ProcessDefinition();
-        List<ProcessInstance> list = session.getNamedQuery(GET_PII).setParameterList(
-                "initiators", initiators).list();
+        List<ProcessInstance> list = session.getNamedQuery(GET_PII).setParameterList("initiators", initiators).list();
         assertNotNull(list);
         assertTrue(list.isEmpty());
 
@@ -132,8 +126,7 @@ public class HibernateQueriesTest {
         Token token = new Token();
         pi.setRootToken(token);
         token.setProcessInstance(pi);
-        pi.getContextInstance().setVariable(
-                JbpmService.VariableName.initiator.name(), "bob");
+        pi.getContextInstance().setVariable(JbpmService.VariableName.initiator.name(), "bob");
         session.save(pi.getContextInstance());
         session.save(token);
         session.save(pi);
@@ -174,8 +167,7 @@ public class HibernateQueriesTest {
 
         List<TaskInstance> list = new ArrayList<TaskInstance>();
 
-        list.addAll(session.getNamedQuery(GET_TI_1).setParameter(
-                "docId", _1).setParameter("repoId", DEMO).list());
+        list.addAll(session.getNamedQuery(GET_TI_1).setParameter("docId", _1).setParameter("repoId", DEMO).list());
         assertTrue(list.contains(ti1));
 
         TaskInstance ti2 = new TaskInstance();
@@ -184,9 +176,7 @@ public class HibernateQueriesTest {
         session.save(ti2);
         session.flush();
 
-
-        list.addAll(session.getNamedQuery(GET_TI_2).setParameter(
-                "docId", _1).setParameter("repoId", DEMO).list());
+        list.addAll(session.getNamedQuery(GET_TI_2).setParameter("docId", _1).setParameter("repoId", DEMO).list());
         assertTrue(list.contains(ti2));
 
         assertEquals(2, list.size());

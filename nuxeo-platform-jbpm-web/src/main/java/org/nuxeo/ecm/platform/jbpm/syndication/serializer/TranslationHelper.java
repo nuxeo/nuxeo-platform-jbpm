@@ -35,11 +35,9 @@ public class TranslationHelper {
     }
 
     public static String getLabel(String key, Locale locale) {
-        String translated = I18NUtils.getMessageString("messages", key, null,
-                locale);
+        String translated = I18NUtils.getMessageString("messages", key, null, locale);
         if (translated == null) {
-            translated = I18NUtils.getMessageString("messages", key, null,
-                    Locale.ENGLISH);
+            translated = I18NUtils.getMessageString("messages", key, null, Locale.ENGLISH);
         }
         return translated;
     }

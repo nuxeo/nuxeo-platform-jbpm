@@ -23,16 +23,11 @@ import org.jbpm.JbpmContext;
 import org.nuxeo.ecm.core.api.DocumentModel;
 
 /**
- * Filter of list.
- *
- * This filter allows to select only part of a list. It is used as parameter in
- * methods of {@link JbpmService}. Inside the filter method, the jbpmContext is
- * alive.
+ * Filter of list. This filter allows to select only part of a list. It is used as parameter in methods of
+ * {@link JbpmService}. Inside the filter method, the jbpmContext is alive.
  *
  * @author arussel
- *
  */
 public interface JbpmActorsListFilter {
-    <T> ArrayList<T> filter(JbpmContext jbpmContext, DocumentModel document,
-            ArrayList<T> list, List<String> actors);
+    <T> ArrayList<T> filter(JbpmContext jbpmContext, DocumentModel document, ArrayList<T> list, List<String> actors);
 }

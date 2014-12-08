@@ -48,18 +48,16 @@ public interface JbpmActions extends Serializable {
 
     boolean getCanEndTask(TaskInstance taskInstance) throws ClientException;
 
-    String createProcessInstance(NuxeoPrincipal principal, String pd,
-            DocumentModel dm, String endLifeCycle) throws ClientException;
+    String createProcessInstance(NuxeoPrincipal principal, String pd, DocumentModel dm, String endLifeCycle)
+            throws ClientException;
 
     ProcessInstance getCurrentProcess() throws ClientException;
 
     String getCurrentProcessInitiator() throws ClientException;
 
-    List<TaskInstance> getCurrentTasks(String... taskNames)
-            throws ClientException;
+    List<TaskInstance> getCurrentTasks(String... taskNames) throws ClientException;
 
-    ArrayList<VirtualTaskInstance> getCurrentVirtualTasks()
-            throws ClientException;
+    ArrayList<VirtualTaskInstance> getCurrentVirtualTasks() throws ClientException;
 
     boolean getShowAddVirtualTaskForm() throws ClientException;
 
@@ -76,36 +74,30 @@ public interface JbpmActions extends Serializable {
     String moveDownVirtualTask(int index) throws ClientException;
 
     /**
-     * Returns the list of allowed life cycle state transitions for given
-     * document.
+     * Returns the list of allowed life cycle state transitions for given document.
      */
-    List<String> getAllowedStateTransitions(DocumentRef ref)
-            throws ClientException;
+    List<String> getAllowedStateTransitions(DocumentRef ref) throws ClientException;
 
     String getUserComment();
 
     void setUserComment(String comment);
 
-    void validateTaskDueDate(FacesContext context, UIComponent component,
-            Object value);
+    void validateTaskDueDate(FacesContext context, UIComponent component, Object value);
 
     boolean isProcessStarted(String startTaskName) throws ClientException;
 
     String startProcess(String startTaskName) throws ClientException;
 
-    String validateTask(TaskInstance taskInstance, String transition)
-            throws ClientException;
+    String validateTask(TaskInstance taskInstance, String transition) throws ClientException;
 
-    String rejectTask(TaskInstance taskInstance, String transition)
-            throws ClientException;
+    String rejectTask(TaskInstance taskInstance, String transition) throws ClientException;
 
     String abandonCurrentProcess() throws ClientException;
 
     void resetCurrentData();
 
     /**
-     * Returns true if given document type has process definitions attached to
-     * it.
+     * Returns true if given document type has process definitions attached to it.
      *
      * @since 5.5
      * @param documentType the document type name

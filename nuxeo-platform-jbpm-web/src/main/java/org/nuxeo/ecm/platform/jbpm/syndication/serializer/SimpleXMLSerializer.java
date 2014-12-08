@@ -55,25 +55,19 @@ public class SimpleXMLSerializer implements DashBoardItemSerializer {
     private static final String taskNSPrefix = "nxt";
 
     @Override
-    public void serialize(ResultSummary summary, List<DashBoardItem> workItems,
-            String columnsDefinition, List<String> labels, String lang,
-            Response res, HttpServletRequest req) {
+    public void serialize(ResultSummary summary, List<DashBoardItem> workItems, String columnsDefinition,
+            List<String> labels, String lang, Response res, HttpServletRequest req) {
         if (workItems == null) {
             return;
         }
 
-        QName tasksTag = DocumentFactory.getInstance().createQName(
-                rootTaskNodeName, taskNSPrefix, taskNS);
-        QName taskTag = DocumentFactory.getInstance().createQName(taskNodeName,
-                taskNSPrefix, taskNS);
-        QName taskCategoryTag = DocumentFactory.getInstance().createQName(
-                taskCategoryNodeName, taskNSPrefix, taskNS);
+        QName tasksTag = DocumentFactory.getInstance().createQName(rootTaskNodeName, taskNSPrefix, taskNS);
+        QName taskTag = DocumentFactory.getInstance().createQName(taskNodeName, taskNSPrefix, taskNS);
+        QName taskCategoryTag = DocumentFactory.getInstance().createQName(taskCategoryNodeName, taskNSPrefix, taskNS);
 
-        org.dom4j.Element rootElem = DocumentFactory.getInstance().createElement(
-                tasksTag);
+        org.dom4j.Element rootElem = DocumentFactory.getInstance().createElement(tasksTag);
         rootElem.addNamespace(taskNSPrefix, taskNS);
-        org.dom4j.Document rootDoc = DocumentFactory.getInstance().createDocument(
-                rootElem);
+        org.dom4j.Document rootDoc = DocumentFactory.getInstance().createDocument(rootElem);
 
         Map<String, List<DashBoardItem>> sortedDashBoardItem = new HashMap<String, List<DashBoardItem>>();
         for (DashBoardItem item : workItems) {
@@ -83,8 +77,7 @@ public class SimpleXMLSerializer implements DashBoardItemSerializer {
             }
 
             if (!sortedDashBoardItem.containsKey(category)) {
-                sortedDashBoardItem.put(category,
-                        new ArrayList<DashBoardItem>());
+                sortedDashBoardItem.put(category, new ArrayList<DashBoardItem>());
             }
             sortedDashBoardItem.get(category).add(item);
         }
@@ -101,16 +94,10 @@ public class SimpleXMLSerializer implements DashBoardItemSerializer {
                 taskElem.addAttribute("id", item.getId().toString());
                 taskElem.addAttribute("link", item.getDocumentLink());
                 if (item.getDueDate() != null) {
-                    taskElem.addAttribute(
-                            "dueDate",
-                            DateFormat.getDateInstance().format(
-                                    item.getDueDate()));
+                    taskElem.addAttribute("dueDate", DateFormat.getDateInstance().format(item.getDueDate()));
                 }
                 if (item.getStartDate() != null) {
-                    taskElem.addAttribute(
-                            "startDate",
-                            DateFormat.getDateInstance().format(
-                                    item.getStartDate()));
+                    taskElem.addAttribute("startDate", DateFormat.getDateInstance().format(item.getStartDate()));
                 }
                 String currentLifeCycle = "";
 
@@ -120,27 +107,22 @@ public class SimpleXMLSerializer implements DashBoardItemSerializer {
                     log.debug("No LifeCycle found");
                 }
 
-                taskElem.addAttribute("currentDocumentLifeCycle",
-                        currentLifeCycle);
+                taskElem.addAttribute("currentDocumentLifeCycle", currentLifeCycle);
 
                 // not thread-safe so don't use a static instance
-                DateFormat dateFormat = new SimpleDateFormat(
-                        "yyyy-MM-dd HH:mm:ss");
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 if (item.getDueDate() != null) {
-                    taskElem.addAttribute("dueDate",
-                            dateFormat.format(item.getDueDate()));
+                    taskElem.addAttribute("dueDate", dateFormat.format(item.getDueDate()));
                 }
                 if (item.getStartDate() != null) {
-                    taskElem.addAttribute("startDate",
-                            dateFormat.format(item.getStartDate()));
+                    taskElem.addAttribute("startDate", dateFormat.format(item.getStartDate()));
                 }
                 if (item.getComment() != null) {
                     taskElem.setText(item.getComment());
                 }
             }
         }
-        QName translationTag = DocumentFactory.getInstance().createQName(
-                translationNodeName, taskNSPrefix, taskNS);
+        QName translationTag = DocumentFactory.getInstance().createQName(translationNodeName, taskNSPrefix, taskNS);
         org.dom4j.Element translationElem = rootElem.addElement(translationTag);
 
         Map<String, String> translatedWords = getTranslationsForWorkflow("en");

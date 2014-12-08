@@ -31,7 +31,6 @@ import org.nuxeo.ecm.platform.jbpm.test.AbstractProcessDefinitionTest;
 
 /**
  * @author arussel
- *
  */
 public class ValidationReviewTest extends AbstractProcessDefinitionTest {
 
@@ -61,8 +60,7 @@ public class ValidationReviewTest extends AbstractProcessDefinitionTest {
             List<VirtualTaskInstance> participants = new ArrayList<VirtualTaskInstance>();
             participants.add(new VirtualTaskInstance("bob", "dobob", "yobob", null));
             participants.add(new VirtualTaskInstance("trudy", "dotrudy", "yotrudy", null));
-            pi.getContextInstance().setVariable(
-                    JbpmService.VariableName.participants.name(), participants);
+            pi.getContextInstance().setVariable(JbpmService.VariableName.participants.name(), participants);
             bobstask.get(0).end();
             // first evaluation
             bobstask = context.getGroupTaskList(bob_list);

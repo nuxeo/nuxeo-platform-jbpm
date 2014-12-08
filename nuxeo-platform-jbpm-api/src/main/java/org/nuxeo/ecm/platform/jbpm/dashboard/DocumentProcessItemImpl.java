@@ -44,8 +44,7 @@ public class DocumentProcessItemImpl implements DocumentProcessItem {
 
     protected final String processInstanceName;
 
-    public DocumentProcessItemImpl(ProcessInstance processInstance,
-            DocumentModel documentModel) {
+    public DocumentProcessItemImpl(ProcessInstance processInstance, DocumentModel documentModel) {
         this.documentModel = documentModel;
         this.processInstance = processInstance;
         try {

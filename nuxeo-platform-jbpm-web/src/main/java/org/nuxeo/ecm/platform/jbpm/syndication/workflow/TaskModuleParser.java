@@ -28,8 +28,7 @@ import com.sun.syndication.io.impl.DateParser;
 
 public class TaskModuleParser implements ModuleParser {
 
-    private static final Namespace TASK_NS = Namespace.getNamespace("task",
-            TaskModule.URI);
+    private static final Namespace TASK_NS = Namespace.getNamespace("task", TaskModule.URI);
 
     @Override
     public String getNamespaceUri() {

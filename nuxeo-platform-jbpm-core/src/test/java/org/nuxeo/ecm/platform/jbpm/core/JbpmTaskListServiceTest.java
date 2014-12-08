@@ -59,13 +59,10 @@ public class JbpmTaskListServiceTest extends SQLRepositoryTestCase {
         deployBundle("org.nuxeo.ecm.platform.content.template");
         deployBundle("org.nuxeo.ecm.platform.userworkspace.api");
         deployBundle("org.nuxeo.ecm.platform.userworkspace.types");
-        deployContrib("org.nuxeo.ecm.platform.userworkspace.core",
-                "OSGI-INF/userworkspace-framework.xml");
-        deployContrib("org.nuxeo.ecm.platform.userworkspace.core",
-                "OSGI-INF/userWorkspaceImpl.xml");
+        deployContrib("org.nuxeo.ecm.platform.userworkspace.core", "OSGI-INF/userworkspace-framework.xml");
+        deployContrib("org.nuxeo.ecm.platform.userworkspace.core", "OSGI-INF/userWorkspaceImpl.xml");
 
-        deployContrib("org.nuxeo.ecm.platform.jbpm.core.test",
-                "OSGI-INF/jbpmService-contrib.xml");
+        deployContrib("org.nuxeo.ecm.platform.jbpm.core.test", "OSGI-INF/jbpmService-contrib.xml");
 
         deployBundle(JbpmUTConstants.CORE_BUNDLE_NAME);
         deployBundle(JbpmUTConstants.TESTING_BUNDLE_NAME);
@@ -89,8 +86,7 @@ public class JbpmTaskListServiceTest extends SQLRepositoryTestCase {
 
     @Test
     public void testAdapter() throws ClientException {
-        DocumentModel doc = session.createDocumentModel("/", "list1",
-                "TaskList");
+        DocumentModel doc = session.createDocumentModel("/", "list1", "TaskList");
         doc = session.createDocument(doc);
         assertNotNull(doc);
 
@@ -107,8 +103,7 @@ public class JbpmTaskListServiceTest extends SQLRepositoryTestCase {
 
         list.addTask(task);
 
-        assertEquals(list.getTasks().get(0).getActors(), Arrays.asList("user1",
-                "user2"));
+        assertEquals(list.getTasks().get(0).getActors(), Arrays.asList("user1", "user2"));
         assertEquals("directive1", list.getTasks().get(0).getDirective());
         assertEquals("comment1", list.getTasks().get(0).getComment());
         assertEquals("Read", list.getTasks().get(0).getParameters().get("right"));
@@ -148,8 +143,7 @@ public class JbpmTaskListServiceTest extends SQLRepositoryTestCase {
         list.addTask(task);
 
         assertEquals(1, list.getTasks().size());
-        assertEquals(list.getTasks().get(0).getActors(), Arrays.asList("user1",
-                "user2"));
+        assertEquals(list.getTasks().get(0).getActors(), Arrays.asList("user1", "user2"));
         assertEquals("directive1", list.getTasks().get(0).getDirective());
         assertEquals("comment1", list.getTasks().get(0).getComment());
         assertEquals(list.getTasks().get(0).getDueDate(), date);
@@ -172,8 +166,7 @@ public class JbpmTaskListServiceTest extends SQLRepositoryTestCase {
 
         assertEquals(list.getTasks().size(), list2.getTasks().size());
 
-        assertEquals(list.getTasks().get(0).getActors(), Arrays.asList("user1",
-                "user2"));
+        assertEquals(list.getTasks().get(0).getActors(), Arrays.asList("user1", "user2"));
         assertEquals("directive1", list.getTasks().get(0).getDirective());
         assertEquals("comment1", list.getTasks().get(0).getComment());
         assertEquals(list.getTasks().get(0).getDueDate(), date);
@@ -193,8 +186,7 @@ public class JbpmTaskListServiceTest extends SQLRepositoryTestCase {
         assertNull(list3);
     }
 
-    private static DocumentModel getUserWorkspace(CoreSession session)
-            throws ClientException {
+    private static DocumentModel getUserWorkspace(CoreSession session) throws ClientException {
         UserWorkspaceService uws = Framework.getLocalService(UserWorkspaceService.class);
         return uws.getCurrentUserPersonalWorkspace(session, null);
     }

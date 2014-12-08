@@ -30,32 +30,27 @@ import org.nuxeo.runtime.api.Framework;
 
 /**
  * @author <a href="mailto:arussel@nuxeo.com">Alexandre Russel</a>
- *
  */
-public abstract class AbstractProcessDefinitionDeployer implements
-        ProcessDefinitionDeployer {
+public abstract class AbstractProcessDefinitionDeployer implements ProcessDefinitionDeployer {
 
     public void deploy(final URL url) {
         JbpmService service = Framework.getService(JbpmService.class);
         service.executeJbpmOperation(new JbpmOperation() {
             private static final long serialVersionUID = 1L;
 
-            public Serializable run(JbpmContext context)
-                    throws NuxeoJbpmException {
+            public Serializable run(JbpmContext context) throws NuxeoJbpmException {
                 InputStream is;
                 try {
                     is = url.openStream();
                 } catch (IOException e) {
-                    throw new NuxeoJbpmException(
-                            "Error opening process definition url.", e);
+                    throw new NuxeoJbpmException("Error opening process definition url.", e);
                 }
                 ProcessDefinition pd = ProcessDefinition.parseXmlInputStream(is);
                 context.deployProcessDefinition(pd);
                 try {
                     is.close();
                 } catch (IOException e) {
-                    throw new NuxeoJbpmException(
-                            "Error closing process definition url.", e);
+                    throw new NuxeoJbpmException("Error closing process definition url.", e);
                 }
                 return null;
             }

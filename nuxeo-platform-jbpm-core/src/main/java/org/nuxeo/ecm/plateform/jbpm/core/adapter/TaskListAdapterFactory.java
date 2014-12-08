@@ -41,8 +41,7 @@ public class TaskListAdapterFactory implements DocumentAdapterFactory {
 
     public static boolean checkDocument(DocumentModel doc) {
         if (!doc.hasSchema("taskList")) {
-            throw new RuntimeException(
-                    "Document should contain schema taskList");
+            throw new RuntimeException("Document should contain schema taskList");
         }
         return true;
     }

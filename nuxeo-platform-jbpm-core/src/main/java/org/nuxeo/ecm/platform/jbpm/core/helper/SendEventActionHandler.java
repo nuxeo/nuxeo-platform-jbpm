@@ -50,11 +50,9 @@ public class SendEventActionHandler extends AbstractJbpmHandlerHelper {
             if (documentModel == null) {
                 return;
             }
-            try (CoreSession coreSession = CoreInstance.openCoreSession(
-                    getDocumentRepositoryName(), principal)) {
+            try (CoreSession coreSession = CoreInstance.openCoreSession(getDocumentRepositoryName(), principal)) {
                 EventProducer eventProducer = getEventProducerService();
-                DocumentEventContext ctx = new DocumentEventContext(
-                        coreSession, principal, documentModel);
+                DocumentEventContext ctx = new DocumentEventContext(coreSession, principal, documentModel);
                 ctx.setProperty("recipients", getRecipients());
                 eventProducer.fireEvent(ctx.newEvent(eventName));
             }

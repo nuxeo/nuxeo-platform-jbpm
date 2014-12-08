@@ -49,27 +49,23 @@ import org.xml.sax.SAXException;
 
 /**
  * @author <a href="mailto:arussel@nuxeo.com">Alexandre Russel</a>
- *
  */
 public class MD5Hasher implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public DocumentBuilder getDocumentBuider()
-            throws ParserConfigurationException {
+    public DocumentBuilder getDocumentBuider() throws ParserConfigurationException {
         return DocumentBuilderFactory.newInstance().newDocumentBuilder();
     }
 
-    public Transformer getTransformer()
-            throws TransformerConfigurationException,
-            TransformerFactoryConfigurationError {
+    public Transformer getTransformer() throws TransformerConfigurationException, TransformerFactoryConfigurationError {
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
         transformer.setOutputProperty(OutputKeys.METHOD, "xml");
         return transformer;
     }
 
-    public String getMD5FromURL(URL url) throws SAXException, IOException,
-            TransformerException, NoSuchAlgorithmException {
+    public String getMD5FromURL(URL url) throws SAXException, IOException, TransformerException,
+            NoSuchAlgorithmException {
         Document document = getDomDocument(url);
         byte[] bytes = getBytes(trimDocument(document));
         return MD5(bytes);
@@ -86,8 +82,7 @@ public class MD5Hasher implements Serializable {
         return builder.toString();
     }
 
-    public byte[] getBytes(Document document) throws IOException,
-            TransformerException {
+    public byte[] getBytes(Document document) throws IOException, TransformerException {
         File file = File.createTempFile("nuxeo", "ifChangedDeployer.xml");
         Source source = new DOMSource(document);
         Result result = new StreamResult(file);
@@ -120,8 +115,7 @@ public class MD5Hasher implements Serializable {
             if (child instanceof Comment) {
                 node.removeChild(child);
                 node.normalize();
-            } else if (child instanceof Text
-                    && ((Text) child).getNodeValue().matches("\\s+")) {
+            } else if (child instanceof Text && ((Text) child).getNodeValue().matches("\\s+")) {
                 node.removeChild(child);
                 node.normalize();
             } else {

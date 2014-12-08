@@ -53,8 +53,7 @@ public class JbpmComponent extends DefaultComponent {
         jboss, jetty, glassfish, tomcat, tomcatTransactional, tomcatNontransactional
     }
 
-    public static final ComponentName NAME = new ComponentName(
-            "org.nuxeo.ecm.platform.jbpm.core.JbpmService");
+    public static final ComponentName NAME = new ComponentName("org.nuxeo.ecm.platform.jbpm.core.JbpmService");
 
     public enum ExtensionPoint {
         deployer, processDefinition, activeConfiguration, configurationPath, securityPolicy, typeFilter
@@ -85,8 +84,7 @@ public class JbpmComponent extends DefaultComponent {
     private final HashMap<ProcessDefinitionDescriptor, ComponentInstance> pdDesc = new HashMap<ProcessDefinitionDescriptor, ComponentInstance>();
 
     @Override
-    public void registerContribution(Object contribution,
-            String extensionPoint, ComponentInstance contributor) {
+    public void registerContribution(Object contribution, String extensionPoint, ComponentInstance contributor) {
         ExtensionPoint ep = Enum.valueOf(ExtensionPoint.class, extensionPoint);
         switch (ep) {
         case deployer:
@@ -126,8 +124,7 @@ public class JbpmComponent extends DefaultComponent {
             } catch (ReflectiveOperationException e) {
                 throw new RuntimeException(e);
             }
-            service.addSecurityPolicy(pmd.getProcessDefinition(),
-                    securityPolicy);
+            service.addSecurityPolicy(pmd.getProcessDefinition(), securityPolicy);
             break;
         case typeFilter:
             TypeFilterDescriptor tfd = (TypeFilterDescriptor) contribution;
@@ -155,12 +152,10 @@ public class JbpmComponent extends DefaultComponent {
             ProcessDefinitionDescriptor pdDescriptor = entry.getKey();
             ProcessDefinitionDeployer deployer = deployerDesc.get(pdDescriptor.getDeployer());
             if (deployer == null) {
-                log.warn("No deployer named '" + entry.getKey().getDeployer()
-                        + "' have been registered.");
+                log.warn("No deployer named '" + entry.getKey().getDeployer() + "' have been registered.");
                 continue;
             }
-            URL url = entry.getValue().getRuntimeContext().getResource(
-                    pdDescriptor.getPath());
+            URL url = entry.getValue().getRuntimeContext().getResource(pdDescriptor.getPath());
             if (deployer.isDeployable(url)) {
                 log.debug("Deploying process definition: " + url.getPath());
                 deployer.deploy(url);
@@ -206,17 +201,14 @@ public class JbpmComponent extends DefaultComponent {
             try {
                 is = url.openStream();
             } catch (Exception e) {
-                throw new RuntimeException(
-                        "Unable to open input stream for jbpm configuration "
-                                + activeConfigurationName, e);
+                throw new RuntimeException("Unable to open input stream for jbpm configuration "
+                        + activeConfigurationName, e);
             }
             jbpmConfiguration = JbpmConfiguration.parseInputStream(is);
             try {
                 is.close();
             } catch (IOException e) {
-                throw new RuntimeException(
-                        "Unable to open input stream for jbpm configuration.",
-                        e);
+                throw new RuntimeException("Unable to open input stream for jbpm configuration.", e);
             }
         }
         return jbpmConfiguration;
@@ -236,8 +228,7 @@ public class JbpmComponent extends DefaultComponent {
                 }
             }
             service.setTypeFilters(typeFiltersContrib);
-            boolean startJobExecutor = Boolean.parseBoolean(Framework.getProperty(
-                    START_JOB_EXECUTOR, "false"));
+            boolean startJobExecutor = Boolean.parseBoolean(Framework.getProperty(START_JOB_EXECUTOR, "false"));
             if (startJobExecutor) {
                 JobExecutor jobExecutor = getConfiguration().getJobExecutor();
                 if (jobExecutor != null) {

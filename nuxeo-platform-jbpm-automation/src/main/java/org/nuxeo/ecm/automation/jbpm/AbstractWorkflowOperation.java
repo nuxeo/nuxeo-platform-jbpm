@@ -42,19 +42,15 @@ public class AbstractWorkflowOperation {
         return I18NUtils.getMessageString("messages", label, null, locale);
     }
 
-    protected String getDocumentLink(
-            DocumentViewCodecManager documentViewCodecManager,
-            DocumentModel doc, boolean includeWorkflowTab)
-            throws ClientException {
+    protected String getDocumentLink(DocumentViewCodecManager documentViewCodecManager, DocumentModel doc,
+            boolean includeWorkflowTab) throws ClientException {
         String viewId = getDefaultViewFor(doc);
         Map<String, String> parameters = Maps.newHashMap();
         if (includeWorkflowTab) {
             parameters.put("tabId", "TAB_CONTENT_JBPM");
         }
-        DocumentView docView = new DocumentViewImpl(new DocumentLocationImpl(
-                doc), viewId, parameters);
-        return documentViewCodecManager.getUrlFromDocumentView("docpath",
-                docView, false, null);
+        DocumentView docView = new DocumentViewImpl(new DocumentLocationImpl(doc), viewId, parameters);
+        return documentViewCodecManager.getUrlFromDocumentView("docpath", docView, false, null);
     }
 
     protected String getDefaultViewFor(DocumentModel doc) {

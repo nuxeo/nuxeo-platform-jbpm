@@ -23,7 +23,6 @@ package org.nuxeo.ecm.platform.jbpm.test;
  * JBPM test configuration constants
  *
  * @author Anahide Tchertchian
- *
  */
 public class JbpmUTConstants {
 

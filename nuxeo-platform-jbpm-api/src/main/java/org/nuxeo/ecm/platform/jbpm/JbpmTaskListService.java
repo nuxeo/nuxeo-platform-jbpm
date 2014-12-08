@@ -24,13 +24,10 @@ import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 
 /**
- * The Task List service maintains the lists of tasks that are used in
- * Workflow.
- *
- * The lists are saved in the Personal Workspace.
+ * The Task List service maintains the lists of tasks that are used in Workflow. The lists are saved in the Personal
+ * Workspace.
  *
  * @author nulrich
- *
  */
 public interface JbpmTaskListService {
 
@@ -41,8 +38,7 @@ public interface JbpmTaskListService {
      * @return the created list
      * @throws ClientException
      */
-    TaskList createTaskList(CoreSession session, String listName)
-            throws ClientException;
+    TaskList createTaskList(CoreSession session, String listName) throws ClientException;
 
     /**
      * Saves the list.
@@ -50,8 +46,7 @@ public interface JbpmTaskListService {
      * @param list to save
      * @throws ClientException
      */
-    void saveTaskList(CoreSession session, TaskList list)
-            throws ClientException;
+    void saveTaskList(CoreSession session, TaskList list) throws ClientException;
 
     /**
      * Retrieves a task list from it name.
@@ -60,8 +55,7 @@ public interface JbpmTaskListService {
      * @return
      * @throws ClientException
      */
-    TaskList getTaskList(CoreSession session, String listUUId)
-            throws ClientException;
+    TaskList getTaskList(CoreSession session, String listUUId) throws ClientException;
 
     /**
      * Delete a list of participant.
@@ -70,8 +64,7 @@ public interface JbpmTaskListService {
      * @param listName The name of the list to delete
      * @throws ClientException
      */
-    void deleteTaskList(CoreSession session, String listUUId)
-            throws ClientException;
+    void deleteTaskList(CoreSession session, String listUUId) throws ClientException;
 
     /**
      * Retrieve all the task lists of the current user

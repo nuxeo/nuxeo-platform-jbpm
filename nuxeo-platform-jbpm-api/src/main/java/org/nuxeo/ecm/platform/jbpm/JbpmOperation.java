@@ -21,12 +21,9 @@ import java.io.Serializable;
 import org.jbpm.JbpmContext;
 
 /**
- * A JbpmOperation
- *
- * Allows to run an operation with a live jbpmContext.
+ * A JbpmOperation Allows to run an operation with a live jbpmContext.
  *
  * @author arussel
- *
  */
 public interface JbpmOperation extends Serializable {
 

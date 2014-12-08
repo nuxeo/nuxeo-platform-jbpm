@@ -22,7 +22,6 @@ import org.hibernate.dialect.DerbyDialect;
 
 /**
  * @author alexandre
- *
  */
 public class DefaultClobDerbyDialect extends DerbyDialect {
 

@@ -23,12 +23,10 @@ import org.nuxeo.ecm.platform.jbpm.AbstractJbpmSecurityPolicy;
 
 /**
  * @author arussel
- *
  */
 public class DefaultJbpmSecurityPolicy extends AbstractJbpmSecurityPolicy {
 
-    public Boolean checkPermission(ProcessInstance pi, Action action,
-            DocumentModel dm, NuxeoPrincipal principal) {
+    public Boolean checkPermission(ProcessInstance pi, Action action, DocumentModel dm, NuxeoPrincipal principal) {
         if (Action.write.equals(action)) {
             // only initiator and administrator
             if (isAdminOrInitiator(pi, principal)) {

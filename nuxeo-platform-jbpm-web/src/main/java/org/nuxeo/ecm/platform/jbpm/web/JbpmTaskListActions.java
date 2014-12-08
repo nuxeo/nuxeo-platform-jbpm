@@ -91,8 +91,7 @@ public class JbpmTaskListActions implements Serializable {
 
         if (listName == null || listName.equals("")) {
             facesMessages.add(StatusMessage.Severity.ERROR,
-                    resourcesAccessor.getMessages().get(
-                            "label.review.list.chooseaname"));
+                    resourcesAccessor.getMessages().get("label.review.list.chooseaname"));
             return;
         }
 
@@ -112,32 +111,26 @@ public class JbpmTaskListActions implements Serializable {
 
         listName = null;
 
-        facesMessages.add(
-                StatusMessage.Severity.INFO,
-                resourcesAccessor.getMessages().get("label.review.list.created"));
+        facesMessages.add(StatusMessage.Severity.INFO, resourcesAccessor.getMessages().get("label.review.list.created"));
     }
 
     public void deleteTaskList() throws Exception {
         if (selectedListId == null) {
             facesMessages.add(StatusMessage.Severity.ERROR,
-                    resourcesAccessor.getMessages().get(
-                            "label.review.list.notselected"));
+                    resourcesAccessor.getMessages().get("label.review.list.notselected"));
             return;
         }
 
         JbpmTaskListService service = Framework.getService(JbpmTaskListService.class);
         service.deleteTaskList(documentManager, selectedListId);
 
-        facesMessages.add(
-                StatusMessage.Severity.INFO,
-                resourcesAccessor.getMessages().get("label.review.list.deleted"));
+        facesMessages.add(StatusMessage.Severity.INFO, resourcesAccessor.getMessages().get("label.review.list.deleted"));
     }
 
     public void loadTaskList() throws Exception {
         if (selectedListId == null) {
             facesMessages.add(StatusMessage.Severity.ERROR,
-                    resourcesAccessor.getMessages().get(
-                            "label.review.list.notselected"));
+                    resourcesAccessor.getMessages().get("label.review.list.notselected"));
             return;
         }
 
@@ -163,13 +156,11 @@ public class JbpmTaskListActions implements Serializable {
                 virtualTasks.add(task);
             }
 
-            pi.getContextInstance().setVariable(
-                    JbpmService.VariableName.participants.name(), virtualTasks);
+            pi.getContextInstance().setVariable(JbpmService.VariableName.participants.name(), virtualTasks);
             jbpmService.persistProcessInstance(pi);
 
             facesMessages.add(StatusMessage.Severity.INFO,
-                    resourcesAccessor.getMessages().get(
-                            "label.review.list.added"));
+                    resourcesAccessor.getMessages().get("label.review.list.added"));
         }
     }
 

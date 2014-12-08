@@ -27,8 +27,7 @@ public interface WorkflowDashBoard {
 
     Collection<DashBoardItem> computeDashboardItems() throws ClientException;
 
-    Collection<DocumentProcessItem> computeDocumentProcessItems()
-            throws ClientException;
+    Collection<DocumentProcessItem> computeDocumentProcessItems() throws ClientException;
 
     void invalidateDocumentProcessItems();
 

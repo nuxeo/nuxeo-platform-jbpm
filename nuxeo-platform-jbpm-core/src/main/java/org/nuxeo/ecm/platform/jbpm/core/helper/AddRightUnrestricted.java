@@ -24,7 +24,6 @@ import org.nuxeo.ecm.core.api.security.ACP;
 
 /**
  * @author alexandre
- *
  */
 public class AddRightUnrestricted extends UnrestrictedSessionRunner {
 

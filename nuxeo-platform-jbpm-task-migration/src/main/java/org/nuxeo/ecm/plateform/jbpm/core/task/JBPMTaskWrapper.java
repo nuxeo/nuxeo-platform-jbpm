@@ -38,8 +38,6 @@ import org.nuxeo.ecm.platform.task.TaskComment;
 
 /**
  * Simple wrapper around a Jbpm {@link TaskInstance}
- *
- *
  */
 public class JBPMTaskWrapper implements Task {
 
@@ -138,11 +136,9 @@ public class JBPMTaskWrapper implements Task {
     @Override
     public List<TaskComment> getComments() throws ClientException {
         List<Comment> jbpmComments = ti.getComments();
-        List<TaskComment> comments = new ArrayList<TaskComment>(
-                jbpmComments.size());
+        List<TaskComment> comments = new ArrayList<TaskComment>(jbpmComments.size());
         for (Comment taskComment : jbpmComments) {
-            comments.add(new TaskComment(taskComment.getActorId(),
-                    taskComment.getMessage(), taskComment.getTime()));
+            comments.add(new TaskComment(taskComment.getActorId(), taskComment.getMessage(), taskComment.getTime()));
         }
         return comments;
     }
@@ -241,8 +237,7 @@ public class JBPMTaskWrapper implements Task {
     }
 
     @Override
-    public void setVariables(Map<String, String> variables)
-            throws ClientException {
+    public void setVariables(Map<String, String> variables) throws ClientException {
         throw new UnsupportedOperationException();
     }
 
@@ -262,8 +257,7 @@ public class JBPMTaskWrapper implements Task {
     }
 
     /**
-     * Delegation is not supported on JBPM tasks. The list of delegated actors
-     * is always empty.
+     * Delegation is not supported on JBPM tasks. The list of delegated actors is always empty.
      *
      * @since 5.8
      */

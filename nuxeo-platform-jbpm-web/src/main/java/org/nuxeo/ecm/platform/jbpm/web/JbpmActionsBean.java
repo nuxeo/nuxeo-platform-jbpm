@@ -79,8 +79,7 @@ import org.nuxeo.ecm.webapp.helpers.ResourcesAccessor;
 @Name("jbpmActions")
 @Scope(ScopeType.CONVERSATION)
 @AutomaticDocumentBasedInvalidation
-public class JbpmActionsBean extends DocumentContextBoundActionBean implements
-        JbpmActions {
+public class JbpmActionsBean extends DocumentContextBoundActionBean implements JbpmActions {
 
     private static final long serialVersionUID = 1L;
 
@@ -137,8 +136,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements
             DocumentModel currentDoc = navigationContext.getCurrentDocument();
             if (currentDoc != null) {
                 DocumentRef docRef = currentDoc.getRef();
-                return documentManager.hasPermission(docRef,
-                        SecurityConstants.WRITE);
+                return documentManager.hasPermission(docRef, SecurityConstants.WRITE);
             }
         }
         return false;
@@ -149,8 +147,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements
             canManageCurrentProcess = Boolean.FALSE;
             ProcessInstance currentProcess = getCurrentProcess();
             if (currentProcess != null) {
-                Boolean canWrite = jbpmService.getPermission(currentProcess,
-                        JbpmSecurityPolicy.Action.write,
+                Boolean canWrite = jbpmService.getPermission(currentProcess, JbpmSecurityPolicy.Action.write,
                         navigationContext.getCurrentDocument(), currentUser);
                 if (canWrite != null) {
                     canManageCurrentProcess = canWrite;
@@ -169,14 +166,13 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements
                 ProcessInstance pi = getCurrentProcess();
                 if (pi != null) {
                     // check if user has a current task in this workflow
-                    List<TaskInstance> tasks = jbpmService.getTaskInstances(
-                            Long.valueOf(currentProcess.getId()), null, null);
+                    List<TaskInstance> tasks = jbpmService.getTaskInstances(Long.valueOf(currentProcess.getId()), null,
+                            null);
                     if (tasks != null && !tasks.isEmpty()) {
                         JbpmHelper helper = new JbpmHelper();
                         NuxeoPrincipal pal = currentUser;
                         for (TaskInstance task : tasks) {
-                            if (!task.isCancelled() && !task.hasEnded()
-                                    && helper.isTaskAssignedToUser(task, pal)) {
+                            if (!task.isCancelled() && !task.hasEnded() && helper.isTaskAssignedToUser(task, pal)) {
                                 canManageParticipants = Boolean.TRUE;
                                 break;
                             }
@@ -196,34 +192,27 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements
         return canManageParticipants.booleanValue();
     }
 
-    public boolean getCanEndTask(TaskInstance taskInstance)
-            throws ClientException {
-        if (taskInstance != null
-                && (!taskInstance.isCancelled() && !taskInstance.hasEnded())) {
+    public boolean getCanEndTask(TaskInstance taskInstance) throws ClientException {
+        if (taskInstance != null && (!taskInstance.isCancelled() && !taskInstance.hasEnded())) {
             JbpmHelper helper = new JbpmHelper();
             NuxeoPrincipal pal = currentUser;
-            return pal.isAdministrator()
-                    || pal.getName().equals(getCurrentProcessInitiator())
+            return pal.isAdministrator() || pal.getName().equals(getCurrentProcessInitiator())
                     || helper.isTaskAssignedToUser(taskInstance, pal);
         }
         return false;
     }
 
-    public String createProcessInstance(NuxeoPrincipal principal, String pd,
-            DocumentModel dm, String endLifeCycle) throws ClientException {
+    public String createProcessInstance(NuxeoPrincipal principal, String pd, DocumentModel dm, String endLifeCycle)
+            throws ClientException {
         if (getCanCreateProcess()) {
             Map<String, Serializable> map = null;
-            if (endLifeCycle != null && !endLifeCycle.equals("")
-                    && !"null".equals(endLifeCycle)) {
+            if (endLifeCycle != null && !endLifeCycle.equals("") && !"null".equals(endLifeCycle)) {
                 map = new HashMap<String, Serializable>();
-                map.put(JbpmService.VariableName.endLifecycleTransition.name(),
-                        endLifeCycle);
+                map.put(JbpmService.VariableName.endLifecycleTransition.name(), endLifeCycle);
             }
             jbpmService.createProcessInstance(principal, pd, dm, map, null);
-            notifyEventListeners(
-                    JbpmEventNames.WORKFLOW_NEW_STARTED,
-                    "",
-                    new String[] { NuxeoPrincipal.PREFIX + principal.getName() });
+            notifyEventListeners(JbpmEventNames.WORKFLOW_NEW_STARTED, "", new String[] { NuxeoPrincipal.PREFIX
+                    + principal.getName() });
             // TODO: add feedback?
 
             Events.instance().raiseEvent(JbpmEventNames.WORKFLOW_NEW_STARTED);
@@ -234,8 +223,8 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements
 
     public ProcessInstance getCurrentProcess() throws ClientException {
         if (currentProcess == null) {
-            List<ProcessInstance> processes = jbpmService.getProcessInstances(
-                    navigationContext.getCurrentDocument(), currentUser, null);
+            List<ProcessInstance> processes = jbpmService.getProcessInstances(navigationContext.getCurrentDocument(),
+                    currentUser, null);
             if (processes != null && !processes.isEmpty()) {
                 currentProcess = processes.get(0);
             }
@@ -275,14 +264,12 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements
         return currentProcessDestinationState;
     }
 
-    public List<TaskInstance> getCurrentTasks(String... taskNames)
-            throws ClientException {
+    public List<TaskInstance> getCurrentTasks(String... taskNames) throws ClientException {
         if (currentTasks == null) {
             currentTasks = new ArrayList<TaskInstance>();
             ProcessInstance currentProcess = getCurrentProcess();
             if (currentProcess != null) {
-                currentTasks.addAll(jbpmService.getTaskInstances(
-                        Long.valueOf(currentProcess.getId()), null,
+                currentTasks.addAll(jbpmService.getTaskInstances(Long.valueOf(currentProcess.getId()), null,
                         new TaskListFilter(taskNames)));
             }
         }
@@ -290,8 +277,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements
     }
 
     @SuppressWarnings("unchecked")
-    public ArrayList<VirtualTaskInstance> getCurrentVirtualTasks()
-            throws ClientException {
+    public ArrayList<VirtualTaskInstance> getCurrentVirtualTasks() throws ClientException {
         if (currentVirtualTasks == null) {
             currentVirtualTasks = new ArrayList<VirtualTaskInstance>();
             ProcessInstance currentProcess = getCurrentProcess();
@@ -309,16 +295,14 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements
     public boolean getShowAddVirtualTaskForm() throws ClientException {
         if (showAddVirtualTaskForm == null) {
             showAddVirtualTaskForm = Boolean.FALSE;
-            if (getCurrentVirtualTasks().isEmpty()
-                    && (currentTasks == null || currentTasks.isEmpty())) {
+            if (getCurrentVirtualTasks().isEmpty() && (currentTasks == null || currentTasks.isEmpty())) {
                 showAddVirtualTaskForm = Boolean.TRUE;
             }
         }
         return showAddVirtualTaskForm.booleanValue();
     }
 
-    public void toggleShowAddVirtualTaskForm(ActionEvent event)
-            throws ClientException {
+    public void toggleShowAddVirtualTaskForm(ActionEvent event) throws ClientException {
         showAddVirtualTaskForm = Boolean.valueOf(!getShowAddVirtualTaskForm());
     }
 
@@ -338,14 +322,11 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements
             }
             virtualTasks.add(newVirtualTask);
 
-            pi.getContextInstance().setVariable(
-                    JbpmService.VariableName.participants.name(), virtualTasks);
+            pi.getContextInstance().setVariable(JbpmService.VariableName.participants.name(), virtualTasks);
             jbpmService.persistProcessInstance(pi);
 
-            facesMessages.add(
-                    StatusMessage.Severity.INFO,
-                    resourcesAccessor.getMessages().get(
-                            "label.review.added.reviewer"));
+            facesMessages.add(StatusMessage.Severity.INFO,
+                    resourcesAccessor.getMessages().get("label.review.added.reviewer"));
 
             resetCurrentData();
             // show create form again
@@ -359,10 +340,8 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements
         if (pi != null) {
             jbpmService.persistProcessInstance(pi);
 
-            facesMessages.add(
-                    StatusMessage.Severity.INFO,
-                    resourcesAccessor.getMessages().get(
-                            "label.review.task.edited"));
+            facesMessages.add(StatusMessage.Severity.INFO,
+                    resourcesAccessor.getMessages().get("label.review.task.edited"));
 
             resetCurrentData();
             formInEditMode = Boolean.FALSE;
@@ -391,14 +370,11 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements
                 virtualTasks.add(index + 1, task);
             }
 
-            pi.getContextInstance().setVariable(
-                    JbpmService.VariableName.participants.name(), virtualTasks);
+            pi.getContextInstance().setVariable(JbpmService.VariableName.participants.name(), virtualTasks);
             jbpmService.persistProcessInstance(pi);
 
-            facesMessages.add(
-                    StatusMessage.Severity.INFO,
-                    resourcesAccessor.getMessages().get(
-                            "label.review.movedUp.reviewer"));
+            facesMessages.add(StatusMessage.Severity.INFO,
+                    resourcesAccessor.getMessages().get("label.review.movedUp.reviewer"));
 
             // reset so that's reloaded
             resetCurrentData();
@@ -415,14 +391,11 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements
                 virtualTasks.add(index - 1, task);
             }
 
-            pi.getContextInstance().setVariable(
-                    JbpmService.VariableName.participants.name(), virtualTasks);
+            pi.getContextInstance().setVariable(JbpmService.VariableName.participants.name(), virtualTasks);
             jbpmService.persistProcessInstance(pi);
 
-            facesMessages.add(
-                    StatusMessage.Severity.INFO,
-                    resourcesAccessor.getMessages().get(
-                            "label.review.movedDown.reviewer"));
+            facesMessages.add(StatusMessage.Severity.INFO,
+                    resourcesAccessor.getMessages().get("label.review.movedDown.reviewer"));
 
             // reset so that's reloaded
             resetCurrentData();
@@ -438,14 +411,11 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements
                 virtualTasks.remove(index);
             }
 
-            pi.getContextInstance().setVariable(
-                    JbpmService.VariableName.participants.name(), virtualTasks);
+            pi.getContextInstance().setVariable(JbpmService.VariableName.participants.name(), virtualTasks);
             jbpmService.persistProcessInstance(pi);
 
-            facesMessages.add(
-                    StatusMessage.Severity.INFO,
-                    resourcesAccessor.getMessages().get(
-                            "label.review.removed.reviewer"));
+            facesMessages.add(StatusMessage.Severity.INFO,
+                    resourcesAccessor.getMessages().get("label.review.removed.reviewer"));
 
             // reset so that's reloaded
             resetCurrentData();
@@ -453,8 +423,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements
         return null;
     }
 
-    public void validateTaskDueDate(FacesContext context,
-            UIComponent component, Object value) {
+    public void validateTaskDueDate(FacesContext context, UIComponent component, Object value) {
         final String DATE_FORMAT = "dd/MM/yyyy";
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 
@@ -474,10 +443,8 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements
         }
 
         if (messageString != null) {
-            FacesMessage message = new FacesMessage(
-                    FacesMessage.SEVERITY_ERROR, ComponentUtils.translate(
-                            context, "label.workflow.error.outdated_duedate"),
-                    null);
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, ComponentUtils.translate(context,
+                    "label.workflow.error.outdated_duedate"), null);
             ((EditableValueHolder) component).setValid(false);
             context.addMessage(component.getClientId(context), message);
             // also add global message?
@@ -492,8 +459,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements
             // get task with that name on current process
             ProcessInstance pi = getCurrentProcess();
             if (pi != null) {
-                List<TaskInstance> tasks = jbpmService.getTaskInstances(
-                        Long.valueOf(currentProcess.getId()), null,
+                List<TaskInstance> tasks = jbpmService.getTaskInstances(Long.valueOf(currentProcess.getId()), null,
                         new TaskListFilter(taskName));
                 if (tasks != null && !tasks.isEmpty()) {
                     // take first one found
@@ -502,15 +468,12 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements
             }
         }
         if (startTask == null) {
-            throw new ClientException(
-                    "No start task found on current process with name "
-                            + taskName);
+            throw new ClientException("No start task found on current process with name " + taskName);
         }
         return startTask;
     }
 
-    public boolean isProcessStarted(String startTaskName)
-            throws ClientException {
+    public boolean isProcessStarted(String startTaskName) throws ClientException {
         TaskInstance startTask = getStartTask(startTaskName);
         return startTask.hasEnded();
     }
@@ -524,15 +487,10 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements
             // optim: pass participants as transient variables to avoid
             // lookup in the process instance
             Map<String, Serializable> transientVariables = new HashMap<String, Serializable>();
-            transientVariables.put(
-                    JbpmService.VariableName.participants.name(),
-                    getCurrentVirtualTasks());
-            transientVariables.put(JbpmService.VariableName.document.name(),
-                    navigationContext.getCurrentDocument());
-            transientVariables.put(JbpmService.VariableName.principal.name(),
-                    currentUser);
-            jbpmService.endTask(Long.valueOf(startTask.getId()), null, null,
-                    null, transientVariables, currentUser);
+            transientVariables.put(JbpmService.VariableName.participants.name(), getCurrentVirtualTasks());
+            transientVariables.put(JbpmService.VariableName.document.name(), navigationContext.getCurrentDocument());
+            transientVariables.put(JbpmService.VariableName.principal.name(), currentUser);
+            jbpmService.endTask(Long.valueOf(startTask.getId()), null, null, null, transientVariables, currentUser);
             documentManager.save(); // process invalidations from handlers'
             // sessions
             resetCurrentData();
@@ -540,66 +498,54 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements
         return null;
     }
 
-    public String validateTask(final TaskInstance taskInstance,
-            String transition) throws ClientException {
+    public String validateTask(final TaskInstance taskInstance, String transition) throws ClientException {
         if (taskInstance != null) {
             if (userComment != null && !"".equals(userComment)) {
-                AddCommentOperation addCommentOperation = new AddCommentOperation(
-                        taskInstance.getId(), NuxeoPrincipal.PREFIX
-                                + currentUser.getName(), userComment);
+                AddCommentOperation addCommentOperation = new AddCommentOperation(taskInstance.getId(),
+                        NuxeoPrincipal.PREFIX + currentUser.getName(), userComment);
                 jbpmService.executeJbpmOperation(addCommentOperation);
             }
             // add marker that task was validated
             Map<String, Serializable> taskVariables = new HashMap<String, Serializable>();
-            taskVariables.put(JbpmService.TaskVariableName.validated.name(),
-                    Boolean.TRUE);
-            jbpmService.endTask(Long.valueOf(taskInstance.getId()), transition,
-                    taskVariables, null, getTransientVariables(), currentUser);
+            taskVariables.put(JbpmService.TaskVariableName.validated.name(), Boolean.TRUE);
+            jbpmService.endTask(Long.valueOf(taskInstance.getId()), transition, taskVariables, null,
+                    getTransientVariables(), currentUser);
             documentManager.save(); // process invalidations from handlers'
             // sessions
-            facesMessages.add(
-                    StatusMessage.Severity.INFO,
-                    resourcesAccessor.getMessages().get(
-                            "label.review.task.ended"));
+            facesMessages.add(StatusMessage.Severity.INFO,
+                    resourcesAccessor.getMessages().get("label.review.task.ended"));
             Set<String> recipients = getRecipientsFromTask(taskInstance);
-            notifyEventListeners(JbpmEventNames.WORKFLOW_TASK_COMPLETED,
-                    userComment, recipients.toArray(new String[] {}));
+            notifyEventListeners(JbpmEventNames.WORKFLOW_TASK_COMPLETED, userComment,
+                    recipients.toArray(new String[] {}));
             Events.instance().raiseEvent(JbpmEventNames.WORKFLOW_TASK_COMPLETED);
             resetCurrentData();
         }
         return returnToCurrentDocOrHome();
     }
 
-    public String rejectTask(final TaskInstance taskInstance, String transition)
-            throws ClientException {
+    public String rejectTask(final TaskInstance taskInstance, String transition) throws ClientException {
         if (taskInstance != null) {
             if (userComment != null && !"".equals(userComment)) {
-                AddCommentOperation addCommentOperation = new AddCommentOperation(
-                        taskInstance.getId(), NuxeoPrincipal.PREFIX
-                                + currentUser.getName(), userComment);
+                AddCommentOperation addCommentOperation = new AddCommentOperation(taskInstance.getId(),
+                        NuxeoPrincipal.PREFIX + currentUser.getName(), userComment);
                 jbpmService.executeJbpmOperation(addCommentOperation);
             } else {
-                facesMessages.add(
-                        StatusMessage.Severity.ERROR,
-                        resourcesAccessor.getMessages().get(
-                                "label.review.task.enterComment"));
+                facesMessages.add(StatusMessage.Severity.ERROR,
+                        resourcesAccessor.getMessages().get("label.review.task.enterComment"));
                 return null;
             }
             // add marker that task was rejected
             Map<String, Serializable> taskVariables = new HashMap<String, Serializable>();
-            taskVariables.put(JbpmService.TaskVariableName.validated.name(),
-                    Boolean.FALSE);
-            jbpmService.endTask(Long.valueOf(taskInstance.getId()), transition,
-                    taskVariables, null, getTransientVariables(), currentUser);
+            taskVariables.put(JbpmService.TaskVariableName.validated.name(), Boolean.FALSE);
+            jbpmService.endTask(Long.valueOf(taskInstance.getId()), transition, taskVariables, null,
+                    getTransientVariables(), currentUser);
             documentManager.save(); // process invalidations from handlers'
             // sessions
-            facesMessages.add(
-                    StatusMessage.Severity.INFO,
-                    resourcesAccessor.getMessages().get(
-                            "label.review.task.ended"));
+            facesMessages.add(StatusMessage.Severity.INFO,
+                    resourcesAccessor.getMessages().get("label.review.task.ended"));
             Set<String> recipients = getRecipientsFromTask(taskInstance);
-            notifyEventListeners(JbpmEventNames.WORKFLOW_TASK_REJECTED,
-                    userComment, recipients.toArray(new String[] {}));
+            notifyEventListeners(JbpmEventNames.WORKFLOW_TASK_REJECTED, userComment,
+                    recipients.toArray(new String[] {}));
             Events.instance().raiseEvent(JbpmEventNames.WORKFLOW_TASK_REJECTED);
             resetCurrentData();
         }
@@ -618,8 +564,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements
             if (currentProcess == null || currentProcess.hasEnded()) {
                 return navigationContext.navigateToDocument(currentDocument);
             }
-            return webActions.setCurrentTabAndNavigate(currentDocument,
-                    currentTabId);
+            return webActions.setCurrentTabAndNavigate(currentDocument, currentTabId);
         } catch (DocumentSecurityException e) {
             navigationContext.setCurrentDocument(null);
             return navigationContext.goHome();
@@ -628,18 +573,14 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements
 
     protected Map<String, Serializable> getTransientVariables() {
         Map<String, Serializable> transientVariables = new HashMap<String, Serializable>();
-        transientVariables.put(JbpmService.VariableName.document.name(),
-                navigationContext.getCurrentDocument());
-        transientVariables.put(JbpmService.VariableName.principal.name(),
-                currentUser);
+        transientVariables.put(JbpmService.VariableName.document.name(), navigationContext.getCurrentDocument());
+        transientVariables.put(JbpmService.VariableName.principal.name(), currentUser);
         return transientVariables;
     }
 
     @SuppressWarnings("unchecked")
-    protected Set<String> getRecipientsFromTask(final TaskInstance taskInstance)
-            throws NuxeoJbpmException {
-        GetRecipientsForTaskOperation operation = new GetRecipientsForTaskOperation(
-                taskInstance.getId());
+    protected Set<String> getRecipientsFromTask(final TaskInstance taskInstance) throws NuxeoJbpmException {
+        GetRecipientsForTaskOperation operation = new GetRecipientsForTaskOperation(taskInstance.getId());
         return (Set<String>) jbpmService.executeJbpmOperation(operation);
 
     }
@@ -651,25 +592,21 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements
             Long pid = Long.valueOf(currentProcess.getId());
             DocumentModel currentDoc = navigationContext.getCurrentDocument();
             if (currentDoc != null) {
-                AbandonProcessUnrestricted runner = new AbandonProcessUnrestricted(
-                        documentManager, currentDoc.getRef(), pid);
+                AbandonProcessUnrestricted runner = new AbandonProcessUnrestricted(documentManager,
+                        currentDoc.getRef(), pid);
                 runner.runUnrestricted();
             }
 
             // end process and tasks using unrestricted session
-            List<TaskInstance> tis = jbpmService.getTaskInstances(
-                    documentManager.getDocument(currentDoc.getRef()),
+            List<TaskInstance> tis = jbpmService.getTaskInstances(documentManager.getDocument(currentDoc.getRef()),
                     (NuxeoPrincipal) null, null);
 
-            EndProcessUnrestricted endProcessRunner = new EndProcessUnrestricted(
-                    documentManager, tis);
+            EndProcessUnrestricted endProcessRunner = new EndProcessUnrestricted(documentManager, tis);
             endProcessRunner.runUnrestricted();
 
             jbpmService.deleteProcessInstance(currentUser, pid);
-            facesMessages.add(
-                    StatusMessage.Severity.INFO,
-                    resourcesAccessor.getMessages().get(
-                            "workflowProcessCanceled"));
+            facesMessages.add(StatusMessage.Severity.INFO,
+                    resourcesAccessor.getMessages().get("workflowProcessCanceled"));
             notifyEventListeners(JbpmEventNames.WORKFLOW_CANCELED, userComment,
                     endProcessRunner.getRecipients().toArray(new String[] {}));
             Events.instance().raiseEvent(JbpmEventNames.WORKFLOW_CANCELED);
@@ -687,14 +624,13 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements
             Long pid = Long.valueOf(currentProcess.getId());
             DocumentModel currentDoc = navigationContext.getCurrentDocument();
             if (currentDoc != null) {
-                AbandonProcessUnrestricted runner = new AbandonProcessUnrestricted(
-                        documentManager, currentDoc.getRef(), pid);
+                AbandonProcessUnrestricted runner = new AbandonProcessUnrestricted(documentManager,
+                        currentDoc.getRef(), pid);
                 runner.runUnrestricted();
             }
 
             // end process and tasks
-            List<TaskInstance> tis = jbpmService.getTaskInstances(
-                    navigationContext.getCurrentDocument(),
+            List<TaskInstance> tis = jbpmService.getTaskInstances(navigationContext.getCurrentDocument(),
                     (NuxeoPrincipal) null, null);
             Set<String> recipients = new HashSet<String>();
             for (TaskInstance ti : tis) {
@@ -706,10 +642,8 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements
                 }
             }
             jbpmService.deleteProcessInstance(currentUser, pid);
-            facesMessages.add(StatusMessage.Severity.INFO,
-                    resourcesAccessor.getMessages().get("workflowAbandoned"));
-            notifyEventListeners(JbpmEventNames.WORKFLOW_ABANDONED,
-                    userComment, recipients.toArray(new String[] {}));
+            facesMessages.add(StatusMessage.Severity.INFO, resourcesAccessor.getMessages().get("workflowAbandoned"));
+            notifyEventListeners(JbpmEventNames.WORKFLOW_ABANDONED, userComment, recipients.toArray(new String[] {}));
             Events.instance().raiseEvent(JbpmEventNames.WORKFLOW_ABANDONED);
             resetCurrentData();
         }
@@ -724,15 +658,13 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements
         this.userComment = comment;
     }
 
-    protected static Set<String> CHECK_IN_TRANSITIONS = new HashSet<String>(
-            Arrays.asList("approve"));
+    protected static Set<String> CHECK_IN_TRANSITIONS = new HashSet<String>(Arrays.asList("approve"));
 
     protected boolean isCheckInTransition(String transition) {
         return CHECK_IN_TRANSITIONS.contains(transition);
     }
 
-    public List<String> getAllowedStateTransitions(DocumentRef ref)
-            throws ClientException {
+    public List<String> getAllowedStateTransitions(DocumentRef ref) throws ClientException {
         // break reference: core gives an unmodifiable collection unsuitable
         // for UI.
         List<String> res = new ArrayList<String>();
@@ -747,8 +679,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements
         return res;
     }
 
-    @Observer(value = { JbpmEventNames.WORKFLOW_TASK_COMPLETED,
-            JbpmEventNames.WORKFLOW_TASK_REJECTED,
+    @Observer(value = { JbpmEventNames.WORKFLOW_TASK_COMPLETED, JbpmEventNames.WORKFLOW_TASK_REJECTED,
             JbpmEventNames.WORKFLOW_CANCELED }, create = false)
     public void resetCurrentData() {
         canManageCurrentProcess = null;
@@ -768,10 +699,8 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements
         resetCurrentData();
     }
 
-    public void notifyEventListeners(String name, String comment,
-            String[] recipients) throws ClientException {
-        jbpmService.notifyEventListeners(name, comment, recipients,
-                documentManager, currentUser, getCurrentDocument());
+    public void notifyEventListeners(String name, String comment, String[] recipients) throws ClientException {
+        jbpmService.notifyEventListeners(name, comment, recipients, documentManager, currentUser, getCurrentDocument());
     }
 
     @Override

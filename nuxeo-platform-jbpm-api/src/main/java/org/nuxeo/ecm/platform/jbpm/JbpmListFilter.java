@@ -24,17 +24,13 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 
 /**
- * Filter of list.
- *
- * This filter allows to select only part of a list. It is used as parameter in
- * methods of {@link JbpmService}. Inside the filter method, the jbpmContext is
- * alive.
+ * Filter of list. This filter allows to select only part of a list. It is used as parameter in methods of
+ * {@link JbpmService}. Inside the filter method, the jbpmContext is alive.
  *
  * @author arussel
  */
 public interface JbpmListFilter extends Serializable {
 
-    <T> ArrayList<T> filter(JbpmContext jbpmContext, DocumentModel document,
-            ArrayList<T> list, NuxeoPrincipal principal);
+    <T> ArrayList<T> filter(JbpmContext jbpmContext, DocumentModel document, ArrayList<T> list, NuxeoPrincipal principal);
 
 }

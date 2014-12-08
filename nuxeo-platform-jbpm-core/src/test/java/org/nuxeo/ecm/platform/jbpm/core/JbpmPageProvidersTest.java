@@ -79,12 +79,9 @@ public class JbpmPageProvidersTest extends SQLRepositoryTestCase {
         deployBundle("org.nuxeo.ecm.platform.usermanager");
         deployBundle("org.nuxeo.ecm.directory.types.contrib");
         deployBundle("org.nuxeo.ecm.directory.sql");
-        deployContrib("org.nuxeo.ecm.platform.jbpm.core.test",
-                "OSGI-INF/jbpmService-contrib.xml");
-        deployContrib("org.nuxeo.ecm.platform.query.api",
-                "OSGI-INF/pageprovider-framework.xml");
-        deployContrib("org.nuxeo.ecm.platform.jbpm.core.test",
-                "OSGI-INF/pageproviders-contrib.xml");
+        deployContrib("org.nuxeo.ecm.platform.jbpm.core.test", "OSGI-INF/jbpmService-contrib.xml");
+        deployContrib("org.nuxeo.ecm.platform.query.api", "OSGI-INF/pageprovider-framework.xml");
+        deployContrib("org.nuxeo.ecm.platform.jbpm.core.test", "OSGI-INF/pageproviders-contrib.xml");
 
         deployBundle(JbpmUTConstants.CORE_BUNDLE_NAME);
         deployBundle(JbpmUTConstants.TESTING_BUNDLE_NAME);
@@ -106,9 +103,8 @@ public class JbpmPageProvidersTest extends SQLRepositoryTestCase {
         // create process instance
         List<VirtualTaskInstance> participants = new ArrayList<VirtualTaskInstance>();
         participants.add(new VirtualTaskInstance("bob", "dobob", "yobob", null));
-        service.createProcessInstance(administrator, "review_parallel",
-                document, Collections.singletonMap("participants",
-                        (Serializable) participants), null);
+        service.createProcessInstance(administrator, "review_parallel", document,
+                Collections.singletonMap("participants", (Serializable) participants), null);
         // create isolated task
         List<String> actors = new ArrayList<String>();
         actors.add(NuxeoPrincipal.PREFIX + administrator.getName());
@@ -116,12 +112,10 @@ public class JbpmPageProvidersTest extends SQLRepositoryTestCase {
         Calendar calendar = Calendar.getInstance();
         calendar.set(2006, 6, 6);
         // create one task
-        taskService.createTask(session, administrator, document,
-                "Test Task Name", actors, false, "test directive",
+        taskService.createTask(session, administrator, document, "Test Task Name", actors, false, "test directive",
                 "test comment", calendar.getTime(), null);
         // create another task to check pagination
-        taskService.createTask(session, administrator, document,
-                "Test Task Name 2", actors, false, "test directive",
+        taskService.createTask(session, administrator, document, "Test Task Name 2", actors, false, "test directive",
                 "test comment", calendar.getTime(), null);
     }
 
@@ -136,11 +130,9 @@ public class JbpmPageProvidersTest extends SQLRepositoryTestCase {
     @Test
     public void testTaskPageProvider() throws Exception {
         Map<String, Serializable> properties = new HashMap<String, Serializable>();
-        properties.put(UserTaskPageProvider.CORE_SESSION_PROPERTY,
-                (Serializable) session);
+        properties.put(UserTaskPageProvider.CORE_SESSION_PROPERTY, (Serializable) session);
         PageProvider<DashBoardItem> taskProvider = (PageProvider<DashBoardItem>) ppService.getPageProvider(
-                "current_user_tasks", null, null, null, properties,
-                (Object[]) null);
+                "current_user_tasks", null, null, null, properties, (Object[]) null);
         List<DashBoardItem> tasks = taskProvider.getCurrentPage();
         assertNotNull(tasks);
         assertEquals(2, tasks.size());
@@ -189,11 +181,9 @@ public class JbpmPageProvidersTest extends SQLRepositoryTestCase {
     @Test
     public void testProcessPageProvider() throws Exception {
         Map<String, Serializable> properties = new HashMap<String, Serializable>();
-        properties.put(UserTaskPageProvider.CORE_SESSION_PROPERTY,
-                (Serializable) session);
+        properties.put(UserTaskPageProvider.CORE_SESSION_PROPERTY, (Serializable) session);
         PageProvider<DocumentProcessItem> processProvider = (PageProvider<DocumentProcessItem>) ppService.getPageProvider(
-                "current_user_processes", null, null, null, properties,
-                (Object[]) null);
+                "current_user_processes", null, null, null, properties, (Object[]) null);
         List<DocumentProcessItem> processes = processProvider.getCurrentPage();
         assertNotNull(processes);
         assertEquals(1, processes.size());
@@ -207,8 +197,7 @@ public class JbpmPageProvidersTest extends SQLRepositoryTestCase {
     }
 
     protected DocumentModel getDocument() throws Exception {
-        DocumentModel model = session.createDocumentModel(
-                session.getRootDocument().getPathAsString(), "1", "File");
+        DocumentModel model = session.createDocumentModel(session.getRootDocument().getPathAsString(), "1", "File");
         DocumentModel doc = session.createDocument(model);
         assertNotNull(doc);
 

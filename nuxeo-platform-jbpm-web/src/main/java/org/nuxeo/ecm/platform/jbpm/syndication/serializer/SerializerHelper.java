@@ -33,18 +33,13 @@ public class SerializerHelper {
     private SerializerHelper() {
     }
 
-    public static void formatResult(ResultSummary summary,
-            List<DashBoardItem> tasks, Response response, String format,
-            String columnsDefinition, HttpServletRequest req)
-            throws ClientException {
-        formatResult(summary, tasks, response, format, columnsDefinition, req,
-                null, null);
+    public static void formatResult(ResultSummary summary, List<DashBoardItem> tasks, Response response, String format,
+            String columnsDefinition, HttpServletRequest req) throws ClientException {
+        formatResult(summary, tasks, response, format, columnsDefinition, req, null, null);
     }
 
-    public static void formatResult(ResultSummary summary,
-            List<DashBoardItem> tasks, Response response, String format,
-            String columnsDefinition, HttpServletRequest req,
-            List<String> labels, String lang) throws ClientException {
+    public static void formatResult(ResultSummary summary, List<DashBoardItem> tasks, Response response, String format,
+            String columnsDefinition, HttpServletRequest req, List<String> labels, String lang) throws ClientException {
         DashBoardItemSerializer dis;
 
         if (format.equalsIgnoreCase("JSON")) {
@@ -57,8 +52,7 @@ public class SerializerHelper {
             dis = new SimpleXMLSerializer();
         }
 
-        dis.serialize(summary, tasks, columnsDefinition, labels, lang,
-                response, req);
+        dis.serialize(summary, tasks, columnsDefinition, labels, lang, response, req);
     }
 
 }

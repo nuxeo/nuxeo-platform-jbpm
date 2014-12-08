@@ -74,8 +74,7 @@ public class UserTaskPageProviderOperation extends AbstractWorkflowOperation {
     @OperationMethod
     public Blob run() throws Exception {
         Map<String, Serializable> props = new HashMap<String, Serializable>();
-        props.put(UserProcessPageProvider.CORE_SESSION_PROPERTY,
-                (Serializable) session);
+        props.put(UserProcessPageProvider.CORE_SESSION_PROPERTY, (Serializable) session);
         PageProviderService pps = Framework.getLocalService(PageProviderService.class);
 
         Long targetPage = null;
@@ -87,11 +86,9 @@ public class UserTaskPageProviderOperation extends AbstractWorkflowOperation {
             targetPageSize = Long.valueOf(pageSize.longValue());
         }
         PageProvider<DashBoardItem> pageProvider = (PageProvider<DashBoardItem>) pps.getPageProvider(
-                USER_TASKS_PAGE_PROVIDER, null, targetPageSize, targetPage,
-                props);
+                USER_TASKS_PAGE_PROVIDER, null, targetPageSize, targetPage, props);
 
-        Locale locale = language != null && !language.isEmpty() ? new Locale(
-                language) : Locale.ENGLISH;
+        Locale locale = language != null && !language.isEmpty() ? new Locale(language) : Locale.ENGLISH;
 
         JSONArray processes = new JSONArray();
         for (DashBoardItem dashBoardItem : pageProvider.getCurrentPage()) {
@@ -100,24 +97,18 @@ public class UserTaskPageProviderOperation extends AbstractWorkflowOperation {
 
             JSONObject obj = new JSONObject();
             obj.put("taskName",
-                    createdFromCreateTaskOperation ? dashBoardItem.getName()
-                            : getI18nTaskName(dashBoardItem.getName(), locale));
-            obj.put("directive",
-                    getI18nLabel(dashBoardItem.getDirective(), locale));
+                    createdFromCreateTaskOperation ? dashBoardItem.getName() : getI18nTaskName(dashBoardItem.getName(),
+                            locale));
+            obj.put("directive", getI18nLabel(dashBoardItem.getDirective(), locale));
             obj.put("comment", dashBoardItem.getComment());
             Date dueDate = dashBoardItem.getDueDate();
-            obj.put("dueDate",
-                    dueDate != null ? DateParser.formatW3CDateTime(dueDate)
-                            : "");
+            obj.put("dueDate", dueDate != null ? DateParser.formatW3CDateTime(dueDate) : "");
             obj.put("documentTitle", dashBoardItem.getDocument().getTitle());
             obj.put("documentLink",
-                    getDocumentLink(documentViewCodecManager,
-                            dashBoardItem.getDocument(),
+                    getDocumentLink(documentViewCodecManager, dashBoardItem.getDocument(),
                             !createdFromCreateTaskOperation));
             Date startDate = dashBoardItem.getStartDate();
-            obj.put("startDate",
-                    startDate != null ? DateParser.formatW3CDateTime(startDate)
-                            : "");
+            obj.put("startDate", startDate != null ? DateParser.formatW3CDateTime(startDate) : "");
             processes.add(obj);
         }
 
@@ -129,8 +120,7 @@ public class UserTaskPageProviderOperation extends AbstractWorkflowOperation {
         json.put("pageCount", Long.valueOf(pageProvider.getNumberOfPages()));
 
         json.put("entries", processes);
-        return new InputStreamBlob(new ByteArrayInputStream(
-                json.toString().getBytes("UTF-8")), "application/json");
+        return new InputStreamBlob(new ByteArrayInputStream(json.toString().getBytes("UTF-8")), "application/json");
     }
 
     protected String getI18nTaskName(String taskName, Locale locale) {

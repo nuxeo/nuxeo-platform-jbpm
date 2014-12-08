@@ -32,9 +32,8 @@ import org.nuxeo.ecm.platform.jbpm.JbpmService;
 import org.nuxeo.runtime.api.Framework;
 
 /**
- * Listener that deletes process instance and related tasks when the process is
- * attached to a document that is being deleted. It also deletes related tasks
- * of the document out of process.
+ * Listener that deletes process instance and related tasks when the process is attached to a document that is being
+ * deleted. It also deletes related tasks of the document out of process.
  * 
  * @author arussel
  */
@@ -46,8 +45,7 @@ public class DeleteProcessForDeletedDocumentListener implements EventListener {
             try {
                 jbpmService = Framework.getService(JbpmService.class);
             } catch (Exception e) {
-                throw new ClientRuntimeException("JbpmService is not deployed",
-                        e);
+                throw new ClientRuntimeException("JbpmService is not deployed", e);
             }
         }
         return jbpmService;
@@ -58,20 +56,16 @@ public class DeleteProcessForDeletedDocumentListener implements EventListener {
             DocumentEventContext context = (DocumentEventContext) event.getContext();
             DocumentModel dm = context.getSourceDocument();
             NuxeoPrincipal principal = (NuxeoPrincipal) context.getPrincipal();
-            List<ProcessInstance> processes = getJbpmService().getProcessInstances(
-                    dm, principal, null);
-            if(!processes.isEmpty()){
+            List<ProcessInstance> processes = getJbpmService().getProcessInstances(dm, principal, null);
+            if (!processes.isEmpty()) {
                 for (ProcessInstance process : processes) {
-                    getJbpmService().deleteProcessInstance(principal,
-                            Long.valueOf(process.getId()));
+                    getJbpmService().deleteProcessInstance(principal, Long.valueOf(process.getId()));
                 }
             }
-            List<TaskInstance> tasks = getJbpmService().getTaskInstances(dm,
-                    principal, null);
+            List<TaskInstance> tasks = getJbpmService().getTaskInstances(dm, principal, null);
             if (!tasks.isEmpty()) {
                 for (TaskInstance task : tasks) {
-                    getJbpmService().deleteTaskInstance(principal,
-                            Long.valueOf(task.getId()));
+                    getJbpmService().deleteTaskInstance(principal, Long.valueOf(task.getId()));
                 }
             }
         }

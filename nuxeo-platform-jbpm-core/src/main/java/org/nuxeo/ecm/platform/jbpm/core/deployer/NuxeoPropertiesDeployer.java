@@ -24,17 +24,15 @@ import org.nuxeo.runtime.api.Framework;
 
 /**
  * @author arussel
- *
  */
-public class NuxeoPropertiesDeployer extends AbstractProcessDefinitionDeployer
-        implements Serializable {
+public class NuxeoPropertiesDeployer extends AbstractProcessDefinitionDeployer implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     public static final String DEPLOY_PROCESS_DEFINITION = "org.nuxeo.ecm.platform.jbpm.deployProcessDefinition";
 
     @Override
     public boolean isDeployable(URL url) {
-        return Boolean.parseBoolean(Framework.getProperty(
-                DEPLOY_PROCESS_DEFINITION, "true"));
+        return Boolean.parseBoolean(Framework.getProperty(DEPLOY_PROCESS_DEFINITION, "true"));
     }
 }

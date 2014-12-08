@@ -84,30 +84,25 @@ public class JBPMDocTaskProvider implements TaskProvider {
     }
 
     @Override
-    public List<Task> getCurrentTaskInstances(final CoreSession coreSession)
-            throws ClientException {
+    public List<Task> getCurrentTaskInstances(final CoreSession coreSession) throws ClientException {
         @SuppressWarnings("unchecked")
-        List<Task> migratedTasks = (List<Task>) getJbpmService().executeJbpmOperation(
-                new JbpmOperation() {
-                    private static final long serialVersionUID = 1L;
+        List<Task> migratedTasks = (List<Task>) getJbpmService().executeJbpmOperation(new JbpmOperation() {
+            private static final long serialVersionUID = 1L;
 
-                    @Override
-                    public Serializable run(JbpmContext context)
-                            throws NuxeoJbpmException {
+            @Override
+            public Serializable run(JbpmContext context) throws NuxeoJbpmException {
 
-                        List<TaskInstance> tis = getJbpmService().getCurrentTaskInstances(
-                                (NuxeoPrincipal) coreSession.getPrincipal(),
-                                null);
-                        TaskMigrationRunner migrationRunner = new TaskMigrationRunner(
-                                tis, context, coreSession);
-                        try {
-                            return (Serializable) migrationRunner.migrate();
-                        } catch (ClientException e) {
-                            log.error("Unable to migrate task", e);
-                            return new ArrayList<Task>();
-                        }
-                    }
-                });
+                List<TaskInstance> tis = getJbpmService().getCurrentTaskInstances(
+                        (NuxeoPrincipal) coreSession.getPrincipal(), null);
+                TaskMigrationRunner migrationRunner = new TaskMigrationRunner(tis, context, coreSession);
+                try {
+                    return (Serializable) migrationRunner.migrate();
+                } catch (ClientException e) {
+                    log.error("Unable to migrate task", e);
+                    return new ArrayList<Task>();
+                }
+            }
+        });
         return migratedTasks;
     }
 
@@ -117,36 +112,31 @@ public class JBPMDocTaskProvider implements TaskProvider {
      * @since 5.9.3
      */
     @Override
-    public List<Task> getCurrentTaskInstances(CoreSession coreSession,
-            List<SortInfo> sortInfos) throws ClientException {
+    public List<Task> getCurrentTaskInstances(CoreSession coreSession, List<SortInfo> sortInfos) throws ClientException {
         return getCurrentTaskInstances(coreSession);
     }
 
     @Override
-    public List<Task> getCurrentTaskInstances(final List<String> actors,
-            final CoreSession coreSession) throws ClientException {
+    public List<Task> getCurrentTaskInstances(final List<String> actors, final CoreSession coreSession)
+            throws ClientException {
         @SuppressWarnings("unchecked")
-        List<Task> migratedTasks = (List<Task>) getJbpmService().executeJbpmOperation(
-                new JbpmOperation() {
-                    private static final long serialVersionUID = 1L;
+        List<Task> migratedTasks = (List<Task>) getJbpmService().executeJbpmOperation(new JbpmOperation() {
+            private static final long serialVersionUID = 1L;
 
-                    @Override
-                    public Serializable run(JbpmContext context)
-                            throws NuxeoJbpmException {
+            @Override
+            public Serializable run(JbpmContext context) throws NuxeoJbpmException {
 
-                        List<TaskInstance> tis = getJbpmService().getCurrentTaskInstances(
-                                actors, null);
+                List<TaskInstance> tis = getJbpmService().getCurrentTaskInstances(actors, null);
 
-                        TaskMigrationRunner migrationRunner = new TaskMigrationRunner(
-                                tis, context, coreSession);
-                        try {
-                            return (Serializable) migrationRunner.migrate();
-                        } catch (ClientException e) {
-                            log.error("Unable to migrate task", e);
-                            return new ArrayList<Task>();
-                        }
-                    }
-                });
+                TaskMigrationRunner migrationRunner = new TaskMigrationRunner(tis, context, coreSession);
+                try {
+                    return (Serializable) migrationRunner.migrate();
+                } catch (ClientException e) {
+                    log.error("Unable to migrate task", e);
+                    return new ArrayList<Task>();
+                }
+            }
+        });
         return migratedTasks;
     }
 
@@ -156,37 +146,31 @@ public class JBPMDocTaskProvider implements TaskProvider {
      * @since 5.9.3
      */
     @Override
-    public List<Task> getCurrentTaskInstances(List<String> actors,
-            CoreSession coreSession, List<SortInfo> sortInfos) throws
-            ClientException {
+    public List<Task> getCurrentTaskInstances(List<String> actors, CoreSession coreSession, List<SortInfo> sortInfos)
+            throws ClientException {
         return getCurrentTaskInstances(actors, coreSession);
     }
 
     @Override
-    public List<Task> getTaskInstances(final DocumentModel dm,
-            final NuxeoPrincipal user, final CoreSession coreSession)
+    public List<Task> getTaskInstances(final DocumentModel dm, final NuxeoPrincipal user, final CoreSession coreSession)
             throws ClientException {
         @SuppressWarnings("unchecked")
-        List<Task> migratedTasks = (List<Task>) getJbpmService().executeJbpmOperation(
-                new JbpmOperation() {
-                    private static final long serialVersionUID = 1L;
+        List<Task> migratedTasks = (List<Task>) getJbpmService().executeJbpmOperation(new JbpmOperation() {
+            private static final long serialVersionUID = 1L;
 
-                    @Override
-                    public Serializable run(final JbpmContext context)
-                            throws NuxeoJbpmException {
+            @Override
+            public Serializable run(final JbpmContext context) throws NuxeoJbpmException {
 
-                        final List<TaskInstance> tis = getJbpmService().getTaskInstances(
-                                dm, user, null);
-                        TaskMigrationRunner migrationRunner = new TaskMigrationRunner(
-                                tis, context, coreSession);
-                        try {
-                            return (Serializable) migrationRunner.migrate();
-                        } catch (ClientException e) {
-                            log.error("Unable to migrate task", e);
-                            return new ArrayList<Task>();
-                        }
-                    }
-                });
+                final List<TaskInstance> tis = getJbpmService().getTaskInstances(dm, user, null);
+                TaskMigrationRunner migrationRunner = new TaskMigrationRunner(tis, context, coreSession);
+                try {
+                    return (Serializable) migrationRunner.migrate();
+                } catch (ClientException e) {
+                    log.error("Unable to migrate task", e);
+                    return new ArrayList<Task>();
+                }
+            }
+        });
         return migratedTasks;
     }
 
@@ -194,8 +178,7 @@ public class JBPMDocTaskProvider implements TaskProvider {
      * @since 5.6
      */
     @Override
-    public List<Task> getAllTaskInstances(String processId, CoreSession session)
-            throws ClientException {
+    public List<Task> getAllTaskInstances(String processId, CoreSession session) throws ClientException {
         return null;
     }
 
@@ -203,8 +186,7 @@ public class JBPMDocTaskProvider implements TaskProvider {
      * @since 5.7
      */
     @Override
-    public List<Task> getAllTaskInstances(String processId, String nodeId,
-            CoreSession session) throws ClientException {
+    public List<Task> getAllTaskInstances(String processId, String nodeId, CoreSession session) throws ClientException {
         throw new UnsupportedOperationException();
     }
 
@@ -212,8 +194,8 @@ public class JBPMDocTaskProvider implements TaskProvider {
      * @since 5.6
      */
     @Override
-    public List<Task> getAllTaskInstances(String processId,
-            NuxeoPrincipal user, CoreSession session) throws ClientException {
+    public List<Task> getAllTaskInstances(String processId, NuxeoPrincipal user, CoreSession session)
+            throws ClientException {
         return null;
     }
 
@@ -221,54 +203,44 @@ public class JBPMDocTaskProvider implements TaskProvider {
      * @since 5.6
      */
     @Override
-    public List<Task> getAllTaskInstances(String processId,
-            List<String> actors, CoreSession session) throws ClientException {
+    public List<Task> getAllTaskInstances(String processId, List<String> actors, CoreSession session)
+            throws ClientException {
         return null;
     }
 
     @Override
-    public List<Task> getTaskInstances(final DocumentModel dm,
-            final List<String> actors, final CoreSession coreSession)
+    public List<Task> getTaskInstances(final DocumentModel dm, final List<String> actors, final CoreSession coreSession)
             throws ClientException {
         @SuppressWarnings("unchecked")
-        List<Task> migratedTasks = (List<Task>) getJbpmService().executeJbpmOperation(
-                new JbpmOperation() {
-                    private static final long serialVersionUID = 1L;
+        List<Task> migratedTasks = (List<Task>) getJbpmService().executeJbpmOperation(new JbpmOperation() {
+            private static final long serialVersionUID = 1L;
 
-                    @Override
-                    public Serializable run(JbpmContext context)
-                            throws NuxeoJbpmException {
-                        List<TaskInstance> tis = getJbpmService().getTaskInstances(
-                                dm, actors, null);
-                        TaskMigrationRunner migrationRunner = new TaskMigrationRunner(
-                                tis, context, coreSession);
-                        try {
-                            return (Serializable) migrationRunner.migrate();
-                        } catch (ClientException e) {
-                            log.error("Unable to migrate task", e);
-                            return new ArrayList<Task>();
-                        }
-                    }
-                });
+            @Override
+            public Serializable run(JbpmContext context) throws NuxeoJbpmException {
+                List<TaskInstance> tis = getJbpmService().getTaskInstances(dm, actors, null);
+                TaskMigrationRunner migrationRunner = new TaskMigrationRunner(tis, context, coreSession);
+                try {
+                    return (Serializable) migrationRunner.migrate();
+                } catch (ClientException e) {
+                    log.error("Unable to migrate task", e);
+                    return new ArrayList<Task>();
+                }
+            }
+        });
         return migratedTasks;
     }
 
     /**
-     * @since 5.8
-     *
-     *  Delegation is not supported on JBPM tasks , so the parameter
-     *  'includeDelegatedTasks' is ignored
+     * @since 5.8 Delegation is not supported on JBPM tasks , so the parameter 'includeDelegatedTasks' is ignored
      */
     @Override
-    public List<Task> getTaskInstances(DocumentModel documentModel,
-            List<String> actors, boolean includeDelegatedTasks,
+    public List<Task> getTaskInstances(DocumentModel documentModel, List<String> actors, boolean includeDelegatedTasks,
             CoreSession session) throws ClientException {
         return getTaskInstances(documentModel, actors, session);
     }
 
-    public String endTask(CoreSession coreSession, NuxeoPrincipal principal,
-            Task task, String comment, String eventName, boolean isValidated)
-            throws ClientException {
+    public String endTask(CoreSession coreSession, NuxeoPrincipal principal, Task task, String comment,
+            String eventName, boolean isValidated) throws ClientException {
 
         String seamEventName = null;
         if (task != null) {
@@ -278,18 +250,14 @@ public class JBPMDocTaskProvider implements TaskProvider {
             String transition = isValidated ? null : WORKFLOW_REJECT_TRANSITION;
 
             Map<String, Serializable> taskVariables = new HashMap<String, Serializable>();
-            taskVariables.put(JbpmService.TaskVariableName.validated.name(),
-                    String.valueOf(isValidated));
+            taskVariables.put(JbpmService.TaskVariableName.validated.name(), String.valueOf(isValidated));
 
             Map<String, Serializable> transientVariables = new HashMap<String, Serializable>();
-            transientVariables.put(JbpmService.VariableName.document.name(),
-                    taskDoc);
-            transientVariables.put(JbpmService.VariableName.principal.name(),
-                    principal);
+            transientVariables.put(JbpmService.VariableName.document.name(), taskDoc);
+            transientVariables.put(JbpmService.VariableName.principal.name(), principal);
 
             try {
-                getJbpmService().endTask(taskId, transition, taskVariables,
-                        null, transientVariables, principal);
+                getJbpmService().endTask(taskId, transition, taskVariables, null, transientVariables, principal);
             } catch (JbpmException jbpme) {
                 // Exception caught, means the task could not be ended leaving
                 // the task-node with the given transition.
@@ -297,23 +265,20 @@ public class JBPMDocTaskProvider implements TaskProvider {
                 log.info(String.format(
                         "This task cannot be ended leaving the task-node with the transition '%s' => canceling the process.",
                         transition));
-                return cancelCurrentProcess(coreSession, taskDoc, principal,
-                        comment);
+                return cancelCurrentProcess(coreSession, taskDoc, principal, comment);
             }
 
             if (comment != null && !"".equals(comment)) {
-                AddCommentOperation addCommentOperation = new AddCommentOperation(
-                        taskId, NuxeoPrincipal.PREFIX + principal.getName(),
-                        comment);
+                AddCommentOperation addCommentOperation = new AddCommentOperation(taskId, NuxeoPrincipal.PREFIX
+                        + principal.getName(), comment);
                 getJbpmService().executeJbpmOperation(addCommentOperation);
             }
 
             coreSession.save(); // process invalidations from handlers' sessions
 
             Set<String> recipients = getRecipientsFromTask(taskId);
-            notifyEventListeners(eventName, comment,
-                    recipients.toArray(new String[] {}), coreSession,
-                    principal, taskDoc);
+            notifyEventListeners(eventName, comment, recipients.toArray(new String[] {}), coreSession, principal,
+                    taskDoc);
             seamEventName = isValidated ? TaskEventNames.WORKFLOW_TASK_COMPLETED
                     : TaskEventNames.WORKFLOW_TASK_REJECTED;
         }
@@ -321,24 +286,19 @@ public class JBPMDocTaskProvider implements TaskProvider {
     }
 
     @SuppressWarnings("unchecked")
-    protected Set<String> getRecipientsFromTask(final long taskId)
-            throws NuxeoJbpmException {
-        GetRecipientsForTaskOperation operation = new GetRecipientsForTaskOperation(
-                taskId);
+    protected Set<String> getRecipientsFromTask(final long taskId) throws NuxeoJbpmException {
+        GetRecipientsForTaskOperation operation = new GetRecipientsForTaskOperation(taskId);
         return (Set<String>) getJbpmService().executeJbpmOperation(operation);
 
     }
 
-    protected void notifyEventListeners(String name, String comment,
-            String[] recipients, CoreSession coreSession,
+    protected void notifyEventListeners(String name, String comment, String[] recipients, CoreSession coreSession,
             NuxeoPrincipal principal, DocumentModel doc) throws ClientException {
-        getJbpmService().notifyEventListeners(name, comment, recipients,
-                coreSession, principal, doc);
+        getJbpmService().notifyEventListeners(name, comment, recipients, coreSession, principal, doc);
     }
 
-    protected String cancelCurrentProcess(CoreSession coreSession,
-            DocumentModel doc, NuxeoPrincipal principal, String comment)
-            throws ClientException {
+    protected String cancelCurrentProcess(CoreSession coreSession, DocumentModel doc, NuxeoPrincipal principal,
+            String comment) throws ClientException {
 
         String seamEventName = null;
         ProcessInstance currentProcess = getCurrentProcess(doc, principal);
@@ -346,35 +306,29 @@ public class JBPMDocTaskProvider implements TaskProvider {
             // remove wf acls
             Long pid = Long.valueOf(currentProcess.getId());
             if (doc != null) {
-                AbandonProcessUnrestricted runner = new AbandonProcessUnrestricted(
-                        coreSession, doc.getRef(), pid);
+                AbandonProcessUnrestricted runner = new AbandonProcessUnrestricted(coreSession, doc.getRef(), pid);
                 runner.runUnrestricted();
             }
 
             // end process and tasks using unrestricted session
-            List<TaskInstance> tis = getJbpmService().getTaskInstances(
-                    coreSession.getDocument(doc.getRef()),
+            List<TaskInstance> tis = getJbpmService().getTaskInstances(coreSession.getDocument(doc.getRef()),
                     (NuxeoPrincipal) null, null);
 
-            EndProcessUnrestricted endProcessRunner = new EndProcessUnrestricted(
-                    coreSession, tis);
+            EndProcessUnrestricted endProcessRunner = new EndProcessUnrestricted(coreSession, tis);
             endProcessRunner.runUnrestricted();
 
             getJbpmService().deleteProcessInstance(principal, pid);
 
             notifyEventListeners(JbpmEventNames.WORKFLOW_CANCELED, comment,
-                    endProcessRunner.getRecipients().toArray(new String[] {}),
-                    coreSession, principal, doc);
+                    endProcessRunner.getRecipients().toArray(new String[] {}), coreSession, principal, doc);
             seamEventName = JbpmEventNames.WORKFLOW_CANCELED;
         }
         return seamEventName;
     }
 
-    protected ProcessInstance getCurrentProcess(DocumentModel doc,
-            NuxeoPrincipal principal) throws ClientException {
+    protected ProcessInstance getCurrentProcess(DocumentModel doc, NuxeoPrincipal principal) throws ClientException {
         ProcessInstance currentProcess = null;
-        List<ProcessInstance> processes = getJbpmService().getProcessInstances(
-                doc, principal, null);
+        List<ProcessInstance> processes = getJbpmService().getProcessInstances(doc, principal, null);
         if (processes != null && !processes.isEmpty()) {
             currentProcess = processes.get(0);
         }
@@ -386,8 +340,7 @@ public class JBPMDocTaskProvider implements TaskProvider {
             try {
                 jbpmService = Framework.getService(JbpmService.class);
             } catch (Exception e) {
-                throw new IllegalStateException(
-                        "Jbpm service is not deployed.", e);
+                throw new IllegalStateException("Jbpm service is not deployed.", e);
             }
         }
         return jbpmService;
@@ -398,8 +351,7 @@ public class JBPMDocTaskProvider implements TaskProvider {
             try {
                 taskService = Framework.getService(TaskService.class);
             } catch (Exception e) {
-                throw new IllegalStateException(
-                        "Task service is not deployed.", e);
+                throw new IllegalStateException("Task service is not deployed.", e);
             }
         }
         return taskService;
@@ -410,8 +362,7 @@ public class JBPMDocTaskProvider implements TaskProvider {
             try {
                 userManager = Framework.getService(UserManager.class);
             } catch (Exception e) {
-                throw new IllegalStateException(
-                        "UserManager service is not deployed.", e);
+                throw new IllegalStateException("UserManager service is not deployed.", e);
             }
         }
         return userManager;

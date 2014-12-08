@@ -41,8 +41,8 @@ import org.nuxeo.runtime.api.Framework;
  *
  * @author arussel
  */
-public abstract class AbstractJbpmHandlerHelper implements ActionHandler,
-        AssignmentHandler, DecisionHandler, TaskControllerHandler {
+public abstract class AbstractJbpmHandlerHelper implements ActionHandler, AssignmentHandler, DecisionHandler,
+        TaskControllerHandler {
 
     private static final long serialVersionUID = 1L;
 
@@ -58,8 +58,7 @@ public abstract class AbstractJbpmHandlerHelper implements ActionHandler,
         throw new UnsupportedOperationException();
     }
 
-    public void assign(Assignable assignable, ExecutionContext executionContext)
-            throws Exception {
+    public void assign(Assignable assignable, ExecutionContext executionContext) throws Exception {
         throw new UnsupportedOperationException();
     }
 
@@ -67,13 +66,11 @@ public abstract class AbstractJbpmHandlerHelper implements ActionHandler,
         throw new UnsupportedOperationException();
     }
 
-    public void initializeTaskVariables(TaskInstance taskInstance,
-            ContextInstance contextInstance, Token token) {
+    public void initializeTaskVariables(TaskInstance taskInstance, ContextInstance contextInstance, Token token) {
         throw new UnsupportedOperationException();
     }
 
-    public void submitTaskVariables(TaskInstance taskInstance,
-            ContextInstance contextInstance, Token token) {
+    public void submitTaskVariables(TaskInstance taskInstance, ContextInstance contextInstance, Token token) {
         throw new UnsupportedOperationException();
     }
 
@@ -108,27 +105,22 @@ public abstract class AbstractJbpmHandlerHelper implements ActionHandler,
 
     @SuppressWarnings("unchecked")
     protected List<String> getParticipants() {
-        return (List<String>) executionContext.getContextInstance().getVariable(
-                VariableName.participants.name());
+        return (List<String>) executionContext.getContextInstance().getVariable(VariableName.participants.name());
     }
 
     protected String getSwimlaneUser(String swimlaneName) {
-        return executionContext.getTaskMgmtInstance().getSwimlaneInstance(
-                swimlaneName).getActorId();
+        return executionContext.getTaskMgmtInstance().getSwimlaneInstance(swimlaneName).getActorId();
     }
 
     /** @deprecated since 5.4 */
     @Deprecated
-    protected void followTransition(NuxeoPrincipal principal,
-            DocumentRef docRef, String transition) throws Exception {
+    protected void followTransition(NuxeoPrincipal principal, DocumentRef docRef, String transition) throws Exception {
         followTransition(principal, docRef, transition, null);
     }
 
-    protected void followTransition(NuxeoPrincipal principal,
-            DocumentRef docRef, String transition, VersioningOption option)
-            throws Exception {
-        try (CoreSession coreSession = CoreInstance.openCoreSession(
-                getDocumentRepositoryName(), principal)) {
+    protected void followTransition(NuxeoPrincipal principal, DocumentRef docRef, String transition,
+            VersioningOption option) throws Exception {
+        try (CoreSession coreSession = CoreInstance.openCoreSession(getDocumentRepositoryName(), principal)) {
             coreSession.followTransition(docRef, transition);
             if (option != null) {
                 if (coreSession.isCheckedOut(docRef)) {

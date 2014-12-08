@@ -73,17 +73,14 @@ public class TasksRestlet extends BaseStatelessNuxeoRestlet {
             return;
         }
 
-        String format = request.getResourceRef().getQueryAsForm().getFirstValue(
-                "format");
+        String format = request.getResourceRef().getQueryAsForm().getFirstValue("format");
         if (format == null) {
             format = defaultFormat;
         }
 
-        String lang = request.getResourceRef().getQueryAsForm().getFirstValue(
-                "lang");
+        String lang = request.getResourceRef().getQueryAsForm().getFirstValue("lang");
 
-        String myTasksRequested = request.getResourceRef().getQueryAsForm().getFirstValue(
-                "mytasks");
+        String myTasksRequested = request.getResourceRef().getQueryAsForm().getFirstValue("mytasks");
         boolean wantMyTasks = true;
         if ("false".equalsIgnoreCase(myTasksRequested)) {
             wantMyTasks = false;
@@ -92,8 +89,7 @@ public class TasksRestlet extends BaseStatelessNuxeoRestlet {
         // labels to translate
         List<String> labels = new LinkedList<String>();
         if (lang != null) {
-            String allLabels = request.getResourceRef().getQueryAsForm().getFirstValue(
-                    "labels");
+            String allLabels = request.getResourceRef().getQueryAsForm().getFirstValue("labels");
             if (allLabels != null) {
                 for (String label : allLabels.split("\\,")) {
                     // if (!label.startsWith("label.")) {
@@ -106,8 +102,7 @@ public class TasksRestlet extends BaseStatelessNuxeoRestlet {
 
         List<DashBoardItem> dashboardItems = null;
         try {
-            dashboardItems = getDashboardItemsForUser(
-                    (NuxeoPrincipal) getUserPrincipal(request), repo, response,
+            dashboardItems = getDashboardItemsForUser((NuxeoPrincipal) getUserPrincipal(request), repo, response,
                     wantMyTasks);
         } catch (Exception e1) {
             handleError(response, e1);
@@ -118,20 +113,18 @@ public class TasksRestlet extends BaseStatelessNuxeoRestlet {
         summary.setLink(getRestletFullUrl(request));
 
         try {
-            SerializerHelper.formatResult(summary, dashboardItems, response,
-                    format, null, getHttpRequest(request), labels, lang);
+            SerializerHelper.formatResult(summary, dashboardItems, response, format, null, getHttpRequest(request),
+                    labels, lang);
         } catch (ClientException e) {
             handleError(response, e);
         }
     }
 
-    private List<DashBoardItem> getDashboardTaskItemsForUser(
-            NuxeoPrincipal user, String repository, Response response)
+    private List<DashBoardItem> getDashboardTaskItemsForUser(NuxeoPrincipal user, String repository, Response response)
             throws Exception {
 
         List<DashBoardItem> results = new ArrayList<DashBoardItem>();
-        List<TaskInstance> tasks = getJbpmService().getCurrentTaskInstances(
-                user, getFilter());
+        List<TaskInstance> tasks = getJbpmService().getCurrentTaskInstances(user, getFilter());
         if (tasks != null) {
             for (TaskInstance task : tasks) {
                 DocumentModel doc = null;
@@ -143,23 +136,19 @@ public class TasksRestlet extends BaseStatelessNuxeoRestlet {
                 if (doc != null) {
                     results.add(new DashBoardItemImpl(task, doc));
                 } else {
-                    log.warn(String.format(
-                            "User '%s' has a task of type '%s' on an "
-                                    + "unexisting or invisible document",
-                            user.getName(), task.getName()));
+                    log.warn(String.format("User '%s' has a task of type '%s' on an "
+                            + "unexisting or invisible document", user.getName(), task.getName()));
                 }
             }
         }
         return results;
     }
 
-    private List<DashBoardItem> getDashboardItemsManagedByUser(
-            NuxeoPrincipal user, String repository, Response response)
+    private List<DashBoardItem> getDashboardItemsManagedByUser(NuxeoPrincipal user, String repository, Response response)
             throws Exception {
 
         List<DashBoardItem> results = new ArrayList<DashBoardItem>();
-        List<ProcessInstance> processes = getJbpmService().getCurrentProcessInstances(
-                user, getFilter());
+        List<ProcessInstance> processes = getJbpmService().getCurrentProcessInstances(user, getFilter());
         if (processes != null) {
             for (ProcessInstance process : processes) {
                 DocumentModel doc = null;
@@ -170,8 +159,7 @@ public class TasksRestlet extends BaseStatelessNuxeoRestlet {
                 }
                 if (doc != null) {
                     Token token = process.getRootToken();
-                    Collection<TaskInstance> notDone = jbpmService.getTaskInstances(
-                            process.getId(), null, null);
+                    Collection<TaskInstance> notDone = jbpmService.getTaskInstances(process.getId(), null, null);
                     for (TaskInstance task : notDone) {
                         Set<PooledActor> actors = task.getPooledActors();
                         StringBuilder names = new StringBuilder();
@@ -184,8 +172,7 @@ public class TasksRestlet extends BaseStatelessNuxeoRestlet {
                                 }
                                 String id = actor.getActorId();
                                 if (id.indexOf(':') == -1) {
-                                    log.error("Unable to find to find a ':' in actor id:"
-                                            + id);
+                                    log.error("Unable to find to find a ':' in actor id:" + id);
                                     names.append(id);
                                 } else {
                                     names.append(id.substring(id.indexOf(':') + 1));
@@ -197,10 +184,8 @@ public class TasksRestlet extends BaseStatelessNuxeoRestlet {
                         results.add(item);
                     }
                 } else {
-                    log.warn(String.format(
-                            "User '%s' has a process id of '%ld' on an "
-                                    + "unexisting or invisible document",
-                            user.getName(), process.getId()));
+                    log.warn(String.format("User '%s' has a process id of '%ld' on an "
+                            + "unexisting or invisible document", user.getName(), process.getId()));
                 }
             }
         }
@@ -208,17 +193,14 @@ public class TasksRestlet extends BaseStatelessNuxeoRestlet {
 
     }
 
-    private List<DashBoardItem> getDashboardItemsForUser(NuxeoPrincipal user,
-            String repository, Response response, boolean myTasks)
-            throws Exception {
+    private List<DashBoardItem> getDashboardItemsForUser(NuxeoPrincipal user, String repository, Response response,
+            boolean myTasks) throws Exception {
         List<DashBoardItem> currentUserTasks = new ArrayList<DashBoardItem>();
         if (myTasks) {
-            currentUserTasks = getDashboardTaskItemsForUser(user, repository,
-                    response);
+            currentUserTasks = getDashboardTaskItemsForUser(user, repository, response);
         } else {
             // people I am waiting on
-            currentUserTasks = getDashboardItemsManagedByUser(user, repository,
-                    response);
+            currentUserTasks = getDashboardItemsManagedByUser(user, repository, response);
         }
 
         return currentUserTasks;

@@ -30,7 +30,6 @@ import org.nuxeo.runtime.test.NXRuntimeTestCase;
 
 /**
  * @author <a href="mailto:arussel@nuxeo.com">Alexandre Russel</a>
- *
  */
 public class JbpmComponentTest extends NXRuntimeTestCase {
 

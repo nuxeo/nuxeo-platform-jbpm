@@ -22,7 +22,6 @@ import org.nuxeo.ecm.platform.jbpm.JbpmSecurityPolicy;
 
 /**
  * @author arussel
- *
  */
 @XObject("securityPolicy")
 public class SecurityPolicyDescriptor {

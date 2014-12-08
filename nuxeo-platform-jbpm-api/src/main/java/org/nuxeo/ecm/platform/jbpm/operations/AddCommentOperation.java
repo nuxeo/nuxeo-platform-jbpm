@@ -29,7 +29,6 @@ import org.nuxeo.ecm.platform.jbpm.NuxeoJbpmException;
 
 /**
  * @author arussel
- *
  */
 public class AddCommentOperation implements JbpmOperation {
 

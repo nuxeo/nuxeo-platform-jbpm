@@ -49,8 +49,8 @@ public class TaskListFilter implements JbpmListFilter {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> ArrayList<T> filter(JbpmContext jbpmContext,
-            DocumentModel document, ArrayList<T> list, NuxeoPrincipal principal) {
+    public <T> ArrayList<T> filter(JbpmContext jbpmContext, DocumentModel document, ArrayList<T> list,
+            NuxeoPrincipal principal) {
         ArrayList<TaskInstance> result = new ArrayList<TaskInstance>();
         if (taskNames != null && !taskNames.isEmpty()) {
             for (T t : list) {

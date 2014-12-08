@@ -40,7 +40,6 @@ import org.nuxeo.ecm.platform.jbpm.VirtualTaskInstance;
  * Action handler that add READ rights to given participants.
  *
  * @author Anahide Tchertchian
- *
  */
 public class AddRightsActionHandler extends AbstractJbpmHandlerHelper {
 
@@ -55,8 +54,8 @@ public class AddRightsActionHandler extends AbstractJbpmHandlerHelper {
     public void execute(ExecutionContext executionContext) throws Exception {
         this.executionContext = executionContext;
         if (nuxeoHasStarted() && list != null) {
-            List<VirtualTaskInstance> participants
-                    = (List<VirtualTaskInstance>) executionContext.getContextInstance().getTransientVariable(list);
+            List<VirtualTaskInstance> participants = (List<VirtualTaskInstance>) executionContext.getContextInstance().getTransientVariable(
+                    list);
             if (participants == null) {
                 participants = (List<VirtualTaskInstance>) executionContext.getVariable(list);
             }
@@ -72,8 +71,7 @@ public class AddRightsActionHandler extends AbstractJbpmHandlerHelper {
                     if (initiator.startsWith(NuxeoPrincipal.PREFIX)) {
                         initiator = initiator.substring(NuxeoPrincipal.PREFIX.length());
                     }
-                    acl.add(new ACE(initiator, SecurityConstants.READ_WRITE,
-                            true));
+                    acl.add(new ACE(initiator, SecurityConstants.READ_WRITE, true));
                 }
                 // add permission for every review participant according to
                 // the 'right' parameter of the VirtualTaskInstance
@@ -94,8 +92,7 @@ public class AddRightsActionHandler extends AbstractJbpmHandlerHelper {
                     }
                 }
                 acp.addACL(acl);
-                AddRightUnrestricted runner = new AddRightUnrestricted(session,
-                        docRef, acp);
+                AddRightUnrestricted runner = new AddRightUnrestricted(session, docRef, acp);
                 runner.runUnrestricted();
             }
         }

@@ -28,9 +28,7 @@ import org.nuxeo.ecm.platform.jbpm.JbpmTaskService;
  *
  * @author <a href="mailto:ja@nuxeo.com">Julien Anguenot</a>
  */
-public class DashBoardItemImpl extends
-        org.nuxeo.ecm.platform.jbpm.dashboard.DashBoardItemImpl implements
-        DashBoardItem {
+public class DashBoardItemImpl extends org.nuxeo.ecm.platform.jbpm.dashboard.DashBoardItemImpl implements DashBoardItem {
 
     private static final long serialVersionUID = 1L;
 
@@ -45,11 +43,9 @@ public class DashBoardItemImpl extends
     public String getDocumentLink() {
         TaskInstance taskInstance = getTaskInstance();
         if ("true".equals(taskInstance.getVariableLocally(JbpmTaskService.TaskVariableName.createdFromTaskService.name()))) {
-            return "/nxdoc/" + getDocument().getRepositoryName() + "/"
-                    + getDocument().getId() + "/view_documents";
+            return "/nxdoc/" + getDocument().getRepositoryName() + "/" + getDocument().getId() + "/view_documents";
         } else {
-            return "/nxdoc/" + getDocument().getRepositoryName() + "/"
-                    + getDocument().getId()
+            return "/nxdoc/" + getDocument().getRepositoryName() + "/" + getDocument().getId()
                     + "/view_documents?tabId=TAB_CONTENT_JBPM";
         }
     }

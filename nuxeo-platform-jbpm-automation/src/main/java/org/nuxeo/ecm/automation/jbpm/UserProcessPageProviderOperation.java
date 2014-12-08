@@ -74,8 +74,7 @@ public class UserProcessPageProviderOperation extends AbstractWorkflowOperation 
     @OperationMethod
     public Blob run() throws Exception {
         Map<String, Serializable> props = new HashMap<String, Serializable>();
-        props.put(UserProcessPageProvider.CORE_SESSION_PROPERTY,
-                (Serializable) session);
+        props.put(UserProcessPageProvider.CORE_SESSION_PROPERTY, (Serializable) session);
         PageProviderService pps = Framework.getLocalService(PageProviderService.class);
 
         Long targetPage = null;
@@ -87,26 +86,18 @@ public class UserProcessPageProviderOperation extends AbstractWorkflowOperation 
             targetPageSize = Long.valueOf(pageSize.longValue());
         }
         PageProvider<DocumentProcessItem> pageProvider = (PageProvider<DocumentProcessItem>) pps.getPageProvider(
-                USER_PROCESSES_PAGE_PROVIDER, null, targetPageSize, targetPage,
-                props);
+                USER_PROCESSES_PAGE_PROVIDER, null, targetPageSize, targetPage, props);
 
-        Locale locale = language != null && !language.isEmpty() ? new Locale(
-                language) : Locale.ENGLISH;
+        Locale locale = language != null && !language.isEmpty() ? new Locale(language) : Locale.ENGLISH;
 
         JSONArray processes = new JSONArray();
         for (DocumentProcessItem process : pageProvider.getCurrentPage()) {
             JSONObject obj = new JSONObject();
-            obj.put("processInstanceName",
-                    getI18nProcessInstanceName(
-                            process.getProcessInstanceName(), locale));
+            obj.put("processInstanceName", getI18nProcessInstanceName(process.getProcessInstanceName(), locale));
             obj.put("documentTitle", process.getDocumentModel().getTitle());
-            obj.put("documentLink",
-                    getDocumentLink(documentViewCodecManager,
-                            process.getDocumentModel(), true));
+            obj.put("documentLink", getDocumentLink(documentViewCodecManager, process.getDocumentModel(), true));
             Date startDate = process.getProcessInstanceStartDate();
-            obj.put("startDate",
-                    startDate != null ? DateParser.formatW3CDateTime(startDate)
-                            : "");
+            obj.put("startDate", startDate != null ? DateParser.formatW3CDateTime(startDate) : "");
             process.getProcessInstanceName();
             processes.add(obj);
         }
@@ -119,12 +110,10 @@ public class UserProcessPageProviderOperation extends AbstractWorkflowOperation 
         json.put("pageCount", Long.valueOf(pageProvider.getNumberOfPages()));
 
         json.put("entries", processes);
-        return new InputStreamBlob(new ByteArrayInputStream(
-                json.toString().getBytes("UTF-8")), "application/json");
+        return new InputStreamBlob(new ByteArrayInputStream(json.toString().getBytes("UTF-8")), "application/json");
     }
 
-    protected String getI18nProcessInstanceName(String processInstanceName,
-            Locale locale) {
+    protected String getI18nProcessInstanceName(String processInstanceName, Locale locale) {
         String labelKey = "document_" + processInstanceName;
         return getI18nLabel(labelKey, locale);
     }

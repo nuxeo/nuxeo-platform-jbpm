@@ -20,7 +20,6 @@ import org.jbpm.job.executor.JobExecutor;
 
 /**
  * @author arussel
- *
  */
 public class NuxeoJobExecutor extends JobExecutor {
 
@@ -28,7 +27,7 @@ public class NuxeoJobExecutor extends JobExecutor {
 
     @Override
     protected Thread createThread(String threadName) {
-        return new NuxeoJobExecutorThread(threadName, this, jbpmConfiguration,
-                idleInterval, maxIdleInterval, maxLockTime, historyMaxSize);
+        return new NuxeoJobExecutorThread(threadName, this, jbpmConfiguration, idleInterval, maxIdleInterval,
+                maxLockTime, historyMaxSize);
     }
 }

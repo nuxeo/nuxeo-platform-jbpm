@@ -25,7 +25,6 @@ import org.nuxeo.common.xmap.annotation.XObject;
 
 /**
  * @author arussel
- *
  */
 @XObject("type")
 public class TypeFilterDescriptor {
@@ -33,7 +32,7 @@ public class TypeFilterDescriptor {
     @XNode("@name")
     private String type;
 
-    @XNodeList(value="processDefinition", componentType=String.class, type=ArrayList.class)
+    @XNodeList(value = "processDefinition", componentType = String.class, type = ArrayList.class)
     private List<String> pds;
 
     public String getType() {

@@ -25,7 +25,6 @@ import org.nuxeo.ecm.platform.jbpm.AbstractProcessDefinitionDeployer;
 
 /**
  * @author <a href="mailto:arussel@nuxeo.com">Alexandre Russel</a>
- *
  */
 public class AlwaysDeployer extends AbstractProcessDefinitionDeployer {
 

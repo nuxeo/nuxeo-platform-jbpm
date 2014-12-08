@@ -23,20 +23,21 @@ import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.Token;
 
 /**
- * A jBPM node that implements foreach functionalities.
- *
- * It creates a child token for each item of the list and add the item to the
- * child token. To use it:
+ * A jBPM node that implements foreach functionalities. It creates a child token for each item of the list and add the
+ * item to the child token. To use it:
  * <p>
- * <pre><code>
+ * 
+ * <pre>
+ * <code>
  * &lt;action class="org.nuxeo.ecm.platform.jbpm.core.node.ForeachFork"&gt;
  *   &lt;var&gt;participant&lt;/var&gt;
  *   &lt;list&gt;participants&lt;/list&gt;
  * &lt;/action&gt;
- * </code></pre>
+ * </code>
+ * </pre>
  * <p>
- * The list variable is the name of the list in the process instance. The var
- * variable is the name that will be given to the item in the child token.
+ * The list variable is the name of the list in the process instance. The var variable is the name that will be given to
+ * the item in the child token.
  *
  * @author arussel
  */
@@ -53,15 +54,13 @@ public class ForeachFork implements ActionHandler {
     public void execute(ExecutionContext executionContext) {
         assert list != null;
         assert var != null;
-        List l = (List) executionContext.getContextInstance().getTransientVariable(
-                list);
+        List l = (List) executionContext.getContextInstance().getTransientVariable(list);
         if (l == null) {
             l = (List) executionContext.getVariable(list);
         }
         executionContext.getToken();
         for (Object obj : l) {
-            Token childToken = new Token(executionContext.getToken(),
-                    obj.toString());
+            Token childToken = new Token(executionContext.getToken(), obj.toString());
             executionContext.getContextInstance().setTransientVariable(var, obj);
             childToken.signal();
         }

@@ -41,17 +41,15 @@ import org.nuxeo.runtime.api.Framework;
  * <p>
  * Useful for content views displaying users' processes.
  * <p>
- * WARNING: this page provider does not handle sorting, and its pagination
- * management is not efficient (done in post filter).
+ * WARNING: this page provider does not handle sorting, and its pagination management is not efficient (done in post
+ * filter).
  * <p>
- * This page provider requires the property {@link #CORE_SESSION_PROPERTY} to
- * be filled with a core session. It also accepts an optional property
- * {@link #FILTER_DOCS_FROM_TRASH}, defaulting to true.
+ * This page provider requires the property {@link #CORE_SESSION_PROPERTY} to be filled with a core session. It also
+ * accepts an optional property {@link #FILTER_DOCS_FROM_TRASH}, defaulting to true.
  *
  * @since 5.4.2
  */
-public class UserProcessPageProvider extends
-        AbstractPageProvider<DocumentProcessItem> implements
+public class UserProcessPageProvider extends AbstractPageProvider<DocumentProcessItem> implements
         PageProvider<DocumentProcessItem> {
 
     private static final long serialVersionUID = 1L;
@@ -84,8 +82,7 @@ public class UserProcessPageProvider extends
                     // handle offset
                     long offset = getCurrentPageOffset();
                     if (offset <= resultsCount) {
-                        for (int i = Long.valueOf(offset).intValue(); i < resultsCount
-                                && i < offset + pageSize; i++) {
+                        for (int i = Long.valueOf(offset).intValue(); i < resultsCount && i < offset + pageSize; i++) {
                             pageProcesses.add(userProcesses.get(i));
                         }
                     }
@@ -105,29 +102,24 @@ public class UserProcessPageProvider extends
             boolean filterTrashDocs = getFilterDocumentsInTrash();
             NuxeoPrincipal pal = (NuxeoPrincipal) coreSession.getPrincipal();
             JbpmService jbpmService = Framework.getService(JbpmService.class);
-            List<ProcessInstance> processes = jbpmService.getCurrentProcessInstances(
-                    pal, null);
+            List<ProcessInstance> processes = jbpmService.getCurrentProcessInstances(pal, null);
             if (processes != null) {
                 for (ProcessInstance process : processes) {
                     try {
                         if (process.hasEnded()) {
                             continue;
                         }
-                        DocumentModel doc = jbpmService.getDocumentModel(
-                                process, pal);
+                        DocumentModel doc = jbpmService.getDocumentModel(process, pal);
                         if (doc != null) {
                             if (filterTrashDocs
                                     && LifeCycleConstants.DELETED_STATE.equals(doc.getCurrentLifeCycleState())) {
                                 continue;
                             } else {
-                                userProcesses.add(new DocumentProcessItemImpl(
-                                        process, doc));
+                                userProcesses.add(new DocumentProcessItemImpl(process, doc));
                             }
                         } else {
-                            log.warn(String.format(
-                                    "User '%s' has a process of type '%s' on a "
-                                            + "missing or deleted document",
-                                    pal.getName(),
+                            log.warn(String.format("User '%s' has a process of type '%s' on a "
+                                    + "missing or deleted document", pal.getName(),
                                     process.getProcessDefinition().getName()));
                         }
                     } catch (Exception e) {
@@ -160,8 +152,7 @@ public class UserProcessPageProvider extends
     }
 
     /**
-     * This page provider does not support sort for now => override what may be
-     * contributed in the definition
+     * This page provider does not support sort for now => override what may be contributed in the definition
      */
     @Override
     public boolean isSortable() {

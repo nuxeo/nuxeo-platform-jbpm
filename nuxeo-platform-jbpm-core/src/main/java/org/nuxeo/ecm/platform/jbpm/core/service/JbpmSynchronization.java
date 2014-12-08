@@ -22,7 +22,6 @@ import org.jbpm.JbpmContext;
 
 /**
  * @author arussel
- *
  */
 public class JbpmSynchronization implements Synchronization {
 

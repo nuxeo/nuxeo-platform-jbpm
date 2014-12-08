@@ -29,7 +29,6 @@ import java.util.Map;
 
 /**
  * @author Anahide Tchertchian
- *
  */
 public class VirtualTaskInstance implements Serializable {
 
@@ -43,7 +42,7 @@ public class VirtualTaskInstance implements Serializable {
 
     protected Date dueDate;
 
-    protected Map<String, Serializable> parameters = new HashMap<String,  Serializable>();
+    protected Map<String, Serializable> parameters = new HashMap<String, Serializable>();
 
     public VirtualTaskInstance() {
     }
@@ -56,16 +55,14 @@ public class VirtualTaskInstance implements Serializable {
         actors = Collections.singletonList(actor);
     }
 
-    public VirtualTaskInstance(List<String> actors, String directive,
-            String comment, Date dueDate) {
+    public VirtualTaskInstance(List<String> actors, String directive, String comment, Date dueDate) {
         this.actors = actors;
         this.directive = directive;
         this.comment = comment;
         this.dueDate = dueDate;
     }
 
-    public VirtualTaskInstance(String actor, String directive,
-            String comment, Date dueDate) {
+    public VirtualTaskInstance(String actor, String directive, String comment, Date dueDate) {
         this.actors = Collections.singletonList(actor);
         this.directive = directive;
         this.comment = comment;

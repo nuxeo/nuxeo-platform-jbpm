@@ -37,6 +37,7 @@ import org.nuxeo.ecm.core.api.SimplePrincipal;
 public abstract class AbstractProcessDefinitionTest {
 
     protected final List<String> bob_list = Collections.singletonList("bob");
+
     protected final List<String> trudy_list = Collections.singletonList("trudy");
 
     protected JbpmConfiguration configuration;
@@ -47,14 +48,12 @@ public abstract class AbstractProcessDefinitionTest {
 
     @Before
     public void setUp() throws Exception {
-        InputStream isConf = getClass().getResourceAsStream(
-                getConfigurationResource());
+        InputStream isConf = getClass().getResourceAsStream(getConfigurationResource());
         configuration = JbpmConfiguration.parseInputStream(isConf);
         assertNotNull(configuration);
 
         jbpmContext = configuration.createJbpmContext();
-        InputStream is = getClass().getResourceAsStream(
-                getProcessDefinitionResource());
+        InputStream is = getClass().getResourceAsStream(getProcessDefinitionResource());
         assertNotNull(is);
 
         pd = ProcessDefinition.parseXmlInputStream(is);

@@ -35,9 +35,10 @@ import org.w3c.dom.NodeList;
 public class MD5HasherTest {
 
     private static final String xmlFolder = "xml/";
+
     private static final String smallXmlFile = xmlFolder + "smallXmlFile.xml";
-    private static final String smallCommentedFile = xmlFolder
-            + "smallCommentedFile.xml";
+
+    private static final String smallCommentedFile = xmlFolder + "smallCommentedFile.xml";
 
     private MD5Hasher hasher;
 
@@ -93,20 +94,16 @@ public class MD5HasherTest {
     @Test
     public void testMD5() throws NoSuchAlgorithmException {
         // taken from: http://en.wikipedia.org/wiki/MD5
-        assertEquals("d41d8cd98f00b204e9800998ecf8427e",
-                hasher.MD5("".getBytes()));
-        assertEquals(
-                "e4d909c290d0fb1ca068ffaddf22cbd0",
+        assertEquals("d41d8cd98f00b204e9800998ecf8427e", hasher.MD5("".getBytes()));
+        assertEquals("e4d909c290d0fb1ca068ffaddf22cbd0",
                 hasher.MD5("The quick brown fox jumps over the lazy dog.".getBytes()));
-        assertEquals(
-                "9e107d9d372bb6826bd81d3542a419d6",
+        assertEquals("9e107d9d372bb6826bd81d3542a419d6",
                 hasher.MD5("The quick brown fox jumps over the lazy dog".getBytes()));
     }
 
     @Test
     public void testGetMD5FromURL() throws Exception {
-        assertEquals(hasher.getMD5FromURL(getURL(smallCommentedFile)),
-                hasher.getMD5FromURL(getURL(smallXmlFile)));
+        assertEquals(hasher.getMD5FromURL(getURL(smallCommentedFile)), hasher.getMD5FromURL(getURL(smallXmlFile)));
     }
 
     private static void assertNode(NodeList list, String nodeName, int index) {

@@ -24,8 +24,7 @@ package org.nuxeo.ecm.platform.jbpm.syndication.workflow;
  *
  * @author <a href="mailto:ja@nuxeo.com">Julien Anguenot</a>
  */
-public interface DashBoardItem extends
-        org.nuxeo.ecm.platform.jbpm.dashboard.DashBoardItem {
+public interface DashBoardItem extends org.nuxeo.ecm.platform.jbpm.dashboard.DashBoardItem {
     /**
      * REQUIRED FOR OPEN SOCIAL DASHBOARD
      */

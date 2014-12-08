@@ -20,7 +20,6 @@ import org.nuxeo.runtime.api.J2EEContainerDescriptor;
 
 /**
  * @author arussel
- *
  */
 public class RuntimeConfigurationSelector {
     public String getConfigurationName() {

@@ -65,8 +65,7 @@ public class GetUserTasks {
     @OperationMethod
     public Blob run() throws Exception {
         NuxeoPrincipal principal = principal();
-        List<TaskInstance> tasks = srv.getCurrentTaskInstances(principal,
-                filter());
+        List<TaskInstance> tasks = srv.getCurrentTaskInstances(principal, filter());
         if (tasks == null) {
             return null;
         }
@@ -79,9 +78,7 @@ public class GetUserTasks {
                 log.warn("Cannot get doc for task " + task.getId(), e);
             }
             if (doc == null) {
-                log.warn(String.format(
-                        "User '%s' has a task of type '%s' on an "
-                                + "unexisting or invisible document",
+                log.warn(String.format("User '%s' has a task of type '%s' on an " + "unexisting or invisible document",
                         principal.getName(), task.getName()));
                 continue;
             }
@@ -99,8 +96,7 @@ public class GetUserTasks {
                 expired = dueDate.before(new Date());
             }
             obj.element("expired", expired);
-            obj.element("directive",
-                    task.getVariableLocally(TaskVariableName.directive.name()));
+            obj.element("directive", task.getVariableLocally(TaskVariableName.directive.name()));
             @SuppressWarnings("unchecked")
             List<Comment> comments = task.getComments();
             String comment = "";
@@ -122,8 +118,7 @@ public class GetUserTasks {
             private static final long serialVersionUID = 1L;
 
             @Override
-            public <T> ArrayList<T> filter(JbpmContext jbpmContext,
-                    DocumentModel document, ArrayList<T> list,
+            public <T> ArrayList<T> filter(JbpmContext jbpmContext, DocumentModel document, ArrayList<T> list,
                     NuxeoPrincipal principal) {
                 return list;
             }
