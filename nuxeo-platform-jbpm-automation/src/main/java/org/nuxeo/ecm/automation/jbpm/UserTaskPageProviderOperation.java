@@ -16,7 +16,6 @@
 
 package org.nuxeo.ecm.automation.jbpm;
 
-import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,7 +32,7 @@ import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.CoreSession;
-import org.nuxeo.ecm.core.api.impl.blob.InputStreamBlob;
+import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
 import org.nuxeo.ecm.core.schema.utils.DateParser;
 import org.nuxeo.ecm.platform.jbpm.dashboard.DashBoardItem;
 import org.nuxeo.ecm.platform.jbpm.providers.UserProcessPageProvider;
@@ -120,7 +119,7 @@ public class UserTaskPageProviderOperation extends AbstractWorkflowOperation {
         json.put("pageCount", Long.valueOf(pageProvider.getNumberOfPages()));
 
         json.put("entries", processes);
-        return new InputStreamBlob(new ByteArrayInputStream(json.toString().getBytes("UTF-8")), "application/json");
+        return new StringBlob(json.toString(), "application/json");
     }
 
     protected String getI18nTaskName(String taskName, Locale locale) {
