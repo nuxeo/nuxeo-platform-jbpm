@@ -18,21 +18,16 @@ You can build this module with:
 
 #### Deploy the module
 
-Copy the `nuxeo-platform-jbpm-*.jar` JARs into your Nuxeo instance in `nxserver/bundles` and restart.
+Copy the built artifacts into `$NUXEO_HOME/templates/custom/bundles/` and activate the "custom" template.
 
 #### Configure the Datasource
 
 Nuxeo jBPM relies on a Datasource `nxjbpm` which is already defined in a default Nuxeo 5.6 distribution.
 
-## About Nuxeo
+## QA results
 
-Nuxeo provides a modular, extensible Java-based [open source software platform for enterprise content management] [1] and packaged applications for [document management] [2], [digital asset management] [3] and [case management] [4]. Designed by developers for developers, the Nuxeo platform offers a modern architecture, a powerful plug-in model and extensive packaging capabilities for building content applications.
+[![Build Status](https://qa.nuxeo.org/jenkins/buildStatus/icon?job=addons_nuxeo-platform-jbpm-master)](https://qa.nuxeo.org/jenkins/job/addons_nuxeo-platform-jbpm-master/)
 
-[1]: http://www.nuxeo.com/en/products/ep
-[2]: http://www.nuxeo.com/en/products/document-management
-[3]: http://www.nuxeo.com/en/products/dam
-[4]: http://www.nuxeo.com/en/products/case-management
+# About Nuxeo
 
-More information on: <http://www.nuxeo.com/>
-
-
+Nuxeo dramatically improves how content-based applications are built, managed and deployed, making customers more agile, innovative and successful. Nuxeo provides a next generation, enterprise ready platform for building traditional and cutting-edge content oriented applications. Combining a powerful application development environment with SaaS-based tools and a modular architecture, the Nuxeo Platform and Products provide clear business value to some of the most recognizable brands including Verizon, Electronic Arts, Netflix, Sharp, FICO, the U.S. Navy, and Boeing. Nuxeo is headquartered in New York and Paris. More information is available at www.nuxeo.com.
