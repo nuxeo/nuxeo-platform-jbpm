@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.jbpm.JbpmContext;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.exe.ProcessInstance;
@@ -35,68 +37,68 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.NuxeoGroup;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
-import org.nuxeo.ecm.core.storage.sql.SQLRepositoryTestCase;
+import org.nuxeo.ecm.core.test.CoreFeature;
+import org.nuxeo.ecm.core.test.TransactionalFeature;
+import org.nuxeo.ecm.core.test.annotations.Granularity;
+import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
 import org.nuxeo.ecm.platform.jbpm.JbpmOperation;
 import org.nuxeo.ecm.platform.jbpm.JbpmService;
 import org.nuxeo.ecm.platform.jbpm.NuxeoJbpmException;
 import org.nuxeo.ecm.platform.jbpm.VirtualTaskInstance;
 import org.nuxeo.ecm.platform.jbpm.core.service.JbpmServiceImpl;
-import org.nuxeo.ecm.platform.jbpm.test.JbpmUTConstants;
 import org.nuxeo.ecm.platform.usermanager.NuxeoPrincipalImpl;
 import org.nuxeo.ecm.platform.usermanager.UserManager;
-import org.nuxeo.runtime.api.Framework;
+import org.nuxeo.runtime.test.runner.Deploy;
+import org.nuxeo.runtime.test.runner.Features;
+import org.nuxeo.runtime.test.runner.FeaturesRunner;
+import org.nuxeo.runtime.test.runner.LocalDeploy;
 
 /**
  * @author arussel
  */
-public class JbpmServiceTest extends SQLRepositoryTestCase {
+@RunWith(FeaturesRunner.class)
+@Features({ TransactionalFeature.class, CoreFeature.class })
+@RepositoryConfig(cleanup = Granularity.METHOD)
+@Deploy({ "org.nuxeo.ecm.directory", //
+        "org.nuxeo.ecm.platform.usermanager", //
+        "org.nuxeo.ecm.directory.types.contrib", //
+        "org.nuxeo.ecm.directory.sql", //
+        "org.nuxeo.ecm.platform.jbpm.core", //
+        "org.nuxeo.ecm.platform.jbpm.testing", //
+})
+@LocalDeploy("org.nuxeo.ecm.platform.jbpm.core.test:OSGI-INF/jbpmService-contrib.xml")
+public class JbpmServiceTest {
 
+    @Inject
     private JbpmService service;
 
+    @Inject
     private UserManager userManager;
+
+    @Inject
+    protected CoreSession session;
 
     private NuxeoPrincipal administrator;
 
     private NuxeoPrincipal user1;
 
-    @Override
     @Before
     public void setUp() throws Exception {
         // clean up previous test.
         JbpmServiceImpl.contexts.set(null);
-        super.setUp();
-
-        deployBundle("org.nuxeo.ecm.directory");
-        deployBundle("org.nuxeo.ecm.platform.usermanager");
-        deployBundle("org.nuxeo.ecm.directory.types.contrib");
-        deployBundle("org.nuxeo.ecm.directory.sql");
-        deployContrib("org.nuxeo.ecm.platform.jbpm.core.test", "OSGI-INF/jbpmService-contrib.xml");
-
-        deployBundle(JbpmUTConstants.CORE_BUNDLE_NAME);
-        deployBundle(JbpmUTConstants.TESTING_BUNDLE_NAME);
-
-        service = Framework.getService(JbpmService.class);
-        userManager = Framework.getService(UserManager.class);
-        assertNotNull(userManager);
 
         administrator = userManager.getPrincipal(SecurityConstants.ADMINISTRATOR);
-        assertNotNull(administrator);
-
         user1 = userManager.getPrincipal("myuser1");
-        assertNotNull(user1);
-
-        openSession();
     }
 
-    @Override
     @After
     public void tearDown() throws Exception {
-        closeSession();
-        super.tearDown();
         JbpmServiceImpl.contexts.set(null);
     }
 

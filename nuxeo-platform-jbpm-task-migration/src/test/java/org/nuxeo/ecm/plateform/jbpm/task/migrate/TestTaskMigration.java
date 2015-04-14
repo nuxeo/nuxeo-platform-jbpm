@@ -12,27 +12,54 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.jbpm.taskmgmt.exe.TaskInstance;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.api.impl.UserPrincipal;
-import org.nuxeo.ecm.core.storage.sql.SQLRepositoryTestCase;
+import org.nuxeo.ecm.core.test.CoreFeature;
+import org.nuxeo.ecm.core.test.TransactionalFeature;
+import org.nuxeo.ecm.core.test.annotations.Granularity;
+import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
 import org.nuxeo.ecm.platform.jbpm.JbpmService;
 import org.nuxeo.ecm.platform.jbpm.JbpmTaskService;
-import org.nuxeo.ecm.platform.jbpm.test.JbpmUTConstants;
 import org.nuxeo.ecm.platform.task.Task;
 import org.nuxeo.ecm.platform.task.TaskService;
-import org.nuxeo.runtime.api.Framework;
+import org.nuxeo.runtime.test.runner.Deploy;
+import org.nuxeo.runtime.test.runner.Features;
+import org.nuxeo.runtime.test.runner.FeaturesRunner;
+import org.nuxeo.runtime.test.runner.LocalDeploy;
 
-public class TestTaskMigration extends SQLRepositoryTestCase {
+@RunWith(FeaturesRunner.class)
+@Features({ TransactionalFeature.class, CoreFeature.class })
+@RepositoryConfig(cleanup = Granularity.METHOD)
+@Deploy({ "org.nuxeo.ecm.platform.query.api", //
+        "org.nuxeo.ecm.platform.task.api", //
+        "org.nuxeo.ecm.platform.task.core", //
+        "org.nuxeo.ecm.platform.jbpm.api", //
+        "org.nuxeo.ecm.platform.jbpm.core", //
+        "org.nuxeo.ecm.platform.jbpm.testing", //
+})
+@LocalDeploy("org.nuxeo.ecm.platform.jbpm.task.migration:OSGI-INF/task-provider-contrib.xml")
+public class TestTaskMigration {
 
+    @Inject
     protected JbpmService jbpmService;
 
+    @Inject
     protected JbpmTaskService jbpmTaskService;
+
+    @Inject
+    protected TaskService taskService;
+
+    @Inject
+    protected CoreSession session;
 
     protected DocumentModel doc;
 
@@ -46,26 +73,6 @@ public class TestTaskMigration extends SQLRepositoryTestCase {
 
     @Before
     public void setUp() throws Exception {
-        super.setUp();
-
-        deployBundle("org.nuxeo.ecm.platform.jbpm.api");
-        deployBundle("org.nuxeo.ecm.platform.jbpm.core");
-
-        deployBundle("org.nuxeo.ecm.platform.query.api");
-        deployBundle("org.nuxeo.ecm.platform.task.api");
-        deployBundle("org.nuxeo.ecm.platform.task.core");
-
-        deployContrib("org.nuxeo.ecm.platform.jbpm.task.migration", "OSGI-INF/task-provider-contrib.xml");
-
-        deployBundle(JbpmUTConstants.TESTING_BUNDLE_NAME);
-
-        jbpmService = Framework.getService(JbpmService.class);
-        assertNotNull(jbpmService);
-        jbpmTaskService = Framework.getService(JbpmTaskService.class);
-        assertNotNull(jbpmTaskService);
-
-        openSession();
-
         doc = session.createDocumentModel("/", "doc", "File");
         doc.setPropertyValue("dc:title", "MytestDoc");
         doc = session.createDocument(doc);
@@ -74,13 +81,6 @@ public class TestTaskMigration extends SQLRepositoryTestCase {
         principal = new UserPrincipal("toto", null, false, false);
 
         prefixedActorIds.add("user:tit'i");
-
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        closeSession();
-        super.tearDown();
     }
 
     protected void createJBPMTask(String taskName) throws Exception {
@@ -97,10 +97,6 @@ public class TestTaskMigration extends SQLRepositoryTestCase {
 
     @Test
     public void testTaskMigration() throws Exception {
-
-        TaskService taskService = Framework.getService(TaskService.class);
-        assertNotNull(taskService);
-
         // create JBPM Tasks
         for (int i = 0; i < NB_TASKS; i++) {
             createJBPMTask("TestTask-" + i);

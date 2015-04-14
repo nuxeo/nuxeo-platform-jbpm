@@ -30,14 +30,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.NuxeoGroup;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
-import org.nuxeo.ecm.core.storage.sql.SQLRepositoryTestCase;
+import org.nuxeo.ecm.core.test.CoreFeature;
+import org.nuxeo.ecm.core.test.TransactionalFeature;
+import org.nuxeo.ecm.core.test.annotations.Granularity;
+import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
 import org.nuxeo.ecm.platform.jbpm.JbpmService;
 import org.nuxeo.ecm.platform.jbpm.JbpmTaskService;
 import org.nuxeo.ecm.platform.jbpm.VirtualTaskInstance;
@@ -45,24 +52,46 @@ import org.nuxeo.ecm.platform.jbpm.core.service.JbpmServiceImpl;
 import org.nuxeo.ecm.platform.jbpm.dashboard.DashBoardItem;
 import org.nuxeo.ecm.platform.jbpm.dashboard.DocumentProcessItem;
 import org.nuxeo.ecm.platform.jbpm.providers.UserTaskPageProvider;
-import org.nuxeo.ecm.platform.jbpm.test.JbpmUTConstants;
 import org.nuxeo.ecm.platform.query.api.PageProvider;
 import org.nuxeo.ecm.platform.query.api.PageProviderService;
 import org.nuxeo.ecm.platform.usermanager.UserManager;
-import org.nuxeo.runtime.api.Framework;
+import org.nuxeo.runtime.test.runner.Deploy;
+import org.nuxeo.runtime.test.runner.Features;
+import org.nuxeo.runtime.test.runner.FeaturesRunner;
+import org.nuxeo.runtime.test.runner.LocalDeploy;
 
 /**
  * @since 5.4.2
  */
-public class JbpmPageProvidersTest extends SQLRepositoryTestCase {
+@RunWith(FeaturesRunner.class)
+@Features({ TransactionalFeature.class, CoreFeature.class })
+@RepositoryConfig(cleanup = Granularity.METHOD)
+@Deploy({ "org.nuxeo.ecm.directory", //
+        "org.nuxeo.ecm.platform.usermanager", //
+        "org.nuxeo.ecm.directory.types.contrib", //
+        "org.nuxeo.ecm.directory.sql", //
+        "org.nuxeo.ecm.platform.query.api", //
+        "org.nuxeo.ecm.platform.jbpm.core", //
+        "org.nuxeo.ecm.platform.jbpm.testing", //
+})
+@LocalDeploy({ "org.nuxeo.ecm.platform.jbpm.core.test:OSGI-INF/jbpmService-contrib.xml",
+        "org.nuxeo.ecm.platform.jbpm.core.test:OSGI-INF/pageproviders-contrib.xml" })
+public class JbpmPageProvidersTest {
 
+    @Inject
     private JbpmService service;
 
+    @Inject
     protected JbpmTaskService taskService;
 
+    @Inject
     protected PageProviderService ppService;
 
+    @Inject
     protected UserManager userManager;
+
+    @Inject
+    protected CoreSession session;
 
     protected NuxeoPrincipal administrator;
 
@@ -72,33 +101,9 @@ public class JbpmPageProvidersTest extends SQLRepositoryTestCase {
     public void setUp() throws Exception {
         // clean up previous test.
         JbpmServiceImpl.contexts.set(null);
-        super.setUp();
-
-        deployBundle("org.nuxeo.runtime.jtajca");
-        deployBundle("org.nuxeo.ecm.directory");
-        deployBundle("org.nuxeo.ecm.platform.usermanager");
-        deployBundle("org.nuxeo.ecm.directory.types.contrib");
-        deployBundle("org.nuxeo.ecm.directory.sql");
-        deployContrib("org.nuxeo.ecm.platform.jbpm.core.test", "OSGI-INF/jbpmService-contrib.xml");
-        deployContrib("org.nuxeo.ecm.platform.query.api", "OSGI-INF/pageprovider-framework.xml");
-        deployContrib("org.nuxeo.ecm.platform.jbpm.core.test", "OSGI-INF/pageproviders-contrib.xml");
-
-        deployBundle(JbpmUTConstants.CORE_BUNDLE_NAME);
-        deployBundle(JbpmUTConstants.TESTING_BUNDLE_NAME);
-
-        service = Framework.getService(JbpmService.class);
-        taskService = Framework.getService(JbpmTaskService.class);
-        ppService = Framework.getService(PageProviderService.class);
-
-        userManager = Framework.getService(UserManager.class);
-        assertNotNull(userManager);
 
         administrator = userManager.getPrincipal(SecurityConstants.ADMINISTRATOR);
-        assertNotNull(administrator);
-
-        openSession();
         document = getDocument();
-        assertNotNull(document);
 
         // create process instance
         List<VirtualTaskInstance> participants = new ArrayList<VirtualTaskInstance>();
@@ -121,8 +126,6 @@ public class JbpmPageProvidersTest extends SQLRepositoryTestCase {
 
     @After
     public void tearDown() throws Exception {
-        closeSession();
-        super.tearDown();
         JbpmServiceImpl.contexts.set(null);
     }
 

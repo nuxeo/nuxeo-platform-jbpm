@@ -16,45 +16,76 @@
  */
 package org.nuxeo.ecm.platform.jbpm.core;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.After;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import javax.inject.Inject;
 
 import org.jbpm.JbpmContext;
 import org.jbpm.graph.exe.Comment;
 import org.jbpm.taskmgmt.exe.PooledActor;
 import org.jbpm.taskmgmt.exe.TaskInstance;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.NuxeoGroup;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
-import org.nuxeo.ecm.core.storage.sql.SQLRepositoryTestCase;
+import org.nuxeo.ecm.core.test.CoreFeature;
+import org.nuxeo.ecm.core.test.TransactionalFeature;
+import org.nuxeo.ecm.core.test.annotations.Granularity;
+import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
 import org.nuxeo.ecm.platform.jbpm.JbpmOperation;
 import org.nuxeo.ecm.platform.jbpm.JbpmService;
 import org.nuxeo.ecm.platform.jbpm.JbpmTaskService;
 import org.nuxeo.ecm.platform.jbpm.NuxeoJbpmException;
 import org.nuxeo.ecm.platform.jbpm.core.service.JbpmServiceImpl;
-import org.nuxeo.ecm.platform.jbpm.test.JbpmUTConstants;
 import org.nuxeo.ecm.platform.usermanager.UserManager;
-import org.nuxeo.runtime.api.Framework;
+import org.nuxeo.runtime.test.runner.Deploy;
+import org.nuxeo.runtime.test.runner.Features;
+import org.nuxeo.runtime.test.runner.FeaturesRunner;
+import org.nuxeo.runtime.test.runner.LocalDeploy;
 
 /**
  * @author Anahide Tchertchian
  */
-public class JbpmTaskServiceTest extends SQLRepositoryTestCase {
+@RunWith(FeaturesRunner.class)
+@Features({ TransactionalFeature.class, CoreFeature.class })
+@RepositoryConfig(cleanup = Granularity.METHOD)
+@Deploy({ "org.nuxeo.ecm.directory", //
+        "org.nuxeo.ecm.directory.sql", //
+        "org.nuxeo.ecm.platform.usermanager", //
+        "org.nuxeo.ecm.directory.types.contrib", //
+        "org.nuxeo.ecm.platform.jbpm.core", //
+        "org.nuxeo.ecm.platform.jbpm.testing", //
+})
+@LocalDeploy("org.nuxeo.ecm.platform.jbpm.core.test:OSGI-INF/jbpmService-contrib.xml")
+public class JbpmTaskServiceTest {
 
+    @Inject
     protected JbpmService service;
 
+    @Inject
     protected JbpmTaskService taskService;
 
+    @Inject
     protected UserManager userManager;
+
+    @Inject
+    protected CoreSession session;
 
     protected NuxeoPrincipal administrator;
 
@@ -70,45 +101,20 @@ public class JbpmTaskServiceTest extends SQLRepositoryTestCase {
     public void setUp() throws Exception {
         // clean up previous test.
         JbpmServiceImpl.contexts.set(null);
-        super.setUp();
-
-        deployBundle("org.nuxeo.ecm.directory");
-        deployBundle("org.nuxeo.ecm.platform.usermanager");
-        deployBundle("org.nuxeo.ecm.directory.types.contrib");
-        deployBundle("org.nuxeo.ecm.directory.sql");
-        deployContrib("org.nuxeo.ecm.platform.jbpm.core.test", "OSGI-INF/jbpmService-contrib.xml");
-
-        deployBundle(JbpmUTConstants.CORE_BUNDLE_NAME);
-        deployBundle(JbpmUTConstants.TESTING_BUNDLE_NAME);
-
-        service = Framework.getService(JbpmService.class);
-        taskService = Framework.getService(JbpmTaskService.class);
-
-        userManager = Framework.getService(UserManager.class);
-        assertNotNull(userManager);
 
         administrator = userManager.getPrincipal(SecurityConstants.ADMINISTRATOR);
-        assertNotNull(administrator);
-
         user1 = userManager.getPrincipal("myuser1");
         assertNotNull(user1);
-
         user2 = userManager.getPrincipal("myuser2");
         assertNotNull(user2);
-
         user3 = userManager.getPrincipal("myuser3");
         assertNotNull(user3);
-
         user4 = userManager.getPrincipal("myuser4");
         assertNotNull(user4);
-
-        openSession();
     }
 
     @After
     public void tearDown() throws Exception {
-        closeSession();
-        super.tearDown();
         JbpmServiceImpl.contexts.set(null);
     }
 

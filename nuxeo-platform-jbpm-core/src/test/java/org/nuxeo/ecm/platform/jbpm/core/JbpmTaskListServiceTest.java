@@ -18,63 +18,81 @@
 
 package org.nuxeo.ecm.platform.jbpm.core;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
+
 import java.util.Arrays;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import org.junit.Before;
-import org.junit.After;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import javax.inject.Inject;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.core.storage.sql.SQLRepositoryTestCase;
+import org.nuxeo.ecm.core.event.EventService;
+import org.nuxeo.ecm.core.test.CoreFeature;
+import org.nuxeo.ecm.core.test.RepositorySettings;
+import org.nuxeo.ecm.core.test.TransactionalFeature;
+import org.nuxeo.ecm.core.test.annotations.Granularity;
+import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
 import org.nuxeo.ecm.platform.jbpm.JbpmTaskListService;
 import org.nuxeo.ecm.platform.jbpm.TaskList;
 import org.nuxeo.ecm.platform.jbpm.VirtualTaskInstance;
 import org.nuxeo.ecm.platform.jbpm.core.service.JbpmServiceImpl;
-import org.nuxeo.ecm.platform.jbpm.test.JbpmUTConstants;
 import org.nuxeo.ecm.platform.userworkspace.api.UserWorkspaceService;
 import org.nuxeo.runtime.api.Framework;
+import org.nuxeo.runtime.test.runner.Deploy;
+import org.nuxeo.runtime.test.runner.Features;
+import org.nuxeo.runtime.test.runner.FeaturesRunner;
+import org.nuxeo.runtime.test.runner.LocalDeploy;
+import org.nuxeo.runtime.transaction.TransactionHelper;
 
-public class JbpmTaskListServiceTest extends SQLRepositoryTestCase {
+@RunWith(FeaturesRunner.class)
+@Features({ TransactionalFeature.class, CoreFeature.class })
+@RepositoryConfig(cleanup = Granularity.METHOD)
+@Deploy({ "org.nuxeo.ecm.directory", //
+        "org.nuxeo.ecm.directory.api", //
+        "org.nuxeo.ecm.directory.sql", //
+        "org.nuxeo.ecm.platform.usermanager", //
+        "org.nuxeo.ecm.platform.usermanager.api", //
+        "org.nuxeo.ecm.directory.types.contrib", //
+        "org.nuxeo.ecm.platform.content.template", //
+        "org.nuxeo.ecm.platform.userworkspace.api", //
+        "org.nuxeo.ecm.platform.userworkspace.types", //
+        "org.nuxeo.ecm.platform.jbpm.core", //
+        "org.nuxeo.ecm.platform.jbpm.testing", //
+})
+@LocalDeploy({ "org.nuxeo.ecm.platform.userworkspace.core:OSGI-INF/userworkspace-framework.xml",
+        "org.nuxeo.ecm.platform.userworkspace.core:OSGI-INF/userWorkspaceImpl.xml",
+        "org.nuxeo.ecm.platform.jbpm.core.test:OSGI-INF/jbpmService-contrib.xml" })
+public class JbpmTaskListServiceTest {
 
     public static String userWorkspacePath = "/default-domain/UserWorkspaces/Administrator";
 
+    @Inject
+    protected RepositorySettings repositorySettings;
+
+    @Inject
+    protected EventService eventService;
+
+    @Inject
+    protected CoreSession session;
+
     @Before
     public void setUp() throws Exception {
-
         // clean up previous test.
         JbpmServiceImpl.contexts.set(null);
-
-        super.setUp();
-        deployBundle("org.nuxeo.ecm.platform.usermanager");
-        deployBundle("org.nuxeo.ecm.platform.usermanager.api");
-        deployBundle("org.nuxeo.ecm.directory.api");
-        deployBundle("org.nuxeo.ecm.directory");
-        deployBundle("org.nuxeo.ecm.directory.sql");
-        deployBundle("org.nuxeo.ecm.core.api");
-        deployBundle("org.nuxeo.ecm.platform.content.template");
-        deployBundle("org.nuxeo.ecm.platform.userworkspace.api");
-        deployBundle("org.nuxeo.ecm.platform.userworkspace.types");
-        deployContrib("org.nuxeo.ecm.platform.userworkspace.core", "OSGI-INF/userworkspace-framework.xml");
-        deployContrib("org.nuxeo.ecm.platform.userworkspace.core", "OSGI-INF/userWorkspaceImpl.xml");
-
-        deployContrib("org.nuxeo.ecm.platform.jbpm.core.test", "OSGI-INF/jbpmService-contrib.xml");
-
-        deployBundle(JbpmUTConstants.CORE_BUNDLE_NAME);
-        deployBundle(JbpmUTConstants.TESTING_BUNDLE_NAME);
-
-        fireFrameworkStarted();
-        openSession();
     }
 
     @After
     public void tearDown() throws Exception {
-        closeSession();
-        super.tearDown();
         JbpmServiceImpl.contexts.set(null);
     }
 
@@ -152,8 +170,7 @@ public class JbpmTaskListServiceTest extends SQLRepositoryTestCase {
         // Save the list
         service.saveTaskList(session, list);
 
-        closeSession();
-        openSession();
+        reOpenSession();
 
         // Try to load unknown list
         TaskList listFake = service.getTaskList(session, "ListFake");
@@ -178,8 +195,7 @@ public class JbpmTaskListServiceTest extends SQLRepositoryTestCase {
         // Delete it
         service.deleteTaskList(session, list.getUUID());
 
-        closeSession();
-        openSession();
+        reOpenSession();
 
         // Check it is deleted
         TaskList list3 = service.getTaskList(session, list.getUUID());
@@ -189,6 +205,20 @@ public class JbpmTaskListServiceTest extends SQLRepositoryTestCase {
     private static DocumentModel getUserWorkspace(CoreSession session) throws ClientException {
         UserWorkspaceService uws = Framework.getLocalService(UserWorkspaceService.class);
         return uws.getCurrentUserPersonalWorkspace(session, null);
+    }
+
+    protected void reOpenSession() {
+        repositorySettings.releaseSession();
+        waitForAsyncCompletion();
+        session = repositorySettings.createSession();
+    }
+
+    protected void waitForAsyncCompletion() {
+        if (TransactionHelper.isTransactionActiveOrMarkedRollback()) {
+            TransactionHelper.commitOrRollbackTransaction();
+            TransactionHelper.startTransaction();
+        }
+        eventService.waitForAsyncCompletion();
     }
 
 }
