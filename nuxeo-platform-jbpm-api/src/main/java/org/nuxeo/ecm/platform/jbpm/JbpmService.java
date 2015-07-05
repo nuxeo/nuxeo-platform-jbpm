@@ -368,9 +368,8 @@ public interface JbpmService {
      * @param name the name of the event
      * @param comment the comment
      * @param recipients the recipients property of the event context
-     * @throws ClientException
      */
     void notifyEventListeners(String name, String comment, String[] recipients, CoreSession session,
-            NuxeoPrincipal principal, DocumentModel doc) throws ClientException;
+            NuxeoPrincipal principal, DocumentModel doc);
 
 }

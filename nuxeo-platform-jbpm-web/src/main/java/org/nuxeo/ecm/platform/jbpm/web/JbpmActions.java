@@ -40,43 +40,42 @@ import org.nuxeo.ecm.platform.jbpm.VirtualTaskInstance;
  */
 public interface JbpmActions extends Serializable {
 
-    boolean getCanCreateProcess() throws ClientException;
+    boolean getCanCreateProcess();
 
-    boolean getCanManageProcess() throws ClientException;
+    boolean getCanManageProcess();
 
-    boolean getCanManageParticipants() throws ClientException;
+    boolean getCanManageParticipants();
 
-    boolean getCanEndTask(TaskInstance taskInstance) throws ClientException;
+    boolean getCanEndTask(TaskInstance taskInstance);
 
-    String createProcessInstance(NuxeoPrincipal principal, String pd, DocumentModel dm, String endLifeCycle)
-            throws ClientException;
+    String createProcessInstance(NuxeoPrincipal principal, String pd, DocumentModel dm, String endLifeCycle);
 
-    ProcessInstance getCurrentProcess() throws ClientException;
+    ProcessInstance getCurrentProcess();
 
-    String getCurrentProcessInitiator() throws ClientException;
+    String getCurrentProcessInitiator();
 
-    List<TaskInstance> getCurrentTasks(String... taskNames) throws ClientException;
+    List<TaskInstance> getCurrentTasks(String... taskNames);
 
-    ArrayList<VirtualTaskInstance> getCurrentVirtualTasks() throws ClientException;
+    ArrayList<VirtualTaskInstance> getCurrentVirtualTasks();
 
-    boolean getShowAddVirtualTaskForm() throws ClientException;
+    boolean getShowAddVirtualTaskForm();
 
-    void toggleShowAddVirtualTaskForm(ActionEvent event) throws ClientException;
+    void toggleShowAddVirtualTaskForm(ActionEvent event);
 
     VirtualTaskInstance getNewVirtualTask();
 
-    String addNewVirtualTask() throws ClientException;
+    String addNewVirtualTask();
 
-    String removeVirtualTask(int index) throws ClientException;
+    String removeVirtualTask(int index);
 
-    String moveUpVirtualTask(int index) throws ClientException;
+    String moveUpVirtualTask(int index);
 
-    String moveDownVirtualTask(int index) throws ClientException;
+    String moveDownVirtualTask(int index);
 
     /**
      * Returns the list of allowed life cycle state transitions for given document.
      */
-    List<String> getAllowedStateTransitions(DocumentRef ref) throws ClientException;
+    List<String> getAllowedStateTransitions(DocumentRef ref);
 
     String getUserComment();
 
@@ -84,15 +83,15 @@ public interface JbpmActions extends Serializable {
 
     void validateTaskDueDate(FacesContext context, UIComponent component, Object value);
 
-    boolean isProcessStarted(String startTaskName) throws ClientException;
+    boolean isProcessStarted(String startTaskName);
 
-    String startProcess(String startTaskName) throws ClientException;
+    String startProcess(String startTaskName);
 
-    String validateTask(TaskInstance taskInstance, String transition) throws ClientException;
+    String validateTask(TaskInstance taskInstance, String transition);
 
-    String rejectTask(TaskInstance taskInstance, String transition) throws ClientException;
+    String rejectTask(TaskInstance taskInstance, String transition);
 
-    String abandonCurrentProcess() throws ClientException;
+    String abandonCurrentProcess();
 
     void resetCurrentData();
 

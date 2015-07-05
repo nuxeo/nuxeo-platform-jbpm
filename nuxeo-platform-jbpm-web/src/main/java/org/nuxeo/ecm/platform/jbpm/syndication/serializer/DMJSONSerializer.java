@@ -54,7 +54,7 @@ public class DMJSONSerializer implements DashBoardItemSerializer {
     }
 
     protected static String serialize(ResultSummary summary, List<DashBoardItem> workItems, String columnsDefinition,
-            List<String> labels, String lang) throws ClientException {
+            List<String> labels, String lang) {
         if (workItems == null) {
             workItems = Collections.emptyList();
         }
@@ -133,7 +133,7 @@ public class DMJSONSerializer implements DashBoardItemSerializer {
 
     @Override
     public void serialize(ResultSummary summary, List<DashBoardItem> workItems, String columnsDefinition,
-            List<String> labels, String lang, Response res, HttpServletRequest req) throws ClientException {
+            List<String> labels, String lang, Response res, HttpServletRequest req) {
         String json = serialize(summary, workItems, columnsDefinition, labels, lang);
         res.setEntity(json, MediaType.TEXT_PLAIN);
     }

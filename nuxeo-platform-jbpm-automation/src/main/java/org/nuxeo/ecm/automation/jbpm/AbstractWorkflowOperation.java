@@ -43,7 +43,7 @@ public class AbstractWorkflowOperation {
     }
 
     protected String getDocumentLink(DocumentViewCodecManager documentViewCodecManager, DocumentModel doc,
-            boolean includeWorkflowTab) throws ClientException {
+            boolean includeWorkflowTab) {
         String viewId = getDefaultViewFor(doc);
         Map<String, String> parameters = Maps.newHashMap();
         if (includeWorkflowTab) {

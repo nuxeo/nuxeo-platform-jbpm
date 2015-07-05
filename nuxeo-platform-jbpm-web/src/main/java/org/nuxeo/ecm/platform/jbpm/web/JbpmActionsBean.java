@@ -129,7 +129,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements J
 
     protected String userComment;
 
-    public boolean getCanCreateProcess() throws ClientException {
+    public boolean getCanCreateProcess() {
         ProcessInstance currentProcess = getCurrentProcess();
         if (currentProcess == null) {
             // check write permissions on current doc
@@ -142,7 +142,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements J
         return false;
     }
 
-    public boolean getCanManageProcess() throws ClientException {
+    public boolean getCanManageProcess() {
         if (canManageCurrentProcess == null) {
             canManageCurrentProcess = Boolean.FALSE;
             ProcessInstance currentProcess = getCurrentProcess();
@@ -157,7 +157,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements J
         return canManageCurrentProcess.booleanValue();
     }
 
-    public boolean getCanManageParticipants() throws ClientException {
+    public boolean getCanManageParticipants() {
         if (canManageParticipants == null) {
             canManageParticipants = Boolean.FALSE;
             if (getCanManageProcess()) {
@@ -192,7 +192,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements J
         return canManageParticipants.booleanValue();
     }
 
-    public boolean getCanEndTask(TaskInstance taskInstance) throws ClientException {
+    public boolean getCanEndTask(TaskInstance taskInstance) {
         if (taskInstance != null && (!taskInstance.isCancelled() && !taskInstance.hasEnded())) {
             JbpmHelper helper = new JbpmHelper();
             NuxeoPrincipal pal = currentUser;
@@ -203,7 +203,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements J
     }
 
     public String createProcessInstance(NuxeoPrincipal principal, String pd, DocumentModel dm, String endLifeCycle)
-            throws ClientException {
+            {
         if (getCanCreateProcess()) {
             Map<String, Serializable> map = null;
             if (endLifeCycle != null && !endLifeCycle.equals("") && !"null".equals(endLifeCycle)) {
@@ -221,7 +221,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements J
         return null;
     }
 
-    public ProcessInstance getCurrentProcess() throws ClientException {
+    public ProcessInstance getCurrentProcess() {
         if (currentProcess == null) {
             List<ProcessInstance> processes = jbpmService.getProcessInstances(navigationContext.getCurrentDocument(),
                     currentUser, null);
@@ -232,7 +232,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements J
         return currentProcess;
     }
 
-    public String getCurrentProcessInitiator() throws ClientException {
+    public String getCurrentProcessInitiator() {
         if (currentProcessInitiator == null) {
             currentProcessInitiator = "";
             ProcessInstance currentProcess = getCurrentProcess();
@@ -250,7 +250,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements J
         return currentProcessInitiator;
     }
 
-    public String getCurrentProcessDestinationState() throws ClientException {
+    public String getCurrentProcessDestinationState() {
         if (currentProcessDestinationState == null) {
             ProcessInstance currentProcess = getCurrentProcess();
             if (currentProcess != null) {
@@ -264,7 +264,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements J
         return currentProcessDestinationState;
     }
 
-    public List<TaskInstance> getCurrentTasks(String... taskNames) throws ClientException {
+    public List<TaskInstance> getCurrentTasks(String... taskNames) {
         if (currentTasks == null) {
             currentTasks = new ArrayList<TaskInstance>();
             ProcessInstance currentProcess = getCurrentProcess();
@@ -277,7 +277,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements J
     }
 
     @SuppressWarnings("unchecked")
-    public ArrayList<VirtualTaskInstance> getCurrentVirtualTasks() throws ClientException {
+    public ArrayList<VirtualTaskInstance> getCurrentVirtualTasks() {
         if (currentVirtualTasks == null) {
             currentVirtualTasks = new ArrayList<VirtualTaskInstance>();
             ProcessInstance currentProcess = getCurrentProcess();
@@ -292,7 +292,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements J
         return currentVirtualTasks;
     }
 
-    public boolean getShowAddVirtualTaskForm() throws ClientException {
+    public boolean getShowAddVirtualTaskForm() {
         if (showAddVirtualTaskForm == null) {
             showAddVirtualTaskForm = Boolean.FALSE;
             if (getCurrentVirtualTasks().isEmpty() && (currentTasks == null || currentTasks.isEmpty())) {
@@ -302,7 +302,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements J
         return showAddVirtualTaskForm.booleanValue();
     }
 
-    public void toggleShowAddVirtualTaskForm(ActionEvent event) throws ClientException {
+    public void toggleShowAddVirtualTaskForm(ActionEvent event) {
         showAddVirtualTaskForm = Boolean.valueOf(!getShowAddVirtualTaskForm());
     }
 
@@ -313,7 +313,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements J
         return newVirtualTask;
     }
 
-    public String addNewVirtualTask() throws ClientException {
+    public String addNewVirtualTask() {
         ProcessInstance pi = getCurrentProcess();
         if (pi != null && newVirtualTask != null && getCanManageParticipants()) {
             List<VirtualTaskInstance> virtualTasks = getCurrentVirtualTasks();
@@ -335,7 +335,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements J
         return null;
     }
 
-    public String persistProcessInstance() throws ClientException {
+    public String persistProcessInstance() {
         ProcessInstance pi = getCurrentProcess();
         if (pi != null) {
             jbpmService.persistProcessInstance(pi);
@@ -361,7 +361,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements J
         return formInEditMode;
     }
 
-    public String moveDownVirtualTask(int index) throws ClientException {
+    public String moveDownVirtualTask(int index) {
         ProcessInstance pi = getCurrentProcess();
         if (pi != null && getCanManageParticipants()) {
             List<VirtualTaskInstance> virtualTasks = getCurrentVirtualTasks();
@@ -382,7 +382,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements J
         return null;
     }
 
-    public String moveUpVirtualTask(int index) throws ClientException {
+    public String moveUpVirtualTask(int index) {
         ProcessInstance pi = getCurrentProcess();
         if (pi != null && getCanManageParticipants()) {
             List<VirtualTaskInstance> virtualTasks = getCurrentVirtualTasks();
@@ -403,7 +403,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements J
         return null;
     }
 
-    public String removeVirtualTask(int index) throws ClientException {
+    public String removeVirtualTask(int index) {
         ProcessInstance pi = getCurrentProcess();
         if (pi != null && getCanManageParticipants()) {
             List<VirtualTaskInstance> virtualTasks = getCurrentVirtualTasks();
@@ -453,7 +453,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements J
 
     }
 
-    protected TaskInstance getStartTask(String taskName) throws ClientException {
+    protected TaskInstance getStartTask(String taskName) {
         TaskInstance startTask = null;
         if (taskName != null) {
             // get task with that name on current process
@@ -473,12 +473,12 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements J
         return startTask;
     }
 
-    public boolean isProcessStarted(String startTaskName) throws ClientException {
+    public boolean isProcessStarted(String startTaskName) {
         TaskInstance startTask = getStartTask(startTaskName);
         return startTask.hasEnded();
     }
 
-    public String startProcess(String startTaskName) throws ClientException {
+    public String startProcess(String startTaskName) {
         if (getCanManageProcess()) {
             TaskInstance startTask = getStartTask(startTaskName);
             if (startTask.hasEnded()) {
@@ -498,7 +498,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements J
         return null;
     }
 
-    public String validateTask(final TaskInstance taskInstance, String transition) throws ClientException {
+    public String validateTask(final TaskInstance taskInstance, String transition) {
         if (taskInstance != null) {
             if (userComment != null && !"".equals(userComment)) {
                 AddCommentOperation addCommentOperation = new AddCommentOperation(taskInstance.getId(),
@@ -523,7 +523,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements J
         return returnToCurrentDocOrHome();
     }
 
-    public String rejectTask(final TaskInstance taskInstance, String transition) throws ClientException {
+    public String rejectTask(final TaskInstance taskInstance, String transition) {
         if (taskInstance != null) {
             if (userComment != null && !"".equals(userComment)) {
                 AddCommentOperation addCommentOperation = new AddCommentOperation(taskInstance.getId(),
@@ -552,7 +552,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements J
         return returnToCurrentDocOrHome();
     }
 
-    protected String returnToCurrentDocOrHome() throws ClientException {
+    protected String returnToCurrentDocOrHome() {
         DocumentModel currentDocument;
         try {
             // re-fetch the document, it might have changed during the process
@@ -585,7 +585,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements J
 
     }
 
-    public String cancelCurrentProcess() throws ClientException {
+    public String cancelCurrentProcess() {
         ProcessInstance currentProcess = getCurrentProcess();
         if (currentProcess != null) {
             // remove wf acls
@@ -617,7 +617,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements J
     }
 
     @SuppressWarnings("unchecked")
-    public String abandonCurrentProcess() throws ClientException {
+    public String abandonCurrentProcess() {
         ProcessInstance currentProcess = getCurrentProcess();
         if (currentProcess != null && getCanManageProcess()) {
             // remove wf acls
@@ -664,7 +664,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements J
         return CHECK_IN_TRANSITIONS.contains(transition);
     }
 
-    public List<String> getAllowedStateTransitions(DocumentRef ref) throws ClientException {
+    public List<String> getAllowedStateTransitions(DocumentRef ref) {
         // break reference: core gives an unmodifiable collection unsuitable
         // for UI.
         List<String> res = new ArrayList<String>();
@@ -699,7 +699,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements J
         resetCurrentData();
     }
 
-    public void notifyEventListeners(String name, String comment, String[] recipients) throws ClientException {
+    public void notifyEventListeners(String name, String comment, String[] recipients) {
         jbpmService.notifyEventListeners(name, comment, recipients, documentManager, currentUser, getCurrentDocument());
     }
 

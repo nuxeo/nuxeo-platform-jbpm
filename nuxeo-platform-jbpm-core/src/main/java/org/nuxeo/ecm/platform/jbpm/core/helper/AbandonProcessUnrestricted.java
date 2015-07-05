@@ -42,7 +42,7 @@ public class AbandonProcessUnrestricted extends UnrestrictedSessionRunner {
     }
 
     @Override
-    public void run() throws ClientException {
+    public void run() {
         DocumentModel doc = session.getDocument(ref);
         ACP acp = doc.getACP();
         acp.removeACL(AbstractJbpmHandlerHelper.getProcessACLName(processId));

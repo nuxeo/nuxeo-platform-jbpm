@@ -80,7 +80,7 @@ public class TaskMigrationRunner extends UnrestrictedSessionRunner {
         this.context = context;
     }
 
-    public List<Task> migrate() throws ClientException {
+    public List<Task> migrate() {
         if (tis.size() == 0) {
             return new ArrayList<Task>();
         }
@@ -89,7 +89,7 @@ public class TaskMigrationRunner extends UnrestrictedSessionRunner {
     }
 
     @Override
-    public void run() throws ClientException {
+    public void run() {
         for (TaskInstance taskInstance : tis) {
             Task migratedTask = null;
             if (needToMigrate()) {
@@ -107,7 +107,7 @@ public class TaskMigrationRunner extends UnrestrictedSessionRunner {
     }
 
     protected Task migrateJBPMtoDocTask(TaskInstance ti, JbpmContext context, CoreSession coreSession)
-            throws ClientException {
+            {
         ti = context.getTaskInstance(ti.getId());
         JBPMDocTaskProvider.eagerLoadTaskInstance(ti);
         String commentId = (String) ti.getVariable("commentId");
@@ -127,7 +127,7 @@ public class TaskMigrationRunner extends UnrestrictedSessionRunner {
     }
 
     private Task migrateGenericTask(TaskInstance ti, JbpmContext context, CoreSession coreSession,
-            Map<String, String> vars) throws ClientException {
+            Map<String, String> vars) {
         if (vars == null) {
             vars = new HashMap<String, String>();
         }
@@ -180,7 +180,7 @@ public class TaskMigrationRunner extends UnrestrictedSessionRunner {
     }
 
     private Task migrateCommentTask(TaskInstance ti, JbpmContext context, CoreSession coreSession)
-            throws ClientException {
+            {
         Map<String, String> vars = new HashMap<String, String>();
         vars.put(CreateTask.OperationTaskVariableName.acceptOperationChain.name(), CommentsConstants.ACCEPT_CHAIN_NAME);
         vars.put(CreateTask.OperationTaskVariableName.rejectOperationChain.name(), CommentsConstants.REJECT_CHAIN_NAME);
@@ -190,7 +190,7 @@ public class TaskMigrationRunner extends UnrestrictedSessionRunner {
     }
 
     private Task migratePublisherTask(TaskInstance ti, JbpmContext context, CoreSession coreSession)
-            throws ClientException {
+            {
 
         // Add taskType var, needed to filter tasks in single tasks widget
         Map<String, String> vars = new HashMap<String, String>();

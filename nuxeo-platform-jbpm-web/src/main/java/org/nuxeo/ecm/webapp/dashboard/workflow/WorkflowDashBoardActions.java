@@ -68,14 +68,14 @@ public class WorkflowDashBoardActions implements Serializable {
 
     private static final Log log = LogFactory.getLog(WorkflowDashBoardActions.class);
 
-    public Collection<DashBoardItem> computeDashboardItems() throws ClientException {
+    public Collection<DashBoardItem> computeDashboardItems() {
         if (currentUserTasks == null) {
             currentUserTasks = taskDashBoardActions.computeDashboardItems();
         }
         return currentUserTasks;
     }
 
-    public Collection<DocumentProcessItem> computeDocumentProcessItems() throws ClientException {
+    public Collection<DocumentProcessItem> computeDocumentProcessItems() {
         if (currentUserProcesses == null) {
             currentUserProcesses = new ArrayList<DocumentProcessItem>();
             NuxeoPrincipal pal = (NuxeoPrincipal) currentUser;

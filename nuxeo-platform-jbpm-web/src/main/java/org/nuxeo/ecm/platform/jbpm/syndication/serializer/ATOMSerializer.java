@@ -48,7 +48,7 @@ public class ATOMSerializer implements DashBoardItemSerializer {
 
     @Override
     public void serialize(ResultSummary summary, List<DashBoardItem> workItems, String columnsDefinition,
-            List<String> labels, String lang, Response response, HttpServletRequest req) throws ClientException {
+            List<String> labels, String lang, Response response, HttpServletRequest req) {
         // TODO labels, lang
 
         SyndFeed atomFeed = new SyndFeedImpl();
@@ -79,7 +79,7 @@ public class ATOMSerializer implements DashBoardItemSerializer {
     /**
      * Adapts a DashboardItems to a SyndEntry.
      */
-    private static SyndEntry adaptDashBoardItem(DashBoardItem item, HttpServletRequest req) throws ClientException {
+    private static SyndEntry adaptDashBoardItem(DashBoardItem item, HttpServletRequest req) {
 
         SyndEntry entry = new SyndEntryImpl();
         TaskModule taskModule = new TaskModuleImpl();

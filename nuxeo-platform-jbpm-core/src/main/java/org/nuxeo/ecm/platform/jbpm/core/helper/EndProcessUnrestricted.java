@@ -45,7 +45,7 @@ public class EndProcessUnrestricted extends UnrestrictedSessionRunner {
 
     @SuppressWarnings("unchecked")
     @Override
-    public void run() throws ClientException {
+    public void run() {
         // end process and tasks
         for (TaskInstance ti : tis) {
             String actor = ti.getActorId();

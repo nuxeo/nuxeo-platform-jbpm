@@ -59,7 +59,7 @@ public class SendEventActionHandler extends AbstractJbpmHandlerHelper {
         }
     }
 
-    protected EventProducer getEventProducerService() throws ClientException {
+    protected EventProducer getEventProducerService() {
         try {
             return Framework.getService(EventProducer.class);
         } catch (Exception e) {

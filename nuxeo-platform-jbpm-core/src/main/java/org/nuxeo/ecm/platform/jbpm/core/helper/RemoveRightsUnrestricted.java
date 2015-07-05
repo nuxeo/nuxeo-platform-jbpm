@@ -38,7 +38,7 @@ public class RemoveRightsUnrestricted extends UnrestrictedSessionRunner {
     }
 
     @Override
-    public void run() throws ClientException {
+    public void run() {
         ACP acp = session.getACP(docRef);
         acp.removeACL(aclName);
         session.setACP(docRef, acp, true);

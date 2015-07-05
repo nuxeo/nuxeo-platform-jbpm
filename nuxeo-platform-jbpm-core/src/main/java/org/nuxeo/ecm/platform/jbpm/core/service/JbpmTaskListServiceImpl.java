@@ -37,7 +37,7 @@ public class JbpmTaskListServiceImpl extends DefaultComponent implements JbpmTas
 
     private static final String JBPMLISTS = "tasklists";
 
-    public TaskList createTaskList(CoreSession session, String listName) throws ClientException {
+    public TaskList createTaskList(CoreSession session, String listName) {
 
         // Retrieve root list
         DocumentModel listRoot = getOrCreateListRoot(session);
@@ -55,7 +55,7 @@ public class JbpmTaskListServiceImpl extends DefaultComponent implements JbpmTas
 
     }
 
-    public void saveTaskList(CoreSession session, TaskList list) throws ClientException {
+    public void saveTaskList(CoreSession session, TaskList list) {
 
         DocumentModel listDoc = list.getDocument();
         session.saveDocument(listDoc);
@@ -63,7 +63,7 @@ public class JbpmTaskListServiceImpl extends DefaultComponent implements JbpmTas
 
     }
 
-    public TaskList getTaskList(CoreSession session, String listUUId) throws ClientException {
+    public TaskList getTaskList(CoreSession session, String listUUId) {
 
         TaskList list = null;
 
@@ -78,7 +78,7 @@ public class JbpmTaskListServiceImpl extends DefaultComponent implements JbpmTas
 
     }
 
-    public void deleteTaskList(CoreSession session, String listUUId) throws ClientException {
+    public void deleteTaskList(CoreSession session, String listUUId) {
 
         if (session.exists(new IdRef(listUUId))) {
             session.removeDocument(new IdRef(listUUId));
@@ -92,9 +92,8 @@ public class JbpmTaskListServiceImpl extends DefaultComponent implements JbpmTas
      *
      * @param session Current CoreSession
      * @return The personal Workspace
-     * @throws ClientException
      */
-    private static DocumentModel getUserWorkspace(CoreSession session) throws ClientException {
+    private static DocumentModel getUserWorkspace(CoreSession session) {
 
         UserWorkspaceService uws = Framework.getLocalService(UserWorkspaceService.class);
         DocumentModel userWorkspace = uws.getCurrentUserPersonalWorkspace(session, null);
@@ -108,9 +107,8 @@ public class JbpmTaskListServiceImpl extends DefaultComponent implements JbpmTas
      *
      * @param session Current CoreSession
      * @return The folder containing the lists of tasks
-     * @throws ClientException
      */
-    private static DocumentModel getOrCreateListRoot(CoreSession session) throws ClientException {
+    private static DocumentModel getOrCreateListRoot(CoreSession session) {
 
         String path = String.format("%s/%s", getUserWorkspace(session).getPathAsString(), JBPMLISTS);
 
@@ -137,7 +135,7 @@ public class JbpmTaskListServiceImpl extends DefaultComponent implements JbpmTas
 
     }
 
-    public List<TaskList> getTaskLists(CoreSession session) throws ClientException {
+    public List<TaskList> getTaskLists(CoreSession session) {
 
         List<TaskList> taskLists = new ArrayList<TaskList>();
 

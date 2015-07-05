@@ -603,8 +603,7 @@ public class JbpmServiceImpl implements JbpmService {
 
             @Override
             public Serializable run(JbpmContext context) throws NuxeoJbpmException {
-                ProcessInstance pi = context.getProcessInstance(processInstanceId.longValue());
-                ;
+                ProcessInstance pi = context.getProcessInstance(processInstanceId.longValue());;
                 eagerLoadProcessInstances(Collections.singletonList(pi));
                 return pi;
             }
@@ -895,7 +894,7 @@ public class JbpmServiceImpl implements JbpmService {
 
     @Override
     public void notifyEventListeners(String name, String comment, String[] recipients, CoreSession session,
-            NuxeoPrincipal principal, DocumentModel doc) throws ClientException {
+            NuxeoPrincipal principal, DocumentModel doc) {
         DocumentEventContext ctx = new DocumentEventContext(session, principal, doc);
         ctx.setProperty("recipients", recipients);
         ctx.getProperties().put("comment", comment);
@@ -905,4 +904,5 @@ public class JbpmServiceImpl implements JbpmService {
             throw new ClientException(e);
         }
     }
+
 }

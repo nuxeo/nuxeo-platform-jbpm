@@ -73,7 +73,7 @@ public class JBPMTaskWrapper implements Task {
             UnrestrictedSessionRunner runner = new UnrestrictedSessionRunner(
                     (String) ti.getVariable(JbpmService.VariableName.documentRepositoryName.name())) {
                 @Override
-                public void run() throws ClientException {
+                public void run() {
                     doc = session.getDocument(new IdRef(targetDocId));
                     doc.detach(true);
                 }
@@ -98,7 +98,7 @@ public class JBPMTaskWrapper implements Task {
     }
 
     @Override
-    public List<String> getActors() throws ClientException {
+    public List<String> getActors() {
         Set<PooledActor> pooledActors = ti.getPooledActors();
         List<String> actors = new ArrayList<String>(pooledActors.size());
         for (PooledActor pooledActor : pooledActors) {
@@ -113,28 +113,28 @@ public class JBPMTaskWrapper implements Task {
     }
 
     @Override
-    public String getInitiator() throws ClientException {
+    public String getInitiator() {
         return initiator;
     }
 
     @Override
-    public String getName() throws ClientException {
+    public String getName() {
         return ti.getName();
     }
 
     @Override
-    public String getDescription() throws ClientException {
+    public String getDescription() {
         return ti.getDescription();
     }
 
     @Override
-    public String getDirective() throws ClientException {
+    public String getDirective() {
         return directive;
 
     }
 
     @Override
-    public List<TaskComment> getComments() throws ClientException {
+    public List<TaskComment> getComments() {
         List<Comment> jbpmComments = ti.getComments();
         List<TaskComment> comments = new ArrayList<TaskComment>(jbpmComments.size());
         for (Comment taskComment : jbpmComments) {
@@ -144,7 +144,7 @@ public class JBPMTaskWrapper implements Task {
     }
 
     @Override
-    public String getVariable(String key) throws ClientException {
+    public String getVariable(String key) {
         if (Task.TASK_PROVIDER_KEY.equals(key)) {
             return JBPM_TASK_PROVIDER;
         }
@@ -152,47 +152,47 @@ public class JBPMTaskWrapper implements Task {
     }
 
     @Override
-    public Date getDueDate() throws ClientException {
+    public Date getDueDate() {
         return ti.getDueDate();
     }
 
     @Override
-    public Date getCreated() throws ClientException {
+    public Date getCreated() {
         return ti.getCreate();
     }
 
     @Override
-    public Boolean isCancelled() throws ClientException {
+    public Boolean isCancelled() {
         return ti.isCancelled();
     }
 
     @Override
-    public Boolean isOpened() throws ClientException {
+    public Boolean isOpened() {
         return ti.isOpen();
     }
 
     @Override
-    public Boolean hasEnded() throws ClientException {
+    public Boolean hasEnded() {
         return ti.hasEnded();
     }
 
     @Override
-    public Boolean isAccepted() throws ClientException {
+    public Boolean isAccepted() {
         return validated;
     }
 
     @Override
-    public Map<String, String> getVariables() throws ClientException {
+    public Map<String, String> getVariables() {
         return ti.getVariables();
     }
 
     @Override
-    public void setActors(List<String> actors) throws ClientException {
+    public void setActors(List<String> actors) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setInitiator(String initiator) throws ClientException {
+    public void setInitiator(String initiator) {
         throw new UnsupportedOperationException();
     }
 
@@ -202,57 +202,57 @@ public class JBPMTaskWrapper implements Task {
     }
 
     @Override
-    public void setName(String name) throws ClientException {
+    public void setName(String name) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setDescription(String description) throws ClientException {
+    public void setDescription(String description) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setDirective(String directive) throws ClientException {
+    public void setDirective(String directive) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setVariable(String key, String value) throws ClientException {
+    public void setVariable(String key, String value) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setDueDate(Date dueDate) throws ClientException {
+    public void setDueDate(Date dueDate) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setCreated(Date created) throws ClientException {
+    public void setCreated(Date created) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setAccepted(Boolean accepted) throws ClientException {
+    public void setAccepted(Boolean accepted) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setVariables(Map<String, String> variables) throws ClientException {
+    public void setVariables(Map<String, String> variables) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void addComment(String author, String text) throws ClientException {
+    public void addComment(String author, String text) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void cancel(CoreSession coreSession) throws ClientException {
+    public void cancel(CoreSession coreSession) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void end(CoreSession coreSession) throws ClientException {
+    public void end(CoreSession coreSession) {
         throw new UnsupportedOperationException();
     }
 
@@ -262,7 +262,7 @@ public class JBPMTaskWrapper implements Task {
      * @since 5.8
      */
     @Override
-    public List<String> getDelegatedActors() throws ClientException {
+    public List<String> getDelegatedActors() {
         return new ArrayList<String>();
     }
 
@@ -278,7 +278,7 @@ public class JBPMTaskWrapper implements Task {
      * @since 5.6
      */
     @Override
-    public String getType() throws ClientException {
+    public String getType() {
         return null;
     }
 
@@ -286,7 +286,7 @@ public class JBPMTaskWrapper implements Task {
      * @since 5.6
      */
     @Override
-    public void setType(String type) throws ClientException {
+    public void setType(String type) {
         // do nothing
     }
 
@@ -294,7 +294,7 @@ public class JBPMTaskWrapper implements Task {
      * @since 5.6
      */
     @Override
-    public String getProcessId() throws ClientException {
+    public String getProcessId() {
         return null;
     }
 
@@ -302,7 +302,7 @@ public class JBPMTaskWrapper implements Task {
      * @since 5.6
      */
     @Override
-    public void setProcessId(String processId) throws ClientException {
+    public void setProcessId(String processId) {
         // do nothing
     }
 
@@ -310,7 +310,7 @@ public class JBPMTaskWrapper implements Task {
      * @since 5.8
      */
     @Override
-    public List<String> getTargetDocumentsIds() throws ClientException {
+    public List<String> getTargetDocumentsIds() {
         throw new UnsupportedOperationException();
     }
 
@@ -318,7 +318,7 @@ public class JBPMTaskWrapper implements Task {
      * @since 5.8
      */
     @Override
-    public void setTargetDocumentsIds(List<String> docs) throws ClientException {
+    public void setTargetDocumentsIds(List<String> docs) {
         throw new UnsupportedOperationException();
 
     }

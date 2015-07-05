@@ -36,43 +36,38 @@ public interface JbpmTaskListService {
      *
      * @param listName the name of the new list
      * @return the created list
-     * @throws ClientException
      */
-    TaskList createTaskList(CoreSession session, String listName) throws ClientException;
+    TaskList createTaskList(CoreSession session, String listName);
 
     /**
      * Saves the list.
      *
      * @param list to save
-     * @throws ClientException
      */
-    void saveTaskList(CoreSession session, TaskList list) throws ClientException;
+    void saveTaskList(CoreSession session, TaskList list);
 
     /**
      * Retrieves a task list from it name.
      *
      * @param Name of the list to load
      * @return
-     * @throws ClientException
      */
-    TaskList getTaskList(CoreSession session, String listUUId) throws ClientException;
+    TaskList getTaskList(CoreSession session, String listUUId);
 
     /**
      * Delete a list of participant.
      *
      * @param session
      * @param listName The name of the list to delete
-     * @throws ClientException
      */
-    void deleteTaskList(CoreSession session, String listUUId) throws ClientException;
+    void deleteTaskList(CoreSession session, String listUUId);
 
     /**
      * Retrieve all the task lists of the current user
      *
      * @param session
      * @return Task lists of the current user
-     * @throws ClientException
      */
-    List<TaskList> getTaskLists(CoreSession documentManager) throws ClientException;
+    List<TaskList> getTaskLists(CoreSession documentManager);
 
 }

@@ -38,7 +38,7 @@ public class AddRightUnrestricted extends UnrestrictedSessionRunner {
     }
 
     @Override
-    public void run() throws ClientException {
+    public void run() {
         session.setACP(docRef, acp, true);
         session.save();
     }

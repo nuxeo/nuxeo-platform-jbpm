@@ -103,7 +103,7 @@ public class JbpmTaskListServiceTest {
     }
 
     @Test
-    public void testAdapter() throws ClientException {
+    public void testAdapter() {
         DocumentModel doc = session.createDocumentModel("/", "list1", "TaskList");
         doc = session.createDocument(doc);
         assertNotNull(doc);
@@ -129,7 +129,7 @@ public class JbpmTaskListServiceTest {
     }
 
     @Test
-    public void testAdapterFail() throws ClientException {
+    public void testAdapterFail() {
         try {
             session.getRootDocument().getAdapter(TaskList.class);
             fail("Should throw exception");
@@ -202,7 +202,7 @@ public class JbpmTaskListServiceTest {
         assertNull(list3);
     }
 
-    private static DocumentModel getUserWorkspace(CoreSession session) throws ClientException {
+    private static DocumentModel getUserWorkspace(CoreSession session) {
         UserWorkspaceService uws = Framework.getLocalService(UserWorkspaceService.class);
         return uws.getCurrentUserPersonalWorkspace(session, null);
     }
