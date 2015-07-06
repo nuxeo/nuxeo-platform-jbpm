@@ -27,7 +27,6 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.core.api.ClientException;
-import org.nuxeo.ecm.core.api.ClientRuntimeException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 
 public class TaskListImpl implements TaskList {
@@ -44,60 +43,49 @@ public class TaskListImpl implements TaskList {
 
     @SuppressWarnings("unchecked")
     public void addTask(VirtualTaskInstance task) {
-        try {
+        ArrayList<Map<String, Object>> newList = new ArrayList<Map<String, Object>>();
 
-            ArrayList<Map<String, Object>> newList = new ArrayList<Map<String, Object>>();
+        List<Map<String, Object>> currentList = (List<Map<String, Object>>) doc.getPropertyValue("ntl:tasks");
 
-            List<Map<String, Object>> currentList = (List<Map<String, Object>>) doc.getPropertyValue("ntl:tasks");
-
-            if (currentList != null) {
-                newList.addAll(currentList);
-            }
-
-            Map<String, Object> person = new HashMap<String, Object>();
-            person.put("taskUsers", task.getActors());
-            person.put("directive", task.getDirective());
-            person.put("comment", task.getComment());
-            person.put("dueDate", task.getDueDate());
-            person.put("right", task.getParameters().get("right"));
-
-            newList.add(person);
-
-            doc.setPropertyValue("ntl:tasks", newList);
-
-        } catch (ClientException e) {
-            throw new ClientRuntimeException(e);
+        if (currentList != null) {
+            newList.addAll(currentList);
         }
+
+        Map<String, Object> person = new HashMap<String, Object>();
+        person.put("taskUsers", task.getActors());
+        person.put("directive", task.getDirective());
+        person.put("comment", task.getComment());
+        person.put("dueDate", task.getDueDate());
+        person.put("right", task.getParameters().get("right"));
+
+        newList.add(person);
+
+        doc.setPropertyValue("ntl:tasks", newList);
     }
 
     @SuppressWarnings("unchecked")
     public List<VirtualTaskInstance> getTasks() {
-        try {
-            List<VirtualTaskInstance> mls = new ArrayList<VirtualTaskInstance>();
-            List<Map<String, Object>> participants = (List<Map<String, Object>>) doc.getPropertyValue("ntl:tasks");
+        List<VirtualTaskInstance> mls = new ArrayList<VirtualTaskInstance>();
+        List<Map<String, Object>> participants = (List<Map<String, Object>>) doc.getPropertyValue("ntl:tasks");
 
-            if (participants != null) {
-                for (Map<String, Object> participant : participants) {
-                    VirtualTaskInstance task = new VirtualTaskInstance();
-                    task.setActors((List<String>) participant.get("taskUsers"));
-                    task.setDirective((String) participant.get("directive"));
-                    task.setComment((String) participant.get("comment"));
-                    if (participant.containsKey("right")) {
-                        task.parameters.put("right", (String) participant.get("right"));
-                    }
-                    GregorianCalendar calendar = (GregorianCalendar) participant.get("dueDate");
-                    if (calendar != null) {
-                        task.setDueDate(calendar.getTime());
-                    }
-                    mls.add(task);
+        if (participants != null) {
+            for (Map<String, Object> participant : participants) {
+                VirtualTaskInstance task = new VirtualTaskInstance();
+                task.setActors((List<String>) participant.get("taskUsers"));
+                task.setDirective((String) participant.get("directive"));
+                task.setComment((String) participant.get("comment"));
+                if (participant.containsKey("right")) {
+                    task.parameters.put("right", (String) participant.get("right"));
                 }
+                GregorianCalendar calendar = (GregorianCalendar) participant.get("dueDate");
+                if (calendar != null) {
+                    task.setDueDate(calendar.getTime());
+                }
+                mls.add(task);
             }
-
-            return mls;
-
-        } catch (ClientException e) {
-            throw new ClientRuntimeException(e);
         }
+
+        return mls;
     }
 
     public DocumentModel getDocument() {

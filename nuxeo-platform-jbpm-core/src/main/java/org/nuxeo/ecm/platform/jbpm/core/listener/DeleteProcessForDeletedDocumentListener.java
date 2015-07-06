@@ -20,8 +20,6 @@ import java.util.List;
 
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
-import org.nuxeo.ecm.core.api.ClientException;
-import org.nuxeo.ecm.core.api.ClientRuntimeException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.api.event.DocumentEventTypes;
@@ -34,7 +32,7 @@ import org.nuxeo.runtime.api.Framework;
 /**
  * Listener that deletes process instance and related tasks when the process is attached to a document that is being
  * deleted. It also deletes related tasks of the document out of process.
- * 
+ *
  * @author arussel
  */
 public class DeleteProcessForDeletedDocumentListener implements EventListener {
@@ -42,11 +40,7 @@ public class DeleteProcessForDeletedDocumentListener implements EventListener {
 
     public JbpmService getJbpmService() {
         if (jbpmService == null) {
-            try {
-                jbpmService = Framework.getService(JbpmService.class);
-            } catch (Exception e) {
-                throw new ClientRuntimeException("JbpmService is not deployed", e);
-            }
+            jbpmService = Framework.getService(JbpmService.class);
         }
         return jbpmService;
     }
