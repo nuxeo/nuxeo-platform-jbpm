@@ -80,14 +80,14 @@ public class JbpmTaskListActions implements Serializable {
     }
 
     @Factory(value = "availableLists", scope = ScopeType.EVENT)
-    public List<TaskList> availableListsFactory() throws Exception {
+    public List<TaskList> availableListsFactory() {
         JbpmTaskListService service = Framework.getService(JbpmTaskListService.class);
         List<TaskList> lists = service.getTaskLists(documentManager);
 
         return lists;
     }
 
-    public void createTaskList() throws Exception {
+    public void createTaskList() {
 
         if (listName == null || listName.equals("")) {
             facesMessages.add(StatusMessage.Severity.ERROR,
@@ -114,7 +114,7 @@ public class JbpmTaskListActions implements Serializable {
         facesMessages.add(StatusMessage.Severity.INFO, resourcesAccessor.getMessages().get("label.review.list.created"));
     }
 
-    public void deleteTaskList() throws Exception {
+    public void deleteTaskList() {
         if (selectedListId == null) {
             facesMessages.add(StatusMessage.Severity.ERROR,
                     resourcesAccessor.getMessages().get("label.review.list.notselected"));
@@ -127,7 +127,7 @@ public class JbpmTaskListActions implements Serializable {
         facesMessages.add(StatusMessage.Severity.INFO, resourcesAccessor.getMessages().get("label.review.list.deleted"));
     }
 
-    public void loadTaskList() throws Exception {
+    public void loadTaskList() {
         if (selectedListId == null) {
             facesMessages.add(StatusMessage.Severity.ERROR,
                     resourcesAccessor.getMessages().get("label.review.list.notselected"));

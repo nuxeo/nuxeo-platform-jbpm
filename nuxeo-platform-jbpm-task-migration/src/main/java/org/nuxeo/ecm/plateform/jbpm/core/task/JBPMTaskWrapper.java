@@ -27,7 +27,6 @@ import org.apache.commons.logging.LogFactory;
 import org.jbpm.graph.exe.Comment;
 import org.jbpm.taskmgmt.exe.PooledActor;
 import org.jbpm.taskmgmt.exe.TaskInstance;
-import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.IdRef;
@@ -78,11 +77,7 @@ public class JBPMTaskWrapper implements Task {
                     doc.detach(true);
                 }
             };
-            try {
-                runner.runUnrestricted();
-            } catch (ClientException e) {
-                log.error("Error while fetching DocumentModel", e);
-            }
+            runner.runUnrestricted();
         }
         return doc;
     }

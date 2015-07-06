@@ -48,15 +48,14 @@ public class JbpmHelper {
 
     private JbpmService jbpmService;
 
-    public JbpmService getJbpmService() throws Exception {
+    public JbpmService getJbpmService() {
         if (jbpmService == null) {
             jbpmService = Framework.getService(JbpmService.class);
         }
         return jbpmService;
     }
 
-    public String createProcessInstance(NuxeoPrincipal principal, String pd, DocumentModel dm, String endLifeCycle)
-            throws Exception {
+    public String createProcessInstance(NuxeoPrincipal principal, String pd, DocumentModel dm, String endLifeCycle) {
         Map<String, Serializable> map = null;
         if (endLifeCycle != null && !endLifeCycle.equals("") && !"null".equals(endLifeCycle)) {
             map = new HashMap<String, Serializable>();

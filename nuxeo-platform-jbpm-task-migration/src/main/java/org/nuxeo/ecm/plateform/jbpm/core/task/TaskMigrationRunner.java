@@ -29,7 +29,6 @@ import org.jbpm.graph.exe.Comment;
 import org.jbpm.taskmgmt.exe.PooledActor;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.nuxeo.ecm.automation.task.CreateTask;
-import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentRef;
@@ -93,11 +92,7 @@ public class TaskMigrationRunner extends UnrestrictedSessionRunner {
         for (TaskInstance taskInstance : tis) {
             Task migratedTask = null;
             if (needToMigrate()) {
-                try {
-                    migratedTask = migrateJBPMtoDocTask(taskInstance, context, session);
-                } catch (ClientException e) {
-                    log.error("Error while migrating task", e);
-                }
+                migratedTask = migrateJBPMtoDocTask(taskInstance, context, session);
             }
             if (migratedTask == null) {
                 migratedTask = new JBPMTaskWrapper(taskInstance);

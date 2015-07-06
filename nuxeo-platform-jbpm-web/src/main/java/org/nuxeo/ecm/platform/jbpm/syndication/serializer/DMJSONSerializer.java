@@ -33,7 +33,6 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 
-import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.platform.jbpm.syndication.workflow.DashBoardItem;
 import org.restlet.data.MediaType;
 import org.restlet.data.Response;
@@ -92,12 +91,7 @@ public class DMJSONSerializer implements DashBoardItemSerializer {
             m.put("description", item.getDescription());
             m.put("title", item.getDocument().getTitle());
             m.put("link", item.getDocumentLink());
-            String currentLifeCycle;
-            try {
-                currentLifeCycle = item.getDocument().getCurrentLifeCycleState();
-            } catch (ClientException e) {
-                currentLifeCycle = "";
-            }
+            String currentLifeCycle = item.getDocument().getCurrentLifeCycleState();
             m.put("currentDocumentLifeCycle", currentLifeCycle);
 
             // not thread-safe so don't use a static instance

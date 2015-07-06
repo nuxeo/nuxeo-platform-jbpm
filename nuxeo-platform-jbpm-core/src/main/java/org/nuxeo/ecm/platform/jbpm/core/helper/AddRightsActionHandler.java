@@ -51,7 +51,7 @@ public class AddRightsActionHandler extends AbstractJbpmHandlerHelper {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void execute(ExecutionContext executionContext) throws Exception {
+    public void execute(ExecutionContext executionContext) {
         this.executionContext = executionContext;
         if (nuxeoHasStarted() && list != null) {
             List<VirtualTaskInstance> participants = (List<VirtualTaskInstance>) executionContext.getContextInstance().getTransientVariable(

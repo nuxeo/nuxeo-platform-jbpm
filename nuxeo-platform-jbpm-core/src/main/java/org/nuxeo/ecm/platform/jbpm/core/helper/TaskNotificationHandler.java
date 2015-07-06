@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.jbpm.graph.exe.Comment;
 import org.jbpm.graph.exe.ExecutionContext;
-import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreInstance;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
@@ -47,7 +46,7 @@ public class TaskNotificationHandler extends AbstractJbpmHandlerHelper {
     private static final String DIRECTIVE_KEY = "directive";
 
     @Override
-    public void execute(ExecutionContext executionContext) throws Exception {
+    public void execute(ExecutionContext executionContext) {
         this.executionContext = executionContext;
         if (nuxeoHasStarted()) {
             DocumentModel documentModel = (DocumentModel) getTransientVariable(JbpmService.VariableName.document.name());
@@ -56,12 +55,7 @@ public class TaskNotificationHandler extends AbstractJbpmHandlerHelper {
                 return;
             }
             try (CoreSession coreSession = CoreInstance.openCoreSession(getDocumentRepositoryName(), principal)) {
-                EventProducer eventProducer;
-                try {
-                    eventProducer = Framework.getService(EventProducer.class);
-                } catch (Exception e) {
-                    throw new ClientException(e);
-                }
+                EventProducer eventProducer = Framework.getService(EventProducer.class);
                 DocumentEventContext ctx = new DocumentEventContext(coreSession, principal, documentModel);
                 ctx.setProperty(NotificationConstants.RECIPIENTS_KEY, getRecipients());
                 ctx.setProperty(DocumentEventContext.COMMENT_PROPERTY_KEY, getComments());

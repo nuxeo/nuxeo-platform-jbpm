@@ -31,7 +31,6 @@ import org.apache.commons.logging.LogFactory;
 import org.jbpm.graph.exe.Comment;
 import org.jbpm.taskmgmt.exe.PooledActor;
 import org.jbpm.taskmgmt.exe.TaskInstance;
-import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.IdRef;
@@ -71,49 +70,45 @@ public class JbpmTaskServiceImpl implements JbpmTaskService {
                         false, directive, comment, dueDate, taskVariables);
             }
         } else {
-            try {
-                String[] prefixedActorIdsArray = prefixedActorIds.toArray(new String[prefixedActorIds.size()]);
+            String[] prefixedActorIdsArray = prefixedActorIds.toArray(new String[prefixedActorIds.size()]);
 
-                // create the task
-                TaskInstance task = new TaskInstance();
-                task.setName(taskName);
-                task.setCreate(new Date());
-                task.setPooledActors(prefixedActorIdsArray);
-                task.setDueDate(dueDate);
-                if (!StringUtils.isEmpty(comment)) {
-                    task.addComment(new Comment(principal.getName(), comment));
-                }
-
-                // add variables
-                Map<String, Serializable> variables = new HashMap<String, Serializable>();
-                variables.put(JbpmService.VariableName.documentId.name(), document.getId());
-                variables.put(JbpmService.VariableName.documentRepositoryName.name(), document.getRepositoryName());
-                variables.put(JbpmService.VariableName.initiator.name(), principal.getName());
-                variables.put(JbpmService.TaskVariableName.directive.name(), directive);
-                variables.put(TaskVariableName.createdFromTaskService.name(), "true");
-                if (taskVariables != null) {
-                    variables.putAll(taskVariables);
-                }
-                task.setVariables(variables);
-
-                // save the task
-                getJbpmService().saveTaskInstances(Collections.singletonList(task));
-
-                // notify
-                Map<String, Serializable> eventProperties = new HashMap<String, Serializable>();
-                ArrayList<String> notificationRecipients = new ArrayList<String>();
-                notificationRecipients.add(getTaskInitiator(task));
-                notificationRecipients.addAll(prefixedActorIds);
-                eventProperties.put(NotificationConstants.RECIPIENTS_KEY,
-                        notificationRecipients.toArray(new String[notificationRecipients.size()]));
-
-                notifyEvent(coreSession, document, principal, task, JbpmEventNames.WORKFLOW_TASK_ASSIGNED,
-                        eventProperties, comment, null);
-                notifyEvent(coreSession, document, principal, task, JbpmEventNames.WORKFLOW_TASK_ASSIGNED,
-                        eventProperties, comment, null);
-            } catch (ClientException e) {
-                throw new NuxeoJbpmException(e);
+            // create the task
+            TaskInstance task = new TaskInstance();
+            task.setName(taskName);
+            task.setCreate(new Date());
+            task.setPooledActors(prefixedActorIdsArray);
+            task.setDueDate(dueDate);
+            if (!StringUtils.isEmpty(comment)) {
+                task.addComment(new Comment(principal.getName(), comment));
             }
+
+            // add variables
+            Map<String, Serializable> variables = new HashMap<String, Serializable>();
+            variables.put(JbpmService.VariableName.documentId.name(), document.getId());
+            variables.put(JbpmService.VariableName.documentRepositoryName.name(), document.getRepositoryName());
+            variables.put(JbpmService.VariableName.initiator.name(), principal.getName());
+            variables.put(JbpmService.TaskVariableName.directive.name(), directive);
+            variables.put(TaskVariableName.createdFromTaskService.name(), "true");
+            if (taskVariables != null) {
+                variables.putAll(taskVariables);
+            }
+            task.setVariables(variables);
+
+            // save the task
+            getJbpmService().saveTaskInstances(Collections.singletonList(task));
+
+            // notify
+            Map<String, Serializable> eventProperties = new HashMap<String, Serializable>();
+            ArrayList<String> notificationRecipients = new ArrayList<String>();
+            notificationRecipients.add(getTaskInitiator(task));
+            notificationRecipients.addAll(prefixedActorIds);
+            eventProperties.put(NotificationConstants.RECIPIENTS_KEY,
+                    notificationRecipients.toArray(new String[notificationRecipients.size()]));
+
+            notifyEvent(coreSession, document, principal, task, JbpmEventNames.WORKFLOW_TASK_ASSIGNED, eventProperties,
+                    comment, null);
+            notifyEvent(coreSession, document, principal, task, JbpmEventNames.WORKFLOW_TASK_ASSIGNED, eventProperties,
+                    comment, null);
         }
     }
 
@@ -236,11 +231,7 @@ public class JbpmTaskServiceImpl implements JbpmTaskService {
     }
 
     protected EventProducer getEventProducer() {
-        try {
-            return Framework.getService(EventProducer.class);
-        } catch (Exception e) {
-            throw new ClientException(e);
-        }
+        return Framework.getService(EventProducer.class);
     }
 
     protected void notifyEvent(CoreSession coreSession, DocumentModel document, NuxeoPrincipal principal,

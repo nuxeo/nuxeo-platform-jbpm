@@ -6,7 +6,6 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jbpm.graph.exe.ExecutionContext;
-import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreInstance;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
@@ -39,7 +38,7 @@ public class SendEventActionHandler extends AbstractJbpmHandlerHelper {
     protected String recipients;
 
     @Override
-    public void execute(ExecutionContext executionContext) throws Exception {
+    public void execute(ExecutionContext executionContext) {
         this.executionContext = executionContext;
         assert eventName != null;
         assert recipients != null;
@@ -60,11 +59,7 @@ public class SendEventActionHandler extends AbstractJbpmHandlerHelper {
     }
 
     protected EventProducer getEventProducerService() {
-        try {
-            return Framework.getService(EventProducer.class);
-        } catch (Exception e) {
-            throw new ClientException(e);
-        }
+        return Framework.getService(EventProducer.class);
     }
 
     protected String[] getRecipients() {

@@ -29,7 +29,6 @@ import org.jbpm.JbpmContext;
 import org.jbpm.JbpmException;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
-import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
@@ -95,12 +94,7 @@ public class JBPMDocTaskProvider implements TaskProvider {
                 List<TaskInstance> tis = getJbpmService().getCurrentTaskInstances(
                         (NuxeoPrincipal) coreSession.getPrincipal(), null);
                 TaskMigrationRunner migrationRunner = new TaskMigrationRunner(tis, context, coreSession);
-                try {
-                    return (Serializable) migrationRunner.migrate();
-                } catch (ClientException e) {
-                    log.error("Unable to migrate task", e);
-                    return new ArrayList<Task>();
-                }
+                return (Serializable) migrationRunner.migrate();
             }
         });
         return migratedTasks;
@@ -129,12 +123,7 @@ public class JBPMDocTaskProvider implements TaskProvider {
                 List<TaskInstance> tis = getJbpmService().getCurrentTaskInstances(actors, null);
 
                 TaskMigrationRunner migrationRunner = new TaskMigrationRunner(tis, context, coreSession);
-                try {
-                    return (Serializable) migrationRunner.migrate();
-                } catch (ClientException e) {
-                    log.error("Unable to migrate task", e);
-                    return new ArrayList<Task>();
-                }
+                return (Serializable) migrationRunner.migrate();
             }
         });
         return migratedTasks;
@@ -163,12 +152,7 @@ public class JBPMDocTaskProvider implements TaskProvider {
 
                 final List<TaskInstance> tis = getJbpmService().getTaskInstances(dm, user, null);
                 TaskMigrationRunner migrationRunner = new TaskMigrationRunner(tis, context, coreSession);
-                try {
-                    return (Serializable) migrationRunner.migrate();
-                } catch (ClientException e) {
-                    log.error("Unable to migrate task", e);
-                    return new ArrayList<Task>();
-                }
+                return (Serializable) migrationRunner.migrate();
             }
         });
         return migratedTasks;
@@ -219,12 +203,7 @@ public class JBPMDocTaskProvider implements TaskProvider {
             public Serializable run(JbpmContext context) throws NuxeoJbpmException {
                 List<TaskInstance> tis = getJbpmService().getTaskInstances(dm, actors, null);
                 TaskMigrationRunner migrationRunner = new TaskMigrationRunner(tis, context, coreSession);
-                try {
-                    return (Serializable) migrationRunner.migrate();
-                } catch (ClientException e) {
-                    log.error("Unable to migrate task", e);
-                    return new ArrayList<Task>();
-                }
+                return (Serializable) migrationRunner.migrate();
             }
         });
         return migratedTasks;

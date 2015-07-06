@@ -26,7 +26,6 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 
 public class TaskListImpl implements TaskList {
@@ -93,12 +92,7 @@ public class TaskListImpl implements TaskList {
     }
 
     public String getName() {
-        try {
-            return doc.getTitle();
-        } catch (ClientException e) {
-            log.error(e);
-        }
-        return null;
+        return doc.getTitle();
     }
 
     public String getUUID() {

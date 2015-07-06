@@ -54,15 +54,15 @@ public abstract class AbstractJbpmHandlerHelper implements ActionHandler, Assign
 
     public static final String SUFFIX_MAJOR = "_MAJOR";
 
-    public void execute(ExecutionContext executionContext) throws Exception {
+    public void execute(ExecutionContext executionContext) {
         throw new UnsupportedOperationException();
     }
 
-    public void assign(Assignable assignable, ExecutionContext executionContext) throws Exception {
+    public void assign(Assignable assignable, ExecutionContext executionContext) {
         throw new UnsupportedOperationException();
     }
 
-    public String decide(ExecutionContext executionContext) throws Exception {
+    public String decide(ExecutionContext executionContext) {
         throw new UnsupportedOperationException();
     }
 
@@ -74,7 +74,7 @@ public abstract class AbstractJbpmHandlerHelper implements ActionHandler, Assign
         throw new UnsupportedOperationException();
     }
 
-    public JbpmService getJbpmService() throws Exception {
+    public JbpmService getJbpmService() {
         if (jbpmService == null) {
             jbpmService = Framework.getService(JbpmService.class);
         }
@@ -114,12 +114,12 @@ public abstract class AbstractJbpmHandlerHelper implements ActionHandler, Assign
 
     /** @deprecated since 5.4 */
     @Deprecated
-    protected void followTransition(NuxeoPrincipal principal, DocumentRef docRef, String transition) throws Exception {
+    protected void followTransition(NuxeoPrincipal principal, DocumentRef docRef, String transition) {
         followTransition(principal, docRef, transition, null);
     }
 
     protected void followTransition(NuxeoPrincipal principal, DocumentRef docRef, String transition,
-            VersioningOption option) throws Exception {
+            VersioningOption option) {
         try (CoreSession coreSession = CoreInstance.openCoreSession(getDocumentRepositoryName(), principal)) {
             coreSession.followTransition(docRef, transition);
             if (option != null) {

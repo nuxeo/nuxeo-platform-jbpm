@@ -32,7 +32,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentFactory;
 import org.dom4j.QName;
-import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.platform.jbpm.syndication.workflow.DashBoardItem;
 import org.restlet.data.CharacterSet;
 import org.restlet.data.MediaType;
@@ -99,14 +98,7 @@ public class SimpleXMLSerializer implements DashBoardItemSerializer {
                 if (item.getStartDate() != null) {
                     taskElem.addAttribute("startDate", DateFormat.getDateInstance().format(item.getStartDate()));
                 }
-                String currentLifeCycle = "";
-
-                try {
-                    currentLifeCycle = item.getDocument().getCurrentLifeCycleState();
-                } catch (ClientException e) {
-                    log.debug("No LifeCycle found");
-                }
-
+                String currentLifeCycle = item.getDocument().getCurrentLifeCycleState();
                 taskElem.addAttribute("currentDocumentLifeCycle", currentLifeCycle);
 
                 // not thread-safe so don't use a static instance

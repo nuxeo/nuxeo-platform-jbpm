@@ -30,8 +30,8 @@ import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.graph.exe.Token;
 import org.jbpm.taskmgmt.exe.PooledActor;
 import org.jbpm.taskmgmt.exe.TaskInstance;
-import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.api.repository.RepositoryManager;
 import org.nuxeo.ecm.platform.jbpm.JbpmListFilter;
@@ -57,7 +57,7 @@ public class TasksRestlet extends BaseStatelessNuxeoRestlet {
 
     private JbpmService jbpmService;
 
-    public JbpmService getJbpmService() throws Exception {
+    public JbpmService getJbpmService() {
         if (jbpmService == null) {
             jbpmService = Framework.getService(JbpmService.class);
         }
@@ -115,13 +115,13 @@ public class TasksRestlet extends BaseStatelessNuxeoRestlet {
         try {
             SerializerHelper.formatResult(summary, dashboardItems, response, format, null, getHttpRequest(request),
                     labels, lang);
-        } catch (ClientException e) {
+        } catch (NuxeoException e) {
             handleError(response, e);
         }
     }
 
-    private List<DashBoardItem> getDashboardTaskItemsForUser(NuxeoPrincipal user, String repository, Response response)
-            throws Exception {
+    private List<DashBoardItem> getDashboardTaskItemsForUser(NuxeoPrincipal user, String repository,
+            Response response) {
 
         List<DashBoardItem> results = new ArrayList<DashBoardItem>();
         List<TaskInstance> tasks = getJbpmService().getCurrentTaskInstances(user, getFilter());
@@ -144,8 +144,8 @@ public class TasksRestlet extends BaseStatelessNuxeoRestlet {
         return results;
     }
 
-    private List<DashBoardItem> getDashboardItemsManagedByUser(NuxeoPrincipal user, String repository, Response response)
-            throws Exception {
+    private List<DashBoardItem> getDashboardItemsManagedByUser(NuxeoPrincipal user, String repository,
+            Response response) {
 
         List<DashBoardItem> results = new ArrayList<DashBoardItem>();
         List<ProcessInstance> processes = getJbpmService().getCurrentProcessInstances(user, getFilter());
@@ -194,7 +194,7 @@ public class TasksRestlet extends BaseStatelessNuxeoRestlet {
     }
 
     private List<DashBoardItem> getDashboardItemsForUser(NuxeoPrincipal user, String repository, Response response,
-            boolean myTasks) throws Exception {
+            boolean myTasks) {
         List<DashBoardItem> currentUserTasks = new ArrayList<DashBoardItem>();
         if (myTasks) {
             currentUserTasks = getDashboardTaskItemsForUser(user, repository, response);

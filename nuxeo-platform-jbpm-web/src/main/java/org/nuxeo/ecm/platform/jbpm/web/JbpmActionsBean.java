@@ -48,11 +48,11 @@ import org.jboss.seam.international.StatusMessage;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.taskmgmt.exe.PooledActor;
 import org.jbpm.taskmgmt.exe.TaskInstance;
-import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentRef;
 import org.nuxeo.ecm.core.api.DocumentSecurityException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.platform.jbpm.AbstractJbpmHandlerHelper;
@@ -468,7 +468,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements J
             }
         }
         if (startTask == null) {
-            throw new ClientException("No start task found on current process with name " + taskName);
+            throw new NuxeoException("No start task found on current process with name " + taskName);
         }
         return startTask;
     }
@@ -482,7 +482,7 @@ public class JbpmActionsBean extends DocumentContextBoundActionBean implements J
         if (getCanManageProcess()) {
             TaskInstance startTask = getStartTask(startTaskName);
             if (startTask.hasEnded()) {
-                throw new ClientException("Process is already started");
+                throw new NuxeoException("Process is already started");
             }
             // optim: pass participants as transient variables to avoid
             // lookup in the process instance

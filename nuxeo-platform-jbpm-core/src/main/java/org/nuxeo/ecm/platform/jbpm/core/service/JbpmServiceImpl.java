@@ -39,7 +39,6 @@ import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.persistence.db.DbPersistenceServiceFactory;
 import org.jbpm.svc.Services;
 import org.jbpm.taskmgmt.exe.TaskInstance;
-import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreInstance;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
@@ -48,6 +47,7 @@ import org.nuxeo.ecm.core.api.NuxeoGroup;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.event.EventProducer;
 import org.nuxeo.ecm.core.event.impl.DocumentEventContext;
+import org.nuxeo.ecm.core.model.NoSuchDocumentException;
 import org.nuxeo.ecm.platform.jbpm.JbpmActorsListFilter;
 import org.nuxeo.ecm.platform.jbpm.JbpmListFilter;
 import org.nuxeo.ecm.platform.jbpm.JbpmOperation;
@@ -326,7 +326,7 @@ public class JbpmServiceImpl implements JbpmService {
             DocumentModel result = session.getDocument(new IdRef(docId));
             result.detach(true);
             return result;
-        } catch (ClientException e) {
+        } catch (NoSuchDocumentException e) {
             throw new NuxeoJbpmException(e);
         }
     }
@@ -553,12 +553,8 @@ public class JbpmServiceImpl implements JbpmService {
         });
     }
 
-    protected NuxeoPrincipal getPrincipal(String user) throws NuxeoJbpmException {
-        try {
-            return getUserManager().getPrincipal(user);
-        } catch (ClientException e) {
-            throw new NuxeoJbpmException(e);
-        }
+    protected NuxeoPrincipal getPrincipal(String user) {
+        return getUserManager().getPrincipal(user);
     }
 
     protected UserManager getUserManager() {
@@ -885,7 +881,7 @@ public class JbpmServiceImpl implements JbpmService {
         });
     }
 
-    protected EventProducer getEventProducer() throws Exception {
+    protected EventProducer getEventProducer() {
         if (eventProducer == null) {
             eventProducer = Framework.getService(EventProducer.class);
         }
@@ -898,11 +894,7 @@ public class JbpmServiceImpl implements JbpmService {
         DocumentEventContext ctx = new DocumentEventContext(session, principal, doc);
         ctx.setProperty("recipients", recipients);
         ctx.getProperties().put("comment", comment);
-        try {
-            getEventProducer().fireEvent(ctx.newEvent(name));
-        } catch (Exception e) {
-            throw new ClientException(e);
-        }
+        getEventProducer().fireEvent(ctx.newEvent(name));
     }
 
 }

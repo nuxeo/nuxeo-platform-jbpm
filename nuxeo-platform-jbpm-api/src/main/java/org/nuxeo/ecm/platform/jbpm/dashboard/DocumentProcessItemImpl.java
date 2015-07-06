@@ -22,7 +22,6 @@ package org.nuxeo.ecm.platform.jbpm.dashboard;
 import java.util.Date;
 
 import org.jbpm.graph.exe.ProcessInstance;
-import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 
 /**
@@ -47,11 +46,7 @@ public class DocumentProcessItemImpl implements DocumentProcessItem {
     public DocumentProcessItemImpl(ProcessInstance processInstance, DocumentModel documentModel) {
         this.documentModel = documentModel;
         this.processInstance = processInstance;
-        try {
-            docTitle = documentModel.getTitle();
-        } catch (ClientException e) {
-            docTitle = null;
-        }
+        docTitle = documentModel.getTitle();
         processInstanceName = processInstance.getProcessDefinition().getName();
         processInstanceStartDate = processInstance.getStart();
     }

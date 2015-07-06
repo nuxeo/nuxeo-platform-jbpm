@@ -16,12 +16,12 @@
  */
 package org.nuxeo.ecm.platform.jbpm;
 
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 
 /**
  * @author arussel
  */
-public class NuxeoJbpmException extends ClientException {
+public class NuxeoJbpmException extends NuxeoException {
 
     private static final long serialVersionUID = 1L;
 

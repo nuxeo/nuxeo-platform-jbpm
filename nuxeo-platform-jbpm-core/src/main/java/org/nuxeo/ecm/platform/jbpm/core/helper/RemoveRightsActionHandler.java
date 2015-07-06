@@ -35,7 +35,7 @@ public class RemoveRightsActionHandler extends AbstractJbpmHandlerHelper {
     private static final long serialVersionUID = 1L;
 
     @Override
-    public void execute(ExecutionContext executionContext) throws Exception {
+    public void execute(ExecutionContext executionContext) {
         this.executionContext = executionContext;
         if (nuxeoHasStarted()) {
             try (CoreSession session = CoreInstance.openCoreSessionSystem(getDocumentRepositoryName())) {

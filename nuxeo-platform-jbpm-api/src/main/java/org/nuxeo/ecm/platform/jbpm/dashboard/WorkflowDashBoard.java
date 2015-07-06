@@ -21,7 +21,6 @@ package org.nuxeo.ecm.platform.jbpm.dashboard;
 
 import java.util.Collection;
 
-import org.nuxeo.ecm.core.api.ClientException;
 
 public interface WorkflowDashBoard {
 

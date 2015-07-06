@@ -20,17 +20,16 @@ import java.io.Serializable;
 
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.taskmgmt.exe.Assignable;
-import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 
 // FIXME: this interface has no implementation. Remove?
 public interface PublicationHelper extends Serializable {
 
-    String decide(ExecutionContext executionContext) throws Exception;
+    String decide(ExecutionContext executionContext);
 
     void publishDocument(CoreSession session, DocumentModel docToPublish, DocumentModel sectionToPublish);
 
-    void assign(Assignable assignable, ExecutionContext executionContext) throws Exception;
+    void assign(Assignable assignable, ExecutionContext executionContext);
 
 }

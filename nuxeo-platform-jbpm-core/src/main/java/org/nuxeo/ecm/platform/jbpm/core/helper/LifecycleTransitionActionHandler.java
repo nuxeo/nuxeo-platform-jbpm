@@ -36,7 +36,7 @@ public class LifecycleTransitionActionHandler extends AbstractJbpmHandlerHelper 
 
     private static final long serialVersionUID = 1L;
 
-    protected NuxeoPrincipal getNuxeoPrincipal(String user) throws Exception {
+    protected NuxeoPrincipal getNuxeoPrincipal(String user) {
         UserManager userManager = Framework.getService(UserManager.class);
         if (user.startsWith(NuxeoPrincipal.PREFIX)) {
             user = user.substring(NuxeoPrincipal.PREFIX.length());
@@ -45,7 +45,7 @@ public class LifecycleTransitionActionHandler extends AbstractJbpmHandlerHelper 
     }
 
     @Override
-    public void execute(ExecutionContext executionContext) throws Exception {
+    public void execute(ExecutionContext executionContext) {
         this.executionContext = executionContext;
         if (nuxeoHasStarted()) {
             String endLifecycle = getEndLifecycleTransition();

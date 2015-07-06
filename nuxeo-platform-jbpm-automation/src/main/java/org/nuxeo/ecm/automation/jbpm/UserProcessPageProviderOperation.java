@@ -71,7 +71,7 @@ public class UserProcessPageProviderOperation extends AbstractWorkflowOperation 
 
     @SuppressWarnings("unchecked")
     @OperationMethod
-    public Blob run() throws Exception {
+    public Blob run() {
         Map<String, Serializable> props = new HashMap<String, Serializable>();
         props.put(UserProcessPageProvider.CORE_SESSION_PROPERTY, (Serializable) session);
         PageProviderService pps = Framework.getLocalService(PageProviderService.class);

@@ -31,7 +31,7 @@ import org.nuxeo.runtime.api.Framework;
 public class JbpmServiceBusinessDelegate {
 
     @Factory(value = "jbpmService", scope = ScopeType.APPLICATION)
-    public JbpmService bpmManagementServiceFactory() throws Exception {
+    public JbpmService bpmManagementServiceFactory() {
         return Framework.getService(JbpmService.class);
     }
 

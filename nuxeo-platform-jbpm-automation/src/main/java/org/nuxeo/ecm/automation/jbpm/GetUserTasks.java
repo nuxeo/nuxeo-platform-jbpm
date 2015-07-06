@@ -63,7 +63,7 @@ public class GetUserTasks {
     protected JbpmService srv;
 
     @OperationMethod
-    public Blob run() throws Exception {
+    public Blob run() {
         NuxeoPrincipal principal = principal();
         List<TaskInstance> tasks = srv.getCurrentTaskInstances(principal, filter());
         if (tasks == null) {
