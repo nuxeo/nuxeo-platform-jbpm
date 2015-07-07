@@ -218,6 +218,14 @@ public class JBPMDocTaskProvider implements TaskProvider {
         return getTaskInstances(documentModel, actors, session);
     }
 
+    /**
+     * @since 7.4
+     */
+    @Override
+    public List<Task> getAllCurrentTaskInstances(CoreSession session, List<SortInfo> sortInfos) {
+        throw new UnsupportedOperationException();
+    }
+
     public String endTask(CoreSession coreSession, NuxeoPrincipal principal, Task task, String comment,
             String eventName, boolean isValidated) {
 
