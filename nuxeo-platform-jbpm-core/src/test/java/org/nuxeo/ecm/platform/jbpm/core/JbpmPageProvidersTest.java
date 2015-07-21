@@ -42,7 +42,6 @@ import org.nuxeo.ecm.core.api.NuxeoGroup;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.core.test.CoreFeature;
-import org.nuxeo.ecm.core.test.TransactionalFeature;
 import org.nuxeo.ecm.core.test.annotations.Granularity;
 import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
 import org.nuxeo.ecm.platform.jbpm.JbpmService;
@@ -64,7 +63,7 @@ import org.nuxeo.runtime.test.runner.LocalDeploy;
  * @since 5.4.2
  */
 @RunWith(FeaturesRunner.class)
-@Features({ TransactionalFeature.class, CoreFeature.class })
+@Features(CoreFeature.class)
 @RepositoryConfig(cleanup = Granularity.METHOD)
 @Deploy({ "org.nuxeo.ecm.directory", //
         "org.nuxeo.ecm.platform.usermanager", //
