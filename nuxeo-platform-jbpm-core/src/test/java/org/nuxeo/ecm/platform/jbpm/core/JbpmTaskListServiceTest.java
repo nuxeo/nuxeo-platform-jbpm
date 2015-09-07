@@ -37,7 +37,6 @@ import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.event.EventService;
 import org.nuxeo.ecm.core.test.CoreFeature;
-import org.nuxeo.ecm.core.test.RepositorySettings;
 import org.nuxeo.ecm.core.test.annotations.Granularity;
 import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
 import org.nuxeo.ecm.platform.jbpm.JbpmTaskListService;
@@ -75,7 +74,7 @@ public class JbpmTaskListServiceTest {
     public static String userWorkspacePath = "/default-domain/UserWorkspaces/Administrator";
 
     @Inject
-    protected RepositorySettings repositorySettings;
+    protected CoreFeature coreFeature;
 
     @Inject
     protected EventService eventService;
@@ -206,9 +205,7 @@ public class JbpmTaskListServiceTest {
     }
 
     protected void reOpenSession() {
-        repositorySettings.releaseSession();
-        waitForAsyncCompletion();
-        session = repositorySettings.createSession();
+        session = coreFeature.reopenCoreSession();
     }
 
     protected void waitForAsyncCompletion() {
