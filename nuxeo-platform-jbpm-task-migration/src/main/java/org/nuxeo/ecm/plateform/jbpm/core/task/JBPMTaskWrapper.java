@@ -293,11 +293,21 @@ public class JBPMTaskWrapper implements Task {
         return null;
     }
 
+    @Override
+    public String getProcessName() {
+        return null;
+    }
+
     /**
      * @since 5.6
      */
     @Override
     public void setProcessId(String processId) {
+        // do nothing
+    }
+
+    @Override
+    public void setProcessName(String processName) {
         // do nothing
     }
 
